@@ -1,13 +1,11 @@
-# agl-docs (master)
-Revamping and restructuring Automotive Grade Linux's documentation site under GSoD'20.
-
--> [The working documentation site.](https://docs-agl.readthedocs.io)
-
--> [ReadTheDocs project page.](https://readthedocs.org/projects/docs-agl/)
+---
+title: Adding Documentation
+---
 
 The [documentation gerrit repository](https://gerrit.automotivelinux.org/gerrit/admin/repos/AGL/documentation) contains AGL documentation website template and content, rendering is visible at [https://docs-agl.readthedocs.io/en/latest/](https://docs-agl.readthedocs.io/en/latest/). The documentation site is hosted on [readthedocs](https://readthedocs.org/projects/docs-agl/) and corresponding builds are mentioned [here](https://readthedocs.org/projects/docs-agl/builds/).
 
 ## Download Repository
+
 
 Kindly check [this](https://wiki.automotivelinux.org/agl-distro/contributing) and clone with commit-msg hook :
 
@@ -113,4 +111,3 @@ in the site.
     # then to push use
     git review
     ```
-

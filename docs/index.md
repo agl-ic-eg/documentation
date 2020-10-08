@@ -1,16 +1,8 @@
-**AGL Demo**
-
-
-**A mockup documentation website for GSoD.**
+#### *Welcome to the Automotive Grade Linux (AGL) documentation.*
 
 ![AGL](img/agl.png)
 
-Overview
-========
-
-Welcome to the Automotive Grade Linux (AGL) documentation
-"Getting Started" page.
-This page provides you with a brief overview of the AGL Distribution
+This current page provides you with a brief overview of the AGL Distribution
 and with an introduction to selected topics that can help
 you get a quick start using AGL for development.
 
@@ -53,13 +45,15 @@ The "Getting Started" topics allow you to quickly accomplish some work using
 AGL.
 You can use the "Getting Started" sections to do the following:
 
-* [Set Up a Docker Container](./docker-container-setup.html) to create a
-  contained, controlled development environment for building images and
-  Software Development Kits (SDKs) using AGL.
+* [Quickstart](./0_Getting_Started/1_Quickstart/Quickstart.md) to quickly install the     pre-built images into an emulation or hardware platform.
 
-* [Learn How to Build an AGL Image](./image-workflow-intro.html) by working
+* [Learn How to Build an AGL Image](./0_Getting_Started/2_Building_AGL_Image/0_Build_Process.md) by working
   through fundamental steps that show you how to build for various supported
   hardware targets (e.g. Raspberry PI boards).
+
+* [Set Up a Docker Container](./) to create a
+  contained, controlled development environment for building images and
+  Software Development Kits (SDKs) using AGL.
 
 * [Learn How to Create an Application](./app-workflow-intro.html) using the
   application development workflow.
