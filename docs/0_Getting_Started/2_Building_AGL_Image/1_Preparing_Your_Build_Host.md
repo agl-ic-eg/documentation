@@ -20,7 +20,7 @@ development image.
 The [supported images](https://download.automotivelinux.org/AGL/snapshots/master/latest/) exist for several boards as
 well as for the Quick EMUlator (QEMU).
 See the
-"[Quickstart](../1_Quickstart/Quickstart.md)"
+"[Quickstart](../1_Quickstart/Using_Ready_Made_Images.md)"
 section for more information on the ready-made images.
 
 1. **Use a Supported Linux Distribution:** To use the AGL software, it is
@@ -30,16 +30,6 @@ section for more information on the ready-made images.
    section in the Yocto Project Reference Manual.
    Basically, you should be running a recent version of Ubuntu, Fedora, openSUSE,
    CentOS, or Debian.
-
-   If you must use a build host that is not a native Linux machine, you can
-   install and use Docker to create a container that allows you to work as
-   if you are using a Linux-based host.
-   The container contains the same development environment (i.e. distros, packages,
-   and so forth) as would a properly prepared build host running a supported
-   Linux distribution.
-   For information on how to install and set up this Docker container, see the
-   "[Setting Up a Docker Container -- FIX ME](./docker-container-setup.html)"
-   section.
 
 2. **Be Sure Your Build Host Has Enough Free Disk Space:**
    Your build host should have at least 100 Gbytes.

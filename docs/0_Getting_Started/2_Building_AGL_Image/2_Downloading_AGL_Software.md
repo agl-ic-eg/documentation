@@ -10,6 +10,8 @@ For information on how to create accounts for Gerrit, see the
 [Getting Started with AGL](https://wiki.automotivelinux.org/start/getting-started)
 wiki page.
 
+**NOTE:** Further information about Download and Build AGL Source Code available at [AGL wiki](https://wiki.automotivelinux.org/agl-distro/source-code).
+
 The remainder of this section provides steps on how to download the AGL source files:
 
 1. **Define Your Top-Level Directory:**

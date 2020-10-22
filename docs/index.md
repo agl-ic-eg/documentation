@@ -45,15 +45,11 @@ The "Getting Started" topics allow you to quickly accomplish some work using
 AGL.
 You can use the "Getting Started" sections to do the following:
 
-* [Quickstart](./0_Getting_Started/1_Quickstart/Quickstart.md) to quickly install the     pre-built images into an emulation or hardware platform.
+* [Quickstart](./0_Getting_Started/1_Quickstart/Using_Ready_Made_Images.md) to quickly install the     pre-built images into an emulation or hardware platform.
 
 * [Learn How to Build an AGL Image](./0_Getting_Started/2_Building_AGL_Image/0_Build_Process.md) by working
   through fundamental steps that show you how to build for various supported
   hardware targets (e.g. Raspberry PI boards).
-
-* [Set Up a Docker Container](./) to create a
-  contained, controlled development environment for building images and
-  Software Development Kits (SDKs) using AGL.
 
 * [Learn How to Create an Application](./app-workflow-intro.html) using the
   application development workflow.
