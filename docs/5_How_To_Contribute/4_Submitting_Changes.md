@@ -2,41 +2,40 @@
 title: Submitting Changes
 ---
 
-Carefully review the following before submitting a change. These
-guidelines apply to developers that are new to open source, as well as
-to experienced open source developers.
+Carefully review the following before submitting a change. These guidelines
+apply to developers that are new to open source, as well as to experienced open
+source developers.
 
 ## Change Requirements
 
 
-This section contains guidelines for submitting code changes for review.
-For more information on how to submit a change using Gerrit, please see
-[Working with Gerrit](./3_Working_with_Gerrit.md).
+This section contains guidelines for submitting code changes for review. For
+more information on how to submit a change using Gerrit, please see [Working
+with Gerrit](./3_Working_with_Gerrit.md).
 
 Changes are submitted as Git commits. Each commit must contain:
 
--  a short and descriptive subject line that is 72 characters or fewer,
-   followed by a blank line.
--  a change description with your logic or reasoning for the changes,
-   followed by a blank line
+-  a short and descriptive subject line that is 72 characters or fewer, followed
+   by a blank line.
+-  a change description with your logic or reasoning for the changes, followed
+   by a blank line
 -  a Signed-off-by line, followed by a colon (Signed-off-by:)
--  a Change-Id identifier line, followed by a colon (Change-Id:). Gerrit
-   won't accept patches without this identifier.
+-  a Change-Id identifier line, followed by a colon (Change-Id:). Gerrit won't
+   accept patches without this identifier.
 
-A commit with the above details is considered well-formed.
-[This page](https://chris.beams.io/posts/git-commit/) is a very useful for the
-same.
+A commit with the above details is considered well-formed. [This
+page](https://chris.beams.io/posts/git-commit/) is a very useful for the same.
 
-All changes and topics sent to Gerrit must be well-formed.
-Informationally, ``commit messages`` must include:
+All changes and topics sent to Gerrit must be well-formed. Informationally,
+``commit messages`` must include:
 
 -  **what** the change does,
 -  **why** you chose that approach, and
 -  **how** you know it works -- for example, which tests you ran.
 
-For example: One commit fixes whitespace issues, another renames a
-function and a third one changes the code's functionality. An example
-commit file is illustrated below in detail:
+For example: One commit fixes whitespace issues, another renames a function and
+a third one changes the code's functionality. An example commit file is
+illustrated below in detail:
 
 ```sh
 
@@ -51,8 +50,8 @@ Signed-off-by: Your Name <commit-sender@email.address>
 ```
 
 Include the issue ID in the one line description of your commit message for
-readability. Gerrit will link issue IDs automatically to the corresponding
-entry in Jira.
+readability. Gerrit will link issue IDs automatically to the corresponding entry
+in Jira.
 
 Each commit must also contain the following line at the bottom of the commit
 message:
@@ -65,5 +64,5 @@ The name in the Signed-off-by line and your email must match the change
 authorship information. Make sure your :file:``.git/config`` is set up
 correctly. Always submit the full set of changes via Gerrit.
 
-When a change is included in the set to enable other changes, but it
-will not be part of the final set, please let the reviewers know this.
+When a change is included in the set to enable other changes, but it will not be
+part of the final set, please let the reviewers know this.

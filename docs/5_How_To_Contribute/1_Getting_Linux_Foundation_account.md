@@ -84,8 +84,8 @@ details on how to do that. Once you have generated non-default keys, you
 need to configure SSH to use the correct key for Gerrit. In that case,
 you need to create a ``~/.ssh/config`` file modeled after the one below.
 
- ```sh 
-host gerrit.automotivelinux.org 
+ ```sh
+host gerrit.automotivelinux.org
   HostName gerrit.automotivelinux.org
   IdentityFile ~/.ssh/id_rsa_automotivelinux_gerrit
   User <LFID>

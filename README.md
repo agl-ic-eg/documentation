@@ -1,15 +1,20 @@
 # agl-docs (master)
-Revamping and restructuring Automotive Grade Linux's documentation site under GSoD'20.
+Revamping and restructuring Automotive Grade Linux's documentation site under
+GSoD'20.
 
--> [The working documentation site.](https://docs-agl.readthedocs.io)
-
--> [ReadTheDocs project page.](https://readthedocs.org/projects/docs-agl/)
-
-The [documentation gerrit repository](https://gerrit.automotivelinux.org/gerrit/admin/repos/AGL/documentation) contains AGL documentation website template and content, rendering is visible at [https://docs-agl.readthedocs.io/en/latest/](https://docs-agl.readthedocs.io/en/latest/). The documentation site is hosted on [readthedocs](https://readthedocs.org/projects/docs-agl/) and corresponding builds are mentioned [here](https://readthedocs.org/projects/docs-agl/builds/).
+The [documentation gerrit
+repository](https://gerrit.automotivelinux.org/gerrit/admin/repos/AGL/documentation)
+contains AGL documentation website template and content, rendering is visible at
+[https://docs.automotivelinux.org/en/master/](hhttps://docs.automotivelinux.org/en/master/).
+The documentation site is hosted on
+[readthedocs](https://readthedocs.org/projects/automotivegradelinux/) and
+corresponding builds are mentioned
+[here](https://readthedocs.org/projects/automotivegradelinux/builds/).
 
 ## Download Repository
 
-Kindly check [this](https://wiki.automotivelinux.org/agl-distro/contributing) and clone with commit-msg hook :
+Kindly check [this](https://wiki.automotivelinux.org/agl-distro/contributing)
+and clone with commit-msg hook :
 
 ```sh
 $ git clone "ssh://$USER@gerrit.automotivelinux.org:29418/AGL/documentation" && scp -p -P 29418 $USER@gerrit.automotivelinux.org:hooks/commit-msg "documentation/.git/hooks/"
@@ -73,7 +78,8 @@ documentation
 
 ## Test Hyperlinks
 
-[LinkChecker](https://wummel.github.io/linkchecker/) is a tool that allows to check all the hyperlinks in the site.
+[LinkChecker](https://wummel.github.io/linkchecker/) is a tool that allows to
+check all the hyperlinks in the site.
 
 For testing hyperlinks as soon as the local site is running, do:
 
@@ -81,8 +87,8 @@ For testing hyperlinks as soon as the local site is running, do:
 linkchecker http://localhost:8000
 ```
 
-The ```linkchecker``` output will display the broken link and there location
-in the site.
+The ```linkchecker``` output will display the broken link and there location in
+the site.
 
 
 ## Submitting changes

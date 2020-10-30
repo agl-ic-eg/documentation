@@ -2,40 +2,41 @@
 title: Working with Gerrit
 ---
 
-Follow these instructions to collaborate on AGL through the Gerrit review system.
+Follow these instructions to collaborate on AGL through the Gerrit review
+system.
 
 Please be sure that you are subscribed to the [mailing
-list](https://lists.automotivelinux.org/g/agl-dev-community) and of
-course, you can reach out on IRC at the #automotive channel on
-Freenode.net
+list](https://lists.automotivelinux.org/g/agl-dev-community) and of course, you
+can reach out on IRC at the #automotive channel on Freenode.net
 
 Gerrit assigns the following roles to users:
 
--  **Submitters**: May submit changes for consideration, review other
-   code changes, and make recommendations for acceptance or rejection by
-   voting +1 or -1, respectively.
--  **Maintainers**: May approve or reject changes based upon feedback
-   from reviewers voting +2 or -2, respectively.
+-  **Submitters**: May submit changes for consideration, review other code
+   changes, and make recommendations for acceptance or rejection by voting +1 or
+   -1, respectively.
+-  **Maintainers**: May approve or reject changes based upon feedback from
+   reviewers voting +2 or -2, respectively.
 
 ## Getting deeper into Gerrit
 
-A comprehensive walk-through of Gerrit is beyond the scope of this
-document. There are plenty of resources available on the Internet. A good
-summary can be found
-[here](https://www.mediawiki.org/wiki/Gerrit/Tutorial) and 
-[Basic Gerrit Walkthrough for GitHub Users](https://gerrit-review.googlesource.com/Documentation/intro-gerrit-walkthrough-github.html).
+A comprehensive walk-through of Gerrit is beyond the scope of this document.
+There are plenty of resources available on the Internet. A good summary can be
+found [here](https://www.mediawiki.org/wiki/Gerrit/Tutorial) and [Basic Gerrit
+Walkthrough for GitHub
+Users](https://gerrit-review.googlesource.com/Documentation/intro-gerrit-walkthrough-github.html).
 
 ## Working with a local clone of the repository
 
 To work on something, whether a new feature or a bugfix:
 
-1. Open the Gerrit [repo page](https://gerrit.automotivelinux.org/gerrit/admin/repos/).
+1. Open the Gerrit [repo
+   page](https://gerrit.automotivelinux.org/gerrit/admin/repos/).
 
 2. Select the repository you wish to work on.
 
-3. Open a terminal window and clone the project locally using the
-   ``Clone with git hook`` URL. Be sure that ``ssh`` is also selected,
-   as this will make authentication much simpler. For example, for `documentation` repository:
+3. Open a terminal window and clone the project locally using the ``Clone with
+   git hook`` URL. Be sure that ``ssh`` is also selected, as this will make
+   authentication much simpler. For example, for `documentation` repository:
 
     ```sh
     $ git clone "ssh://<LFID>@gerrit.automotivelinux.org:29418/AGL/documentation" && scp -p -P
@@ -66,14 +67,18 @@ To work on something, whether a new feature or a bugfix:
 
 ## Using git review
 
-There's a **very** useful tool for working with Gerrit called [git-review](https://www.mediawiki.org/wiki/Gerrit/git-review). This command-line tool can automate most of the ensuing sections for you. Ofcourse, reading the information below is also highly recommended so that you understand what's going on behind the scenes.
+There's a **very** useful tool for working with Gerrit called
+[git-review](https://www.mediawiki.org/wiki/Gerrit/git-review). This
+command-line tool can automate most of the ensuing sections for you. Ofcourse,
+reading the information below is also highly recommended so that you understand
+what's going on behind the scenes.
 
 ```sh
 # for first time use only
 $ git review -s
 ```
-If `.gitreview` is missing, add the following section to ``.git/config``, and replace ``<LFID>``
-with your LFID id.
+If `.gitreview` is missing, add the following section to ``.git/config``, and
+replace ``<LFID>`` with your LFID id.
 
 ```sh
 [remote "gerrit"]
@@ -88,8 +93,8 @@ $ cd documentation
 $ git review
 ```
 
-When you update your patch, you can commit with ``git commit --amend``,
-and then repeat the ``git review`` command.
+When you update your patch, you can commit with ``git commit --amend``, and then
+repeat the ``git review`` command.
 
 ## Typical Review Workflow
 
@@ -119,30 +124,30 @@ and then repeat the ``git review`` command.
 
 ## Reviewing Using Gerrit
 
--  **Add**: This button allows the change submitter to manually add
-   names of people who should review a change; start typing a name and
-   the system will auto-complete based on the list of people registered
-   and with access to the system. They will be notified by email that
-   you are requesting their input.
+-  **Add**: This button allows the change submitter to manually add names of
+   people who should review a change; start typing a name and the system will
+   auto-complete based on the list of people registered and with access to the
+   system. They will be notified by email that you are requesting their input.
 
--  **Abandon**: This button is available to the submitter only; it
-   allows a committer to abandon a change and remove it from the merge
-   queue.
+-  **Abandon**: This button is available to the submitter only; it allows a
+   committer to abandon a change and remove it from the merge queue.
 
--  **Change-ID**: This ID is generated by Gerrit (or system). It becomes
-   useful when the review process determines that your commit(s) have to
-   be amended. You may submit a new version; and if the same Change-ID
-   header (and value) are present, Gerrit will remember it and present
-   it as another version of the same change.
+-  **Change-ID**: This ID is generated by Gerrit (or system). It becomes useful
+   when the review process determines that your commit(s) have to be amended.
+   You may submit a new version; and if the same Change-ID header (and value)
+   are present, Gerrit will remember it and present it as another version of the
+   same change.
 
--  **Status**: Currently, the example change is in review status, as
-   indicated by “Needs Verified” in the upper-left corner. The list of
-   Reviewers will all emit their opinion, voting +1 if they agree to the
-   merge, -1 if they disagree. Gerrit users with a Maintainer role can
-   agree to the merge or refuse it by voting +2 or -2 respectively.
+-  **Status**: Currently, the example change is in review status, as indicated
+   by “Needs Verified” in the upper-left corner. The list of Reviewers will all
+   emit their opinion, voting +1 if they agree to the merge, -1 if they
+   disagree. Gerrit users with a Maintainer role can agree to the merge or
+   refuse it by voting +2 or -2 respectively.
 
 Notifications are sent to the email address in your commit message's
-Signed-off-by line. Visit your [Gerrit dashboard](https://gerrit.automotivelinux.org/gerrit/dashboard/self),
-to check the progress of your requests.
+Signed-off-by line. Visit your [Gerrit
+dashboard](https://gerrit.automotivelinux.org/gerrit/dashboard/self), to check
+the progress of your requests.
 
-The history tab in Gerrit will show you the in-line comments and the author of the review.
+The history tab in Gerrit will show you the in-line comments and the author of
+the review.
