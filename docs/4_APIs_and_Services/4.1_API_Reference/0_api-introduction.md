@@ -1,7 +1,6 @@
-
-<!-----
+---
 title: API Reference
------>
+---
 
 # Available APIs
 
