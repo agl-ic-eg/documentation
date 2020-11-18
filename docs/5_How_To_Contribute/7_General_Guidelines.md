@@ -152,7 +152,8 @@ We have tried to make it as easy as possible to make contributions. This applies
 to how we handle the legal aspects of contribution.
 
 We simply ask that when submitting a patch for review, the developer must
-include a sign-off statement in the commit message.
+include a sign-off statement in the commit message. This is done to ensure that
+the author of the change adhere to follow [**DCO**](https://developercertificate.org/).
 
 ```sh
 Signed-off-by: John Doe <john.doe@example.com>
