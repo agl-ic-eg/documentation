@@ -8,12 +8,12 @@ title: Contribution Checklist
 - [ ] Does the component have a name ? (Pick one fitting the purpose and the project.)
 - [ ] Is a separate git repo required for the component ?
 - [ ] Does the component have a README.md containing all basic information about it ?
-- [ ] Description.
-- [ ] Dependencies.
-- [ ] Build instructions.
-- [ ] Installation instructions.
-- [ ] Usage instructions.
-- [ ] Example invocations.
+    - [ ] Description.
+    - [ ] Dependencies.
+    - [ ] Build instructions.
+    - [ ] Installation instructions.
+    - [ ] Usage instructions.
+    - [ ] Example invocations.
 - [ ] Does the component have a CONTRIBUTIONS.md file? (Containing all necessary information on how to contribute, e.g. pointing to project website? )
 
 ## License
