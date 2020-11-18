@@ -1,8 +1,6 @@
 ---
-title: Introduction
+title: Overview
 ---
-
-# Introduction
 
 Modern cars have become a lot more technologically sophisticated and different
 than those of the past. We are seeing a wider range of new features and
@@ -38,25 +36,6 @@ highest levels (_Connectivity_ and _Application_). We will move quickly on
 _Hardware_ and _Connectivity_ because this is not supported at our level.
 Solutions of connectivity problems concern updates and secured settings while
 hardware securing is related to the manufacturers.
-
-The document is filled with tags to easily identify important points:
-
-<!-- section-config -->
-
-- The _config_ tag quickly identifies the configurations and the recommendations
-  to take.
-
-<!-- end-section-config --><!-- section-note -->
-
-- The _note_ tag allows you to notify some additional details.
-
-<!-- end-section-note --><!-- section-todo -->
-
-- The _todo_ tag shows the possible improvements.
-
-<!-- end-section-todo -->
-
-In annexes of this document, you can find all the _config_ and _todo_ notes.
 
 ## Adversaries
 
@@ -184,14 +163,12 @@ control unit (**ECU**) or other managed devices. The target for all hardening
 activities is to prevent the execution of invalid binaries on the device, and to
 prevent copying of security related data from the device.
 
-<!-- pagebreak -->
-
 ## AGL security overview
 
 AGL roots are based on security concepts. Those concepts are implemented by the
 security framework as shown in this picture:
 
-![AGL architecture](WhiteBoxArchi.png)
+![AGL architecture](images/WhiteBoxArchi.png)
 
 --------------------------------------------------------------------------------
 
@@ -205,8 +182,6 @@ The following table lists the strongest terms utilized within all this document.
 | _ECU_                     | **E**lectronic **C**ontrol **U**nit |
 
 --------------------------------------------------------------------------------
-
-<!-- pagebreak -->
 
 # References
 

@@ -1,21 +1,15 @@
 ---
-title: Introduction
+title: Hypervisor
 ---
 
-# Part 3 - Hypervisor
-
-Definition: "A hypervisor or virtual machine monitor (VMM) is computer software,
-firmware or hardware that creates and runs virtual machines".
+**Definition** : "A hypervisor or virtual machine monitor (VMM) is computer
+software, firmware or hardware that creates and runs virtual machines".
 
 It must include a signature verification (possibly delegated).
-
-<!-- section-todo -->
 
 Domain                | Improvement
 --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Hypervisor-Abstract-1 | Complete Hypervisor part ([jailhouse](https://github.com/siemens/jailhouse) / [KVM](https://www.linux-kvm.org/page/Main_Page) / [Xen](https://www.xenproject.org/developers/teams/embedded-and-automotive.html)).
-
-<!-- end-section-todo -->
 
 ## Native or Bare-metal hypervisors
 

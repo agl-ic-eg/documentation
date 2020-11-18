@@ -1,9 +1,22 @@
 ---
-title: Config notes
+title: Annexes
 ---
 
+The first part resumed all the configurations you must implement without any
+explications since all the explanations are given as and when in the document.
+
+- The _config_ tag quickly identifies the configurations and the recommendations
+  to take.
+
+- The _note_ tag allows you to notify some additional details.
+
+- The _todo_ tag shows the possible improvements.
+
+The second one allows to visualize all the todo notes in order to have a global
+vision of the possible improvements of the document.
+
 # Config notes
-<!-- section-config -->
+
 
 Domain               | Object     | Recommendations
 -------------------- | ---------- | ----------------------------------
@@ -486,4 +499,80 @@ Domain                        | Object                                    | Reco
 ----------------------------- | ----------------------------------------- | ---------------------------------
 Application-Cloud-Transport-1 | Integrity, confidentiality and legitimacy | Should implement IPSec standards.
 
-<!-- end-section-config -->
+# Todo notes
+
+Domain          | Improvement
+--------------- | ----------------------------------------------------
+Boot-Abstract-1 | More generic and add examples (The chain of trust).
+
+Domain          | Improvement
+--------------- | -------------------------------------------
+Boot-Abstract-1 | Review the definition of the "boot loader".
+
+Domain          | Improvement
+--------------- | ------------------------------------
+Boot-Consoles-1 | Secure loader: No reference earlier?
+
+Domain                | Improvement
+--------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Hypervisor-Abstract-1 | Complete Hypervisor part ([jailhouse](https://github.com/siemens/jailhouse) / [KVM](https://www.linux-kvm.org/page/Main_Page) / [Xen](https://www.xenproject.org/developers/teams/embedded-and-automotive.html)).
+
+Domain                           | Improvement
+-------------------------------- | -----------------------------
+Kernel-General-IndependentExec-1 | Kernel or/and platform part ?
+
+Domain                          | Improvement
+------------------------------- | ---------------
+Kernel-General-LibraryLinking-1 | Keep this part?
+
+Domain              | Improvement
+------------------- | --------------------------------
+Platform-Abstract-1 | Create a graphics and sound part.
+
+Domain              | Improvement
+------------------- | -----------
+Platform-Services-1 | SystemD ?
+Platform-Services-2 | Secure daemon ?
+
+Domain                        | Improvement
+----------------------------- | ------------------------
+Platform-Users-Capabilities-1 | Kernel or Platform-user?
+Platform-Users-Capabilities-2 | Add config note.
+
+Domain                     | Improvement
+-------------------------- | ------------------------------
+Application-Installation-1 | Talk about AppFw offline mode.
+
+Domain                  | Improvement
+----------------------- | ----------------------------------------------------------
+Application-Signature-1 | Add content (see secure build in Secure development part).
+
+Domain                 | Improvement
+---------------------- | ------------
+Application-Services-1 | Add content (Which services?).
+Application-Services-2 | Add Binder.
+
+Domain                  | Improvement
+----------------------- | -----------------
+Connectivity-Abstract-1 | Improve abstract.
+
+Domain                  | Improvement
+----------------------- | -------------------------------------------
+Connectivity-Wireless-1 | Add communication channels (RFID, ZigBee?).
+
+Domain        | Improvement
+------------- | -----------------
+Update-SOTA-1 | Part to complete.
+
+Domain                  | Improvement
+----------------------- | ------------
+SecureDev-SecureBuild-1 | Add content.
+
+Domain                 | Improvement
+---------------------- | ------------
+SecureDev-Signatures-1 | Add content.
+
+Domain                | Improvement
+--------------------- | -----------------------------------------------------
+SecureDev-CodeAudit-1 | Add CVE analyser.
+SecureDev-CodeAudit-2 | [OSSTMM](http://www.isecom.org/mirror/OSSTMM.3.pdf).

@@ -1,10 +1,6 @@
 ---
-title: Introduction
+title: Hardware
 ---
-
-# Part 1 - Hardware
-
-## Abstract
 
 The Automotive Grade Linux platform is a Linux distribution with **AGL**
 compliant applications and services. The platform includes the following
@@ -41,23 +37,15 @@ The board must store hardcoded cryptographic keys in order to verify among
 others the _integrity_ of the _bootloader_. Manufacturers can use **HSM** and
 **SHE** to enhance the security of their board.
 
-<!-- section-config -->
-
 Domain               | Object     | Recommendations
 -------------------- | ---------- | ----------------------------------
 Hardware-Integrity-1 | Bootloader | Must control bootloader integrity.
 Hardware-Integrity-2 | Board      | Must use a HSM.
 Hardware-Integrity-3 | RTC        | Must not be alterable.
 
-<!-- end-section-config -->
-
 --------------------------------------------------------------------------------
 
-<!-- pagebreak -->
-
 ## Certificates
-
-<!-- section-config -->
 
 Domain                 | Object | Recommendations
 ---------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -65,18 +53,12 @@ Hardware-Certificate-1 | System | Shall allow storing dedicated certificates.
 Hardware-Certificate-2 | ECU    | The ECU must verify the certification authority hierarchy.
 Hardware-Certificate-3 | System | Allow the modification of certificates only if the source can be authenticated by a certificate already stored or in the higher levels of the chain of trust.
 
-<!-- end-section-config -->
-
 --------------------------------------------------------------------------------
 
 ## Memory
-
-<!-- section-config -->
 
 Domain            | Object     | Recommendations
 ----------------- | ---------- | ------------------------------------------------------------------------------------
 Hardware-Memory-1 | ECU        | The ECU shall never expose the unencrypted key in RAM when using cryptographic keys.
 Hardware-Memory-2 | Bootloader | Internal NVM only
 Hardware-Module-3 | -          | HSM must be used to secure keys.
-
-<!-- end-section-config -->

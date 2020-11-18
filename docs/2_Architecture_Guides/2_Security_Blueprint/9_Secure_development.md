@@ -1,8 +1,6 @@
 ---
-title: Introduction
+title: Secure development
 ---
-
-# Part 9 - Secure development
 
 In order to save a lot of time in code auditing, developers must follow coding
 guidelines.
@@ -17,23 +15,15 @@ Tools like:
 - [Kernel Drivers test](https://github.com/ucsb-seclab/dr_checker) with
   [docs](https://www.usenix.org/system/files/conference/usenixsecurity17/sec17-machiry.pdf).
 
-<!-- section-todo -->
-
 Domain                  | Improvement
 ----------------------- | ------------
 SecureDev-SecureBuild-1 | Add content.
 
-<!-- end-section-todo -->
-
 ## App/Widget signatures
-
-<!-- section-todo -->
 
 Domain                 | Improvement
 ---------------------- | ------------
 SecureDev-Signatures-1 | Add content.
-
-<!-- end-section-todo -->
 
 ## Code audit
 
@@ -42,14 +32,10 @@ compliance with related good practices.
 
 - [Continuous Code Quality](https://www.sonarqube.org/).
 
-<!-- section-todo -->
-
 Domain                | Improvement
 --------------------- | -----------------------------------------------------
 SecureDev-CodeAudit-1 | Add CVE analyser.
 SecureDev-CodeAudit-2 | [OSSTMM](http://www.isecom.org/mirror/OSSTMM.3.pdf).
-
-<!-- end-section-todo -->
 
 ### SATS
 

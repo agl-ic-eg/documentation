@@ -1,10 +1,6 @@
 ---
-title: Introduction
+title: Application
 ---
-
-# Part 6 - Application
-
-## Abstract
 
 **Application Hardening**: Best practices to apply to the build and release of
 user space applications, in order to reduce the number of attack surfaces used
@@ -55,7 +51,7 @@ distributor, and platform level store distributor. AGL may define a different
 number of third parties, but at a minimum an author and store distributor should
 be defined.
 
-![App Signing Flow](App_signing_flow.png)
+![App Signing Flow](images/App_signing_flow.png)
 
 Once the number of signatures has been established, verification of those
 signatures needs to be done at a minimum at installation time on the AGL device.
@@ -87,3 +83,43 @@ _LSM_                     | **L**inux **S**ecurity **M**odule
 _MITM_                    | **M**an **I**n **T**he **M**iddle
 _OSI_                     | **O**pen **S**ystems **I**nterconnection
 _SATS_                    | **S**tatic **A**pplication **S**ecurity **T**esting
+
+# Local
+
+Domain                     | Improvement
+-------------------------- | ------------------------------
+Application-Installation-1 | Talk about AppFw offline mode.
+
+## Installation
+
+Applications can be delivered and installed with the base image using a special
+offline-mode provided by the **AppFw**. Apps can also be installed at run time.
+
+During early release, default Apps are installed on the image at first boot.
+
+Domain                     | Object    | Recommendations
+-------------------------- | --------- | -----------------------------------------------------------------------
+Application-Installation-1 | AppFw     | Provide offline-mode in order to install app with the base image.
+Application-Installation-2 | Integrity | Allow the installation of applications only if their integrity is good.
+
+# Local
+
+## Privilege Management
+
+Application privileges are managed by **Cynara** and the security manager in the
+**AppFw**. For more details, please refer to the **AppFw** documentation in
+Platform part.
+
+# App Signature
+
+Domain                  | Improvement
+----------------------- | ----------------------------------------------------------
+Application-Signature-1 | Add content (see secure build in Secure development part).
+
+
+# Services
+
+Domain                 | Improvement
+---------------------- | ------------
+Application-Services-1 | Add content (Which services?).
+Application-Services-2 | Add Binder.
