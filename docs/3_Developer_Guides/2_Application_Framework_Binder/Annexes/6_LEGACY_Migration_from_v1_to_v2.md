@@ -1,0 +1,656 @@
+---
+title: LEGACY Migration from v1 to v2
+---
+
+> LEGACY!!! IT IS NOT EXPECTED THAT YOU STILL NEED THIS GUIDE.
+>
+> THIS GUIDE WILL BE REMOVED IN A NEAR FUTURE
+
+
+The ***binding*** interface evolved from version 1 to version 2
+for the following reasons:
+
+- integration of the security requirements within the bindings
+- simplification of the API (after developer feedbacks)
+- removal of obscure features, cleanup
+
+The ***binder*** can run ***bindings*** v1 and/or v2 in any combination.
+Thus moving from v1 to v2 is not enforced, there is no real need.
+
+More, it is possible to write a dual ***binding***:
+
+- a ***binding*** that implements the version 1 and the version 2.
+
+However, IT IS HIGHLY RECOMMENDED TO SWITCH TO ONLY VERSION 2:
+
+- any new development SHOULD start using ***binding*** V2
+- existing ***bindings*** SHOULD migrate to the version 2
+
+This guide covers the migration of bindings from version 1 to version 2.
+
+It also explains some of the rationale taken when migrating from version 1 to version 2.
+
+In the future, if ***binding*** api evolves to fresh versions (3, 4, ...)
+it might be necessarily to write bindings implementing more than
+just one version.
+For example:
+
+- a ***binding*** being v2 AND v3 will resolve the issue of running on older and newer version of AGL.
+
+This should always be possible even if more complicated.
+
+Important things to known when migrating
+----------------------------------------
+
+One of the most important change when migrating from v1 to v2 is
+that many functions use an hidden *common* variable.
+This affects the functions of the following classes:
+
+- functions of class **daemon**:
+  - functions starting with **afb_daemon_...**
+  - functions for logging: **ERROR**, **WARNING**, **NOTICE**, **INFO**, **DEBUG**
+- functions of class **service**:
+  - functions starting with **afb_service_...**
+- callback functions:
+  - the register function (that is removed)
+  - the service init function
+  - the onevent function
+
+For these functions, the first parameter is now implicit.
+
+Let takes an example.
+For ***binding*** v1 you had to write:
+
+```C
+        afb_daemon_broadcast_event(afbitf->daemon, reason, description);
+```
+
+For ***binding*** v2, you simply write:
+
+```C
+        afb_daemon_broadcast_event(reason, description);
+```
+
+This simplification is possible because the header files included for the bindings
+now provide a common variable for storing the **daemon** and **service** data.
+
+As a programmer, you shouldn't care much about that hidden variable.
+It simplifies the job, that's all and that is the reason of the change.
+
+An other important difference is between the version 1 and the version 2 is
+on how the ***binding***'s **API** is documented.
+The version 2 emphasis the **OpenAPI v3** description of the **API**.
+For this reason, to avoid duplication of descriptions, only one description is expected:
+
+- The **OpenAPI** one.
+
+Task list for the migration
+---------------------------
+
+This task list is:
+
+1. Enforce use of binding v2 by setting **AFB_BINDING_VERSION**
+2. Rewrite the main structure and the list of exported verbs
+3. Adapt the init and callback functions
+4. Removes the first parameter of functions of classes **daemon** and **service**
+5. Consider where to emit logs for requests
+6. Take care of store/unstore changes
+7. Consider use of synchronous (sub)call requests
+8. Optionally, removes explicit struct
+
+The remaining chapters explain these task with more details.
+
+Enforce use of binding v2 by setting AFB_BINDING_VERSION
+--------------------------------------------------------
+
+By defining **AFB_BINDING_VERSION** to **2** you switch to version 2.
+This is done as below.
+
+```C
+#define AFB_BINDING_VERSION 2
+#include <afb/afb-binding.h>
+```
+
+After that you will get many errors when compiling.
+
+Rewrite the main structures and the list of exported verbs
+---------------------------------------------------------
+
+The structures describing the ***binding** changed from version 1 to version 2.
+
+The structure for describing verbs changed to include security
+requirements.
+
+In version 1 it was:
+
+```C
+struct afb_verb_desc_v1
+{
+       const char *name;                       /* name of the verb */
+       enum afb_session_flags_v1 session;      /* authorization and session requirements of the verb */
+       void (*callback)(struct afb_req req);   /* callback function implementing the verb */
+       const char *info;                       /* textual description of the verb */
+};
+```
+
+In version 2 it becomes:
+
+```C
+struct afb_verb_v2
+{
+        const char *verb;                       /* name of the verb */
+        void (*callback)(struct afb_req req);   /* callback function implementing the verb */
+        const struct afb_auth *auth;            /* required authorization */
+        uint32_t session;                       /* authorization and session requirements of the verb */
+};
+
+```
+
+The migration of instances of that structure requires the following actions:
+
+- rename field **name** to **verb**
+- remove field **info**
+- adapt field **session** if needed
+- set field **auth** to NULL
+
+Example:
+
+```C
+ { .name= "new",   .session= AFB_SESSION_NONE, .callback= new,   .info= "Starts a new game" }
+```
+
+Becomes
+
+```C
+ { .verb = "new",   .session = AFB_SESSION_NONE, .callback = new, .auth = NULL }
+```
+
+The field **auth** can be set to a value describing the requested
+authorization.
+
+The main describing structure also changed.
+
+In version 1 it was:
+
+```C
+struct afb_binding_desc_v1
+{
+       const char *info;                       /* textual information about the binding */
+       const char *prefix;                     /* required prefix name for the binding */
+       const struct afb_verb_desc_v1 *verbs;   /* array of descriptions of verbs terminated by a NULL name */
+};
+```
+
+In version 2 it becomes:
+
+```C
+struct afb_binding_v2
+{
+        const char *api;                        /* api name for the binding */
+        const char *specification;              /* textual specification of the binding */
+        const struct afb_verb_v2 *verbs;        /* array of descriptions of verbs terminated by a NULL name */
+        int (*preinit)();                       /* callback at load of the binding */
+        int (*init)();                          /* callback for starting the service */
+        void (*onevent)(const char *event, struct json_object *object); /* callback for handling events */
+        unsigned noconcurrency: 1;              /* avoids concurrent requests to verbs */
+};
+```
+
+The migration of instances of that structure requires the following actions:
+
+- declare, explore, name the structure as ```const struct afb_binding_v2 afbBindingV2```
+- rename the field **prefix** to **api**
+- remove the field **info**
+- setup the fields **preinit**, **init**, **onevent** according to the next section
+- set the field **noconcurrency** to the right value:
+  - to 1 if you want to avoid concurrent calls to verbs.
+  - to 0 if you allow concurrent calls to verbs.
+
+Example:
+
+```C
+static const struct afb_binding plugin_desc = {
+        .type = AFB_BINDING_VERSION_1,
+        .v1 = {
+                .info = "Minimal Hello World Sample",
+                .prefix = "hello",
+                .verbs = verbs
+        }
+```
+
+Becomes:
+
+```C
+const struct afb_binding_v2 afbBindingV2 = {
+        .api = "hello",
+        .specification = NULL,
+        .verbs = verbs,
+        .preinit = preinit,
+        .init = init
+};
+```
+
+The **binder** now relies only on the exported names
+to deduce the type of the binding.
+This make the main structure more simple.
+
+Adapt the init and callback functions
+-------------------------------------
+
+The ***bindings*** version 1 defined 3 exported functions:
+
+- **afbBindingV1Register**
+- **afbBindingV1ServiceInit**
+- **afbBindingV1ServiceEvent**
+
+These function should not be exported any more and there definition changed.
+
+The function **afbBindingV1Register** is no more used to describe the binding.
+When a binding has to take actions when it is loaded, it must set the field
+**preinit** of the structure **afbBindingV2**.
+This field, this preinit, might be used to check features at load.
+When it returns a negative number, the ***binder*** stops before initializing any ***binding***.
+
+The function **afbBindingV1ServiceInit** is replaced by the field **init**
+of the structure **afbBindingV2**.
+The init function should return 0 in case of success or a negative error code
+in case of problem.
+It is called during initialization of services.
+
+The function **afbBindingV1ServiceEvent**is replaced by the field **onevent**
+of the structure **afbBindingV2**.
+
+The two functions **afbBindingV1Register** and **afbBindingV1ServiceInit**,
+were taking as parameter the ***binder*** interface and the service interface respectively.
+These interfaces are now managed hiddenly for the **binding** by the **binder**.
+So the variable that ***bindings*** version used to store the ***binder*** interface
+and the service interface are no more needed and can be removed.
+
+Example:
+
+```C
+const struct afb_binding_interface *interface;
+struct afb_service service;
+
+static const struct afb_binding plugin_desc = {
+        .type = AFB_BINDING_VERSION_1,
+        .v1 = {
+                .info = "Minimal Hello World Sample",
+                .prefix = "hello",
+                .verbs = verbs
+        }
+}
+
+const struct afb_binding *afbBindingV1Register (const struct afb_binding_interface *itf)
+{
+        interface = itf;
+        NOTICE(interface, "binding register");
+        return &plugin_desc;
+}
+
+int afbBindingV1ServiceInit(struct afb_service svc)
+{
+        service = svc;
+        NOTICE(interface, "binding init");
+        return 0;
+}
+
+void afbBindingV1ServiceEvent(const char *event, struct json_object *object)
+{
+        NOTICE(interface, "onevent %s", event);
+}
+```
+
+Becomes:
+
+```C
+static int preinit()
+{
+        AFB_NOTICE("binding preinit (was register)");
+        return 0;
+}
+
+static int init()
+{
+        AFB_NOTICE("binding init");
+        return 0;
+}
+
+static void onevent(const char *event, struct json_object *object)
+{
+        AFB_NOTICE("onevent %s", event);
+}
+
+const struct afb_binding_v2 afbBindingV2 = {
+        .api = "hello",
+        .specification = NULL,
+        .verbs = verbs,
+        .preinit = preinit,
+        .init = init,
+        .onevent = onevent
+};
+```
+
+The two functions **afbBindingV1Register** and **afbBindingV1ServiceInit**,
+were taking as parameter the ***binder*** interface and the service interface respectively.
+These interfaces are now managed hiddenly for the **binding** by the **binder**.
+So the variable that ***bindings*** version used to store the ***binder*** interface
+and the service interface are no more needed and can be removed.
+
+On the above example the following lines were removed:
+
+```C
+const struct afb_binding_interface *interface;
+struct afb_service service;
+
+        interface = itf;
+
+        service = svc;
+```
+
+Removes the first parameter of functions of classes **daemon** and **service**
+------------------------------------------------------------------------------
+
+As explained before, many functions loose there first
+arguments, this are the functions of the following classes:
+
+- functions of class **daemon**:
+  - functions starting with **afb_daemon_...**
+  - functions for logging: **ERROR**, **WARNING**, **NOTICE**, **INFO**, **DEBUG**
+- functions of class **service**:
+  - functions starting with **afb_service_...**
+- callback functions:
+  - the register function (that is removed)
+  - the service init function
+  - the onevent function
+
+For these functions, the first parameter is now implicit.
+
+Example:
+
+```C
+        afb_daemon_broadcast_event(afbitf->daemon, reason, description);
+```
+
+Becomes:
+
+```C
+        afb_daemon_broadcast_event(reason, description);
+```
+
+Also, to avoid possible conflicts, we introduced prefixed logging functions:
+the macros
+
+- **ERROR**
+- **WARNING**
+- **NOTICE**
+- **INFO**
+- **DEBUG**
+
+have now a prefixed version:
+
+- **AFB\_ERROR**
+- **AFB\_WARNING**
+- **AFB\_NOTICE**
+- **AFB\_INFO**
+- **AFB\_DEBUG**
+
+It is now recommended to use the prefixed version.
+
+Example:
+
+```C
+        NOTICE(interface, "hello plugin comes to live");
+```
+
+Become:
+
+```C
+        NOTICE("hello plugin comes to live");
+```
+
+or, better:
+
+```C
+        AFB_NOTICE("hello plugin comes to live");
+```
+
+To remove definition of the un-prefixed versions of logging macros:
+
+- **ERROR**
+- **WARNING**
+- **NOTICE**
+- **INFO**
+- **DEBUG**
+
+and just define
+
+- **AFB_BINDING_PRAGMA_NO_VERBOSE_UNPREFIX**
+
+before to include **afb/afb-binding.h**.
+
+```C
+#define AFB_BINDING_PRAGMA_NO_VERBOSE_UNPREFIX
+#define AFB_BINDING_VERSION 2
+#include <afb/afb-binding.h>
+```
+
+Consider where to emit logs for requests
+----------------------------------------
+
+The ***bindings*** v2 now allows to emit log messages associated to ***requests***.
+This feature is valuable when debugging because it allows to return
+side information associated to a ***request***.
+
+The defined macros for logging to requests are:
+
+- **AFB_REQ_ERROR**
+- **AFB_REQ_WARNING**
+- **AFB_REQ_NOTICE**
+- **AFB_REQ_INFO**
+- **AFB_REQ_DEBUG**
+
+We encourage the use of these new logging facilities everywhere it makes sense.
+
+Example:
+
+```C
+        INFO(afbitf, "method 'new' called for boardid %d", board->id);
+```
+
+Might become:
+
+```C
+        AFB_REQ_INFO(req, "method 'new' called for boardid %d", board->id);
+```
+
+Take care of store/unstore change
+---------------------------------
+
+For efficiency, the version 2 redefined how storing/un-storing of
+requests works.
+Storing request is needed for asynchronous handling of requests.
+
+For ***bindings*** version, the signature of the functions were:
+
+```C
+struct afb_req *afb_req_store(struct afb_req req);
+struct afb_req afb_req_unstore(struct afb_req *req);
+```
+
+For version 2 it becomes
+
+```C
+struct afb_stored_req *afb_req_store(struct afb_req req);
+struct afb_req afb_req_unstore(struct afb_stored_req *sreq);
+```
+
+Where the structure ```struct afb_stored_req``` is opaque.
+
+It should require few code change.
+
+Also check the following chapter that explain that asynchronous (sub)calls
+can be replaced by synchronous one, avoiding the need to store/unstore
+requests.
+
+Consider use of synchronous (sub)call requests
+----------------------------------------------
+
+***Bindings*** can emit requests for themselves (calls) or for
+their clients (subcalls).
+With ***bindings*** version 2 comes also synchronous requests for both cases.
+
+So when migrating to bindings version 2, a developer can consider
+to replace the asynchronous requests (with asynchronous call back)
+by synchronous ones.
+
+See functions ***afb_service_call_sync*** and ***afb_req_subcall_sync***.
+
+Optionally, removes explicit struct
+-----------------------------------
+
+The new definitions now includes **typedefs** for common
+structures, as shown on below sample:
+
+```C
+typedef struct afb_daemon               afb_daemon;
+typedef struct afb_event                afb_event;
+typedef struct afb_arg                  afb_arg;
+typedef struct afb_req                  afb_req;
+typedef struct afb_service              afb_service;
+```
+
+So you can remove the keyword **struct** if it bores you.
+
+Example:
+
+```C
+static void verb(struct afb_req req)
+{
+        ...
+}
+```
+
+Might become:
+
+```C
+static void verb(afb_req req)
+{
+        ...
+}
+```
+
+Example of migration
+--------------------
+
+The first ***binding*** that migrated from v1 to v2 was the sample **HelloWorld**.
+Here is shown the differences between the version 1 and the version 2.
+
+```diff
+diff --git a/bindings/samples/HelloWorld.c b/bindings/samples/HelloWorld.c
+index c6fa779..505aee3 100644
+--- a/bindings/samples/HelloWorld.c
++++ b/bindings/samples/HelloWorld.c
+@@ -21,9 +21,9 @@
+
+ #include <json-c/json.h>
+
++#define AFB_BINDING_VERSION 2
+ #include <afb/afb-binding.h>
+
+-const struct afb_binding_interface *interface;
+ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+ struct event
+@@ -79,7 +80,7 @@ static int event_add(const char *tag, const char *name)
+         strcpy(e->tag, tag);
+
+         /* make the event */
+-    e->event = afb_daemon_make_event(interface->daemon, name);
++    e->event = afb_daemon_make_event(name);
+         if (!e->event.closure) { free(e); return -1; }
+
+         /* link */
+@@ -140,7 +141,7 @@ static void pingBug (struct afb_req request)
+ static void pingEvent(struct afb_req request)
+ {
+         json_object *query = afb_req_json(request);
+-    afb_daemon_broadcast_event(interface->daemon, "event", json_object_get(query));
++    afb_daemon_broadcast_event("event", json_object_get(query));
+         ping(request, json_object_get(query), "event");
+ }
+
+@@ -288,38 +289,43 @@ static void exitnow (struct afb_req request)
+         exit(0);
+ }
+
++static int preinit()
++{
++    AFB_NOTICE("hello binding comes to live");
++    return 0;
++}
++
++static int init()
++{
++    AFB_NOTICE("hello binding starting");
++    return 0;
++}
++
+ // NOTE: this sample does not use session to keep test a basic as possible
+ //       in real application most APIs should be protected with AFB_SESSION_CHECK
+-static const struct afb_verb_desc_v1 verbs[]= {
+-  {"ping"     , AFB_SESSION_NONE, pingSample  , "Ping Application Framework"},
+-  {"pingfail" , AFB_SESSION_NONE, pingFail    , "Fails"},
+-  {"pingnull" , AFB_SESSION_NONE, pingNull    , "Return NULL"},
+-  {"pingbug"  , AFB_SESSION_NONE, pingBug     , "Do a Memory Violation"},
+-  {"pingJson" , AFB_SESSION_NONE, pingJson    , "Return a JSON object"},
+-  {"pingevent", AFB_SESSION_NONE, pingEvent   , "Send an event"},
+-  {"subcall",   AFB_SESSION_NONE, subcall     , "Call api/verb(args)"},
+-  {"subcallsync",   AFB_SESSION_NONE, subcallsync     , "Call api/verb(args)"},
+-  {"eventadd",  AFB_SESSION_NONE, eventadd    , "adds the event of 'name' for the 'tag'"},
+-  {"eventdel",  AFB_SESSION_NONE, eventdel    , "deletes the event of 'tag'"},
+-  {"eventsub",  AFB_SESSION_NONE, eventsub    , "subscribes to the event of 'tag'"},
+-  {"eventunsub",AFB_SESSION_NONE, eventunsub  , "unsubscribes to the event of 'tag'"},
+-  {"eventpush", AFB_SESSION_NONE, eventpush   , "pushs the event of 'tag' with the 'data'"},
+-  {"exit",      AFB_SESSION_NONE, exitnow     , "exits from afb-daemon"},
+-  {NULL}
++static const struct afb_verb_v2 verbs[]= {
++  { "ping"     ,    pingSample , NULL, AFB_SESSION_NONE },
++  { "pingfail" ,    pingFail   , NULL, AFB_SESSION_NONE },
++  { "pingnull" ,    pingNull   , NULL, AFB_SESSION_NONE },
++  { "pingbug"  ,    pingBug    , NULL, AFB_SESSION_NONE },
++  { "pingJson" ,    pingJson   , NULL, AFB_SESSION_NONE },
++  { "pingevent",    pingEvent  , NULL, AFB_SESSION_NONE },
++  { "subcall",      subcall    , NULL, AFB_SESSION_NONE },
++  { "subcallsync",  subcallsync, NULL, AFB_SESSION_NONE },
++  { "eventadd",     eventadd   , NULL, AFB_SESSION_NONE },
++  { "eventdel",     eventdel   , NULL, AFB_SESSION_NONE },
++  { "eventsub",     eventsub   , NULL, AFB_SESSION_NONE },
++  { "eventunsub",   eventunsub , NULL, AFB_SESSION_NONE },
++  { "eventpush",    eventpush  , NULL, AFB_SESSION_NONE },
++  { "exit",         exitnow    , NULL, AFB_SESSION_NONE },
++  { NULL}
+ };
+
+-static const struct afb_binding plugin_desc = {
+-    .type = AFB_BINDING_VERSION_1,
+-    .v1 = {
+-        .info = "Minimal Hello World Sample",
+-        .prefix = "hello",
+-        .verbs = verbs
+-    }
++const struct afb_binding_v2 afbBindingV2 = {
++    .api = "hello",
++    .specification = NULL,
++    .verbs = verbs,
++    .preinit = preinit,
++    .init = init
+ };
+
+-const struct afb_binding *afbBindingV1Register (const struct afb_binding_interface *itf)
+-{
+-    interface = itf;
+-    NOTICE(interface, "hello plugin comes to live");
+-    return &plugin_desc;
+-}
+```
