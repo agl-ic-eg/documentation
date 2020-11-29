@@ -51,7 +51,7 @@ You can use the "Getting Started" sections to do the following:
   through fundamental steps that show you how to build for various supported
   hardware targets (e.g. Raspberry PI boards).
 
-* [Learn How to Create an Application](./app-workflow-intro.html) using the
+* [Learn How to Create an Application](./3_Developer_Guides/1_Setting_Up_AGL_SDK.md) using the
   application development workflow.
 
 The AGL community is diverse and supportive.
@@ -74,5 +74,3 @@ ideas, suggestions, bugs and documentation.
 * Learn how to contribute by visiting the
   "[Contributing to the AGL Distro](https://wiki.automotivelinux.org/agl-distro/contributing)"
   wiki page.
-
-
