@@ -10,7 +10,7 @@ You use this layer as the minimal core on which to build AGL profiles.
 
 **NOTE:** The `meta-agl` layer does not include a reference UI.
   The reference UI is included as part of the
-  [`meta-agl-demo`](./meta-agl-demo.html) layer.
+  [`meta-agl-demo`](3_meta-agl-demo.md) layer.
   Furthermore, `meta-agl` does not include additional components, such
   as security, which are part of the
   `meta-agl-extra` layer.
@@ -81,7 +81,7 @@ in `meta-agl`:
 ## Packagegroups
 
 This section describes the AGL
-[packagegroup](https://yoctoproject.org/docs/ 3.1.2/dev-manual/dev-manual.html#usingpoky-extend-customimage-customtasks)
+[packagegroup](https://yoctoproject.org/docs/3.1.2/dev-manual/dev-manual.html#usingpoky-extend-customimage-customtasks)
 design:
 
 * packagegroup-agl-image-minimal

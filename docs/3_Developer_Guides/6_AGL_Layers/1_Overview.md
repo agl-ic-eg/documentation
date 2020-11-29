@@ -2,13 +2,9 @@
 title: Overview
 ---
 
-Overview
-========
-
-The
-[AGL Project](https://www.automotivelinux.org/) is an automotive-specific
+The [AGL Project](https://www.automotivelinux.org/) is an automotive-specific
 development environment that provides a Linux distribution
-[(AGL UCB](https://www.automotivelinux.org/software/unified-code-base)).
+([AGL UCB](https://www.automotivelinux.org/software/unified-code-base)).
 
 AGL uses layers designed to be compatible with the
 [Yocto Project](https://www.yoctoproject.org) and the
