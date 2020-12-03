@@ -21,7 +21,7 @@ Renesas development kits.
 ## 1. Downloading Proprietary Drivers
 
 Before setting up the build environment, you need to download proprietary drivers from the
-[R-Car H3/M3 Software library and Technical document](https://www.renesas.com/us/en/solutions/automotive/rcar-download/rcar-demoboard-2.html)
+[R-Car H3/M3 Software library and Technical document](https://www.renesas.com/us/en/application/automotive/r-car-h3-m3-documents-software)
 site.
 
 Follow these steps to download the drivers you need:
@@ -43,7 +43,7 @@ Follow these steps to download the drivers you need:
    Be sure to have the correct BSP version of the R-Car Starter Kit
    based on the version of the AGL software you are using.
    Find the appropriate download links on the
-   [R-Car H3/M3 Software library and Technical document](https://www.renesas.com/us/en/solutions/automotive/rcar-download/rcar-demoboard-2.html)
+   [R-Car H3/M3 Software library and Technical document](https://www.renesas.com/us/en/application/automotive/r-car-h3-m3-documents-software)
    site.
    The file pairs are grouped according to the Yocto Project version you are
    using with the AGL software.
@@ -66,7 +66,7 @@ Follow these steps to download the drivers you need:
 
    **NOTE:**
    You might have to re-access the
-   [original page](https://www.renesas.com/us/en/solutions/automotive/rcar-download/rcar-demoboard-2.html)
+   [original page](https://www.renesas.com/us/en/application/automotive/r-car-h3-m3-documents-software)
    that contains the download links you need after creating the account and logging in.
 
 4. **Create an Environment Variable to Point to Your Download Area:**
@@ -239,7 +239,7 @@ ERROR: FILES "+/home/working/Downloads/R-Car_Gen3_Series_Evaluation_Software_Pac
 ERROR: FILES "+/home/working/Downloads/R-Car_Gen3_Series_Evaluation_Software_Package_of_Linux_Drivers-weston5-20190802.zip+" NOT EXTRACTING CORRECTLY
 The graphics and multimedia acceleration packages for
 the R-Car Gen3 board BSP can be downloaded from:
-<https://www.renesas.com/us/en/solutions/automotive/rcar-download/rcar-demoboard-2.html>
+<https://www.renesas.com/us/en/application/automotive/r-car-h3-m3-documents-software>
 
 These 2 files from there should be stored in your
 '/home/working/Downloads' directory.
