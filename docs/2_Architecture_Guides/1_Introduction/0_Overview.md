@@ -44,7 +44,7 @@ The Automotive Grade Linux Software Architecture diagram is below. The architect
 of five layers. The App/HMI layer contains applications with their associated business logic and
 HMI.
 
-![Architecture Diagram](architecture.jpg)
+![Architecture Diagram](images/architecture.jpg)
 
 The Application Framework layer provides the APIs for creating both managing and running
 applications on an AGL system. The Services layer contains user space services that all

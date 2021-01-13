@@ -61,7 +61,7 @@ The 3 layers are providing components for:
 
 The figure below shows the history of these layers.
 
-![Security_model_history](./pictures/Security_model_history.svg)
+![Security_model_history](./images/Security_model_history.svg)
 
 We took the decision to use these security layers that provide the
 basis of the Tizen security, the security framework.
@@ -96,7 +96,7 @@ The figure below shows the major components of the framework
 and their interactions going through the following scenario:
 
 - APPLICATION installs an other application and then launch it.
-   ![AppFW-APP_install_sequences](./pictures/AppFW-APP_install_sequences.svg)
+   ![AppFW-APP_install_sequences](./images/AppFW-APP_install_sequences.svg)
 
 Let follow the sequence of calls:
 
@@ -257,5 +257,5 @@ future to include for example incremental delivery.
 [app-manifest]:     http://www.w3.org/TR/appmanifest                                "Web App Manifest"
 [tizen-security]:   https://wiki.tizen.org/wiki/Security                            "Tizen security home page"
 [tizen-secu-3]:     https://wiki.tizen.org/wiki/Security/Tizen_3.X_Overview         "Tizen 3 security overview"
-[AppFW-APP_install_sequences]: pictures/AppFW-APP_install_sequences.svg
-[Security_model_history]: pictures/Security_model_history.svg
+[AppFW-APP_install_sequences]: images/AppFW-APP_install_sequences.svg
+[Security_model_history]: images/Security_model_history.svg

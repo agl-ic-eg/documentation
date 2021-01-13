@@ -26,7 +26,7 @@ is tuned by the AGL framework and the AGL system.
 
 The following figure shows main concepts linked to the ***binder***.
 
-![Figure: binder basis](pictures/basis.svg)
+![Figure: binder basis](images/basis.svg)
 
 The shown elements are:
 
@@ -79,7 +79,7 @@ to setup the ***bindings*** configuration of the ***binders***.
 
 The figure below shows that ***binders*** are interconnected.
 
-![Figure: binder interconnection](pictures/interconnection.svg)
+![Figure: binder interconnection](images/interconnection.svg)
 
 The figure shows 4 several **application/service**: **A**, **B**,
 **C** and **D**.

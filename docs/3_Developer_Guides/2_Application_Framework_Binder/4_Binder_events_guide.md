@@ -20,7 +20,7 @@ Events must be described and explained.
 
 The basis of a signaling agent is shown in the following figure:
 
-![scenario of using events](pictures/signaling-basis.svg)
+![scenario of using events](images/signaling-basis.svg)
 
 This figure shows the main role of the signaling framework for the events
 propagation.
