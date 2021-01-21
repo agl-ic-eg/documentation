@@ -18,6 +18,15 @@ image for the following Renesas platforms:
 The information on this page describes setup and build procedures for both of these
 Renesas development kits.
 
+Additionally, the AGL Reference Hardware platform is based on the same Renesas
+H3 processor used on the Renesas R-Car Starter Kit Premier and Salvator-X boards,
+so support for it leverages the Starter Kit Premier (also known as "h3ulcb")
+build.
+For more information on the AGL reference hardware platform, please refer to its
+[manual](https://wiki.automotivelinux.org/_media/eg-rhsa/rh_manual_ver.1.0.pdf),
+or the Reference Hardware System Architecture Expert Group
+[wiki page](https://wiki.automotivelinux.org/eg-rhsa).
+
 ## 1. Downloading Proprietary Drivers
 
 Before setting up the build environment, you need to download proprietary drivers from the
@@ -152,6 +161,8 @@ you need to take steps to make sure your build host is set up correctly.
     | Starter Kit Premier/H3  + kingfisher support  | `MACHINE`=h3ulcb-kf |
     | Starter Kit Premier/H3  without graphic   | `MACHINE`=h3ulcb-nogfx |
     | Salvator-X  | `MACHINE`=h3-salvator-x |
+    | AGL Reference Hardware | `MACHINE`=h3ulcb |
+    | AGL Reference Hardware  without graphic   | `MACHINE`=h3ulcb-nogfx |
 
     For example, the following command defines and exports the `MACHINE` variable
     for the Starter Kit Pro/M3 Board:
@@ -167,6 +178,14 @@ you need to take steps to make sure your build host is set up correctly.
     ```sh
     $ cd $AGL_TOP
     $ source meta-agl/scripts/aglsetup.sh -m $MACHINE -b build agl-devel agl-demo
+    ```
+
+    If building for the AGL Reference Hardware (with `MACHINE` set to "h3ulcb" or
+    "h3ulcb-nogfx"), add `agl-refhw-h3`, for example:
+
+    ```sh
+    $ cd $AGL_TOP
+    $ source meta-agl/scripts/aglsetup.sh -m $MACHINE -b build agl-devel agl-demo agl-refhw-h3
     ```
 
     **NOTE:**
@@ -371,6 +390,10 @@ Follow these steps to update the firmware:
     ```
 
     **NOTE:** The Salvator-X firmware update process is not documented on eLinux.
+    **NOTE:** The AGL Reference Hardware board generally should not require a
+    firmware update to be usable, and has a slightly different update procedure.
+    If you do need to update the firmware, the procedure is documented
+    [here](https://git.automotivelinux.org/AGL/meta-agl-refhw/tree/meta-agl-refhw-gen3/docs/ReferenceHW_Rcar_gen3.md).
 
 ### Preparing the MicroSD Card
 
@@ -691,6 +714,8 @@ boot device and also to set the screen resolution:
 
        * **M3SK with a Kingfisher board** : `$ setenv load_dtb ext4load mmc 0:1 0x48000000 /boot/r8a7796-m3ulcb-kf.dtb`
 
+       * **AGL Reference Hardware board** : `$ setenv load_dtb ext4load mmc 0:1 0x48000000 /boot/r8a7795-agl-refhw.dtb`
+
 5. Save the boot environment:
     ```sh
     saveenv
@@ -709,7 +734,7 @@ Once the board boots, you should see the
 on the external monitor.
 A login prompt should appear as follows depending on your board:
 
-**h3ulcb**:
+**h3ulcb** or **AGL Reference Hardware**:
 
 ```text
 Automotive Grade Linux ${AGL_VERSION} h3ulcb ttySC0
