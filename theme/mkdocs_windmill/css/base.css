@@ -453,6 +453,10 @@ pre, .rst-content tt {
     overflow-x: auto;
 }
 
+summary {
+  display: list-item;
+}
+
 code.code-large, .rst-content tt.code-large {
     font-size: 90%;
 }
