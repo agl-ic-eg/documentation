@@ -42,7 +42,8 @@ The following table briefs about the various hardware platforms, supported by AG
 |               | dragonboard-820c      |     arm64     |
 |               |                       |               |
 |    ARC HS     |       hsdk            |      ARC      |
-
+|               |                       |               |
+|     virtio    | virtio-aarch64        |     arm64     |
 
 ### Supported Images
 
