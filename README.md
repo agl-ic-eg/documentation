@@ -31,13 +31,17 @@ $ git clone "ssh://$USER@gerrit.automotivelinux.org:29418/AGL/documentation" && 
 2. Install MkDocs and rtd-dropdown theme
 
     ```sh
-    $ sudo pip install -r requirements.txt
+    $ pip install -r requirements.txt
     ```
+
+   Missing packages will be installed for the current user, in particular,
+   scripts will be installed to `$HOME/.local/bin`. Ensure `$HOME/.local/bin` is
+   in your `PATH` to be able to run `mkdocs` command.
 
 3. Serve locally (defaultly rendered at [127.0.0.1:8000/](127.0.0.1:8000/)):
 
     ```sh
-    $ sudo mkdocs serve
+    $ mkdocs serve
     ```
 
 Process to **add new or edit existing** markdown files to AGL documentation:
