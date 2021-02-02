@@ -6,7 +6,7 @@ Preparing your build host so that it can build an AGL image means
 making sure your system is set up to use the
 [Yocto Project](https://yoctoproject.org) OpenEmbedded build system,
 which is based on
-[BitBake](https://yoctoproject.org/docs/3.1.2/bitbake-user-manual/bitbake-user-manual.html).
+[BitBake](https://yoctoproject.org/docs/3.1.4/bitbake-user-manual/bitbake-user-manual.html).
 
 This section presents minimal information so you can prepare the build host
 to use the "Dunfell" version of the Yocto Project (i.e. version 3.1.2).
@@ -26,7 +26,7 @@ section for more information on the ready-made images.
 1. **Use a Supported Linux Distribution:** To use the AGL software, it is
    recommended that your build host is a native Linux machine that runs a
    Yocto Project supported distribution as described by the
-   "[Supported Linux Distributions](https://www.yoctoproject.org/docs/3.1.2/ref-manual/ref-manual.html#detailed-supported-distros)"
+   "[Supported Linux Distributions](https://www.yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#detailed-supported-distros)"
    section in the Yocto Project Reference Manual.
    Basically, you should be running a recent version of Ubuntu, Fedora, openSUSE,
    CentOS, or Debian.
@@ -42,7 +42,7 @@ section for more information on the ready-made images.
    * Python 3.4.0 or greater
 
    If your distribution does not meet these minimal requirements, see the
-   "[Required Git, tar, and Python Versions](https://www.yoctoproject.org/docs/3.1.2/ref-manual/ref-manual.html#required-git-tar-and-python-versions)"
+   "[Required Git, tar, and Python Versions](https://www.yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#required-git-tar-and-python-versions)"
    section in the Yocto Project Reference Manual for steps that you can
    take to be sure you have these tools.
 
@@ -51,13 +51,13 @@ section for more information on the ready-made images.
    Depending on the Linux distribution you are using, the list of
    host packages differ.
    See
-   "[The Build Host Packages](https://www.yoctoproject.org/docs/3.1.2/yocto-project-qs/yocto-project-qs.html#packages)"
+   "[The Build Host Packages](https://www.yoctoproject.org/docs/3.1.4/yocto-project-qs/yocto-project-qs.html#packages)"
    section of the Yocto Project Quick Start for information on the packages you need.
 
    **NOTE:** If you are using the CentOS distribution, you need to
    separately install the epel-release package and run the `makecache` command as
    described in
-   "[The Build Host Packages](https://www.yoctoproject.org/docs/3.1.2/yocto-project-qs/yocto-project-qs.html#packages)"
+   "[The Build Host Packages](https://www.yoctoproject.org/docs/3.1.4/yocto-project-qs/yocto-project-qs.html#packages)"
    section of the Yocto Project Quick Start.
 
    Aside from the packages listed in the previous section, you need the following:

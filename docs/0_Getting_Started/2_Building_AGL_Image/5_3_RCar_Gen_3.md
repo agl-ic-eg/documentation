@@ -94,7 +94,7 @@ Follow these steps to download the drivers you need:
     You can use the following command:
 
     ```sh
-    chmod a+x $XDG_DOWNLOAD_DIR/*.zip
+    chmod a+rw $XDG_DOWNLOAD_DIR/*.zip
     ```
 
 6. **Check to be Sure the Files are Downloaded and Have the Correct Rights:**
@@ -156,19 +156,19 @@ you need to take steps to make sure your build host is set up correctly.
     |:-:|:-:|
     | Starter Kit Pro/M3  | `MACHINE`=m3ulcb |
     | Starter Kit Pro/M3 + kingfisher support | `MACHINE`=m3ulcb-kf |
-    | Starter Kit Pro/M3 without graphic  | `MACHINE`=m3ulcb-nogfx |
+    | Starter Kit Pro/M3 without graphic driver (using pixman)  | `MACHINE`=m3ulcb-nogfx |
     | Starter Kit Premier/H3  | `MACHINE`=h3ulcb |
     | Starter Kit Premier/H3  + kingfisher support  | `MACHINE`=h3ulcb-kf |
-    | Starter Kit Premier/H3  without graphic   | `MACHINE`=h3ulcb-nogfx |
+    | Starter Kit Premier/H3  without graphic driver (using pixman)  | `MACHINE`=h3ulcb-nogfx |
     | Salvator-X  | `MACHINE`=h3-salvator-x |
     | AGL Reference Hardware | `MACHINE`=h3ulcb |
-    | AGL Reference Hardware  without graphic   | `MACHINE`=h3ulcb-nogfx |
+    | AGL Reference Hardware  without graphic driver (using pixman)  | `MACHINE`=h3ulcb-nogfx |
 
     For example, the following command defines and exports the `MACHINE` variable
-    for the Starter Kit Pro/M3 Board:
+    for the Starter Kit Premier/H3 Board:
 
     ```sh
-    $ export MACHINE=m3ulcb
+    $ export MACHINE=h3ulcb
     ```
 
 2. **Run the `aglsetup.sh` Script:**
@@ -223,8 +223,8 @@ you need to take steps to make sure your build host is set up correctly.
     https://www.renesas.com/en-us/solutions/automotive/rcar-demoboard-2.html
 
     These 2 files from there should be store in your'/home/devel/Downloads' directory.
-      R-Car_Gen3_Series_Evaluation_Software_Package_for_Linux-weston5-20190802.zip
-      R-Car_Gen3_Series_Evaluation_Software_Package_of_Linux_Drivers-weston5-20190802.zip
+      R-Car_Gen3_Series_Evaluation_Software_Package_for_Linux-weston8-20200923.zip
+      R-Car_Gen3_Series_Evaluation_Software_Package_of_Linux_Drivers-weston8-20200923.zip
     /home/working/workspace_agl_master/build_gen3
     --- fragment /home/working/workspace_agl_master/meta-agl/templates/base/99_setup_EULAconf.sh
     --- end of setup script
@@ -243,18 +243,18 @@ you need to take steps to make sure your build host is set up correctly.
     ~/workspace_agl/build/conf $ cat setup.log
     --- beginning of setup script
     --- fragment /home/working/workspace_agl/meta-agl/templates/base/01_setup_EULAfunc.sh
-    --- fragment /home/working/workspace_agl/meta-agl/templates/machine/m3ulcb/50_setup.sh
+    --- fragment /home/working/workspace_agl/meta-agl/templates/machine/h3ulcb/50_setup.sh
     ~/workspace_agl ~/workspace_agl/build
-    ERROR: FILES "+/home/working/Downloads/R-Car_Gen3_Series_Evaluation_Software_Package_for_Linux-weston5-20190802.zip+" NOT EXTRACTING CORRECTLY
-    ERROR: FILES "+/home/working/Downloads/R-car_Gen3_Series_Evaluation_Software_Package_of_Linux_Drivers-weston5-20190802.zip+" NOT EXTRACTING CORRECTLY
+    ERROR: FILES "+/home/working/Downloads/R-Car_Gen3_Series_Evaluation_Software_Package_for_Linux-weston8-20200923.zip+" NOT EXTRACTING CORRECTLY
+    ERROR: FILES "+/home/working/Downloads/R-car_Gen3_Series_Evaluation_Software_Package_of_Linux_Drivers-weston8-20200923.zip+" NOT EXTRACTING CORRECTLY
     The graphics and multimedia acceleration packages for
     the R-Car Gen3 board BSP can be downloaded from:
     <https://www.renesas.com/us/en/application/automotive/r-car-h3-m3-documents-software>
 
     These 2 files from there should be stored in your
     '/home/working/Downloads' directory.
-      R-Car_Gen3_Series_Evaluation_Software_Package_for_Linux-weston5-20190802.zip
-      R-Car_Gen3_Series_Evaluation_Software_Package_of_Linux_Drivers-weston5-20190802.zip
+      R-Car_Gen3_Series_Evaluation_Software_Package_for_Linux-weston8-20200923.zip
+      R-Car_Gen3_Series_Evaluation_Software_Package_of_Linux_Drivers-weston8-20200923.zip
     ERROR: Script /home/working/workspace_agl/build/conf/setup.sh failed
     [snip]
     ```
@@ -783,9 +783,9 @@ Last login: Tue Dec  6 10:01:11 2016 from 10.0.0.13
 root@m3ulcb:~# cat /etc/os-release
 ID="poky-agl"
 NAME="Automotive Grade Linux"
-VERSION="3.0.0+snapshot-20161202 (chinook)"
-VERSION_ID="3.0.0-snapshot-20161202"
-PRETTY_NAME="Automotive Grade Linux 3.0.0+snapshot-20161202 (chinook)"
+VERSION="11.0.0+snapshot-20210128 (koi)"
+VERSION_ID="11.0.0-snapshot-20210128"
+PRETTY_NAME="Automotive Grade Linux 11.0.0+snapshot-20210128 (koi)"
 ```
 
 ## 11. Supplementary Information

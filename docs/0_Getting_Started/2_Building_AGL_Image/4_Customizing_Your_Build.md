@@ -47,7 +47,7 @@ BUILDHISTORY_COMMIT = "1"
 ```
 
 See the
-"[Maintaining Build Output Quality](https://www.yoctoproject.org/docs/3.1.2/ref-manual/ref-manual.html#maintaining-build-output-quality)"
+"[Maintaining Build Output Quality](https://www.yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#maintaining-build-output-quality)"
 section in the Yocto Project Reference Manual for a complete discussion on
 build history.
 
@@ -64,7 +64,7 @@ INHERIT += "rm_work"
 ```
 
 You can read about the class in the
-"[rm_work.bbclass](https://www.yoctoproject.org/docs/3.1.2/ref-manual/ref-manual.html#ref-classes-rm-work)"
+"[rm_work.bbclass](https://www.yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#ref-classes-rm-work)"
 section of the Yocto Project Reference Manual for more information.
 
 ##  Pointing at Shared State Cache Locations
@@ -96,7 +96,7 @@ SSTATE_MIRRORS ?= "\
 ```
 
 If you want to know more about the Yocto Project sstate mechanism, see the
-"[Shared State Cache](https://www.yoctoproject.org/docs/3.1.2/ref-manual/ref-manual.html#shared-state-cache)"
+"[Shared State Cache](https://www.yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#shared-state-cache)"
 section in the Yocto Project Reference Manual.
 
 ## Preserving the Download Directory
@@ -106,7 +106,7 @@ from various upstream projects.
 Downloading these files can take a while, particularly if your network
 connection is slow.
 The process downloads files into a
-"[download directory](https://www.yoctoproject.org/docs/3.1.2/ref-manual/ref-manual.html#var-DL_DIR)".
+"[download directory](https://www.yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#var-DL_DIR)".
 The `DL_DIR` variable defines the download directory.
 For subsequent builds, you can preserve this directory to speed up the download
 part of a build.
@@ -132,7 +132,7 @@ SSTATE_MIRRORS_append = " file://.* https://download.automotivelinux.org/sstate-
 ```
 
 You can learn more about shared state and how it is used in the
-"[Shared State Cache](https://yoctoproject.org/docs/3.1.2/ref-manual/ref-manual.html#shared-state-cache)"
+"[Shared State Cache](https://yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#shared-state-cache)"
 section of the Yocto Project Reference Manual.
 
 ## Common Settings using Symbolic Link with site.conf

@@ -55,7 +55,7 @@ AGL provides a number of pre-built ready-made images of various versions.
   - Login into AGL :
 
     ```sh
-    Automotive Grade Linux 9.99.4+snapshot qemux86-64 ttyS1
+    Automotive Grade Linux 11.0.0+snapshot qemux86-64 ttyS1
 
     qemux86-64 login: root
     ```
@@ -95,6 +95,7 @@ AGL provides a number of pre-built ready-made images of various versions.
     ![vbox-step-4](images/vbox-4.png)
     - Go to `Storage`, and change the attribute to `Type : AHCI` and click on `OK`.
     ![vbox-step-5](images/vbox-5.png)
+    - Next go to `Display` and change the attribute to 'VMSVGA' for the graphics driver. Change the graphics memory to be at least 64MB.
     - Click on `Start`.
     - For troubleshooting, you can refer [here](https://lists.automotivelinux.org/g/agl-dev-community/message/8474).
 
@@ -152,7 +153,7 @@ AGL provides a number of pre-built ready-made images of various versions.
     $ xz -v -d agl-demo-platform-crosssdk-qemuarm.ext4.xz
     ```
 
-7. Launch QEMU with vinagre (for scaling), remove `- snapshot \` if you want to save changes to the image files :
+7. Launch QEMU with vinagre (for scaling), remove `- snapshot` if you want to save changes to the image files :
 
   ```sh
     $ ( sleep 5 && vinagre --vnc-scale localhost ) > /tmp/vinagre.log 2>&1 &
@@ -169,7 +170,7 @@ AGL provides a number of pre-built ready-made images of various versions.
   - Login into AGL :
 
     ```sh
-    Automotive Grade Linux 9.99.4+snapshot qemux86-64 ttyS1
+    Automotive Grade Linux 11.0.0+snapshot qemux86-64 ttyS1
 
     qemux86-64 login: root
     ```
@@ -265,7 +266,7 @@ AGL provides a number of pre-built ready-made images of various versions.
   - Login into AGL :
 
     ```sh
-    Automotive Grade Linux 9.99.4+snapshot qemux86-64 ttyS1
+    Automotive Grade Linux 11.0.0+snapshot qemux86-64 ttyS1
 
     qemux86-64 login: root
     ```

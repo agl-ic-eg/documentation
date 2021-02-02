@@ -20,27 +20,28 @@ The following table briefs about the various hardware platforms, supported by AG
 |                 |     m3ulcb     |     arm64     |
 |                 | m3-salvator-x  |     arm64     |
 |                 |      m3-kf     |     arm64     |
+|                 |   agl-refhw    |     arm64     |
 |                 |                |               |
 |  Raspberry Pi   |  raspberrypi4  |     arm64     |
 
 ### Community supported Machines
 
-|    BOARD   	|     $MACHINE     	| ARCHITECHTURE |
-|:-------------:|:-----------------:|:-------------:|
-|  BeagleBone 	|        bbe       	|     arm32     |
-|            	|    beaglebone    	|     arm32     |
-|            	|                  	|               |
-|   i. MX 6  	|      cubox-i     	|     arm32     |
-|            	| imx6qdlsabreauto 	|     arm32     |
-|            	|    nitrogen6x    	|     arm32     |
-|            	|                  	|               |
-|   i. MX 8  	|     imx8mqevk    	|     arm64     |
-|            	|   imx8mqevk-viv  	|     arm64     |
-|            	|                  	|               |
-|  Snapdragon 	| dragonboard-410c 	|     arm64     |
-|            	| dragonboard-820c 	|     arm64     |
-|            	|                  	|               |
-|    ARC HS   	|       hsdk       	|      ARC      |
+|    BOARD      |     $MACHINE          | ARCHITECHTURE |
+|:-------------:|:---------------------:|:-------------:|
+|  BeagleBone   |        bbe            |     arm32     |
+|               |    beaglebone         |     arm32     |
+|               |                       |               |
+|   i.MX 6      |      cubox-i          |     arm32     |
+|               | imx6qdlsabreauto      |     arm32     |
+|               |    nitrogen6x         |     arm32     |
+|               |                       |               |
+|   i.MX 8      |     imx8mqevk         |     arm64     |
+|               |   imx8mqevk-viv       |     arm64     |
+|               |                       |               |
+|  Snapdragon   | dragonboard-410c      |     arm64     |
+|               | dragonboard-820c      |     arm64     |
+|               |                       |               |
+|    ARC HS     |       hsdk            |      ARC      |
 
 
 ### Supported Images
@@ -51,7 +52,7 @@ AGL supports a variety of interfaces, each requiring unique setup configuration.
 
 **Supported boards** :
 
-AGL Reference Boards (QEMU, RCar Gen 3 & Raspberry Pi 4)
+AGL Reference Boards (QEMU, RCar Gen 3, agl-refhw & Raspberry Pi 4)
 
 Community supported Machines (i. MX 6, i. MX 8, Snapdragon & ARC HS)
 
@@ -77,10 +78,10 @@ Community supported Machines (i. MX 6, i. MX 8, Snapdragon & ARC HS)
     * Setting up flags at `aglsetup` script :
 
         ```sh
-        $ source meta-agl/scripts/aglsetup.sh -f -m $MACHINE -b build-$MACHINE agl-demo agl-profile-graphical-html5
+        $ source meta-agl/scripts/aglsetup.sh -f -m $MACHINE -b build-$MACHINE agl-demo
 
         # To enable Developer Options
-        $ source meta-agl/scripts/aglsetup.sh -f -m $MACHINE -b build-$MACHINE agl-demo agl-profile-graphical-html5 agl-devel
+        $ source meta-agl/scripts/aglsetup.sh -f -m $MACHINE -b build-$MACHINE agl-demo agl-devel
         ```
 
     * Building target image :
@@ -99,10 +100,10 @@ AGL Reference Boards (QEMU, RCar Gen 3 & Raspberry Pi 4)
 * Setting up flags at `aglsetup` script :
 
     ```sh
-    $ source meta-agl/scripts/aglsetup.sh -f -m $MACHINE -b build-$MACHINE agl-cluster-demo
+    $ source meta-agl/scripts/aglsetup.sh -f -m $MACHINE -b build-$MACHINE agl-demo
 
     # To enable Developer Options
-    $ source meta-agl/scripts/aglsetup.sh -f -m $MACHINE -b build-$MACHINE agl-cluster-demo agl-devel
+    $ source meta-agl/scripts/aglsetup.sh -f -m $MACHINE -b build-$MACHINE agl-demo agl-devel
     ```
 
 * Building target image :
@@ -123,10 +124,10 @@ Community supported Machines (BeagleBone)
 * Setting up flags at `aglsetup` script :
 
     ```sh
-    $ source meta-agl/scripts/aglsetup.sh -f -m $MACHINE -b build-$MACHINE agl-telematics-demo
+    $ source meta-agl/scripts/aglsetup.sh -f -m $MACHINE -b build-$MACHINE agl-demo
 
     # To enable Developer Options
-    $ source meta-agl/scripts/aglsetup.sh -f -m $MACHINE -b build-$MACHINE agl-telematics-demo agl-devel
+    $ source meta-agl/scripts/aglsetup.sh -f -m $MACHINE -b build-$MACHINE agl-demo agl-devel
     ```
 
 * Building target image :

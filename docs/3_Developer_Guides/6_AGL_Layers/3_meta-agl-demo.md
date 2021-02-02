@@ -119,7 +119,7 @@ dependencies:
 
 ## Packagegroups
 
-AGL DEMO Platform's [packagegroups](https://www.yoctoproject.org/docs/3.1.2/dev-manual/dev-manual.html#usingpoky-extend-customimage-customtasks)
+AGL DEMO Platform's [packagegroups](https://www.yoctoproject.org/docs/3.1.4/dev-manual/dev-manual.html#usingpoky-extend-customimage-customtasks)
 consist of the following:
 
 - packagegroup-agl-demo-platform

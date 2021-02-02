@@ -143,7 +143,7 @@ Following are brief descriptions of the AGL features you can specify on the
 
 * **agl-ci**: Flags used for Continuous Integration (CI).
   Using this feature changes the value of the
-  [`IMAGE_FSTYPES`](https://yoctoproject.org/docs/3.1.2/ref-manual/ref-manual.html#var-IMAGE_FSTYPES)
+  [`IMAGE_FSTYPES`](https://yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#var-IMAGE_FSTYPES)
   variable.
 
 * **agl-ci-change-features**: Enables features for CI builds for Gerrit changes.
@@ -179,15 +179,15 @@ Following are brief descriptions of the AGL features you can specify on the
   agl-profile-telematics
 
   **NOTE:** For information on Package Groups, see the
-  "[Customizing Images Using Custom Package Groups](https://www.yoctoproject.org/docs/3.1.2/dev-manual/dev-manual.html#usingpoky-extend-customimage-customtasks)"
+  "[Customizing Images Using Custom Package Groups](https://www.yoctoproject.org/docs/3.1.4/dev-manual/dev-manual.html#usingpoky-extend-customimage-customtasks)"
   section in the Yocto Project Development Tasks Manual.
   You can also find general information about Layers in the
-  "[Layers](https://www.yoctoproject.org/docs/3.1.2/dev-manual/dev-manual.html#yocto-project-layers)"
+  "[Layers](https://www.yoctoproject.org/docs/3.1.4/dev-manual/dev-manual.html#yocto-project-layers)"
   section in that same manual.
 -->
 
 * **agl-ptest**: Enables
-  [Ptest](https://yoctoproject.org/docs/3.1.2/dev-manual/dev-manual.html#testing-packages-with-ptest)
+  [Ptest](https://yoctoproject.org/docs/3.1.4/dev-manual/dev-manual.html#testing-packages-with-ptest)
   as part of the build.
 
 * **agl-sota**: Enables Software Over-the-Air (SOTA) components and dependencies.
@@ -280,10 +280,10 @@ You can find lots of information on configuring builds in the Yocto Project
 documentation set.
 Here are some references if you want to dig into configuration further:
 
-* [Customizing Images Using local.conf](https://yoctoproject.org/docs/3.1.2/dev-manual/dev-manual.html#usingpoky-extend-customimage-localconf)
-* [Local](https://yoctoproject.org/docs/3.1.2/ref-manual/ref-manual.html#ref-varlocality-config-local)
-* [build/conf/local.conf](https://yoctoproject.org/docs/3.1.2/ref-manual/ref-manual.html#structure-build-conf-local.conf)
-* [build/conf/bblayers.conf](https://yoctoproject.org/docs/3.1.2/ref-manual/ref-manual.html#structure-build-conf-bblayers.conf)
-* [BBLAYERS](https://yoctoproject.org/docs/3.1.2/ref-manual/ref-manual.html#var-BBLAYERS)
-* [User Configuration](https://yoctoproject.org/docs/3.1.2/ref-manual/ref-manual.html#user-configuration)
-* [Enabling Your Layer](https://yoctoproject.org/docs/3.1.2/dev-manual/dev-manual.html#enabling-your-layer)
+* [Customizing Images Using local.conf](https://yoctoproject.org/docs/3.1.4/dev-manual/dev-manual.html#usingpoky-extend-customimage-localconf)
+* [Local](https://yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#ref-varlocality-config-local)
+* [build/conf/local.conf](https://yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#structure-build-conf-local.conf)
+* [build/conf/bblayers.conf](https://yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#structure-build-conf-bblayers.conf)
+* [BBLAYERS](https://yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#var-BBLAYERS)
+* [User Configuration](https://yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#user-configuration)
+* [Enabling Your Layer](https://yoctoproject.org/docs/3.1.4/dev-manual/dev-manual.html#enabling-your-layer)
