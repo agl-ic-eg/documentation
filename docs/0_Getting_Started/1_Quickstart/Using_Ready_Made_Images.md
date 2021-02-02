@@ -75,6 +75,9 @@ AGL provides a number of pre-built ready-made images of various versions.
 
 ### 2. Virtual Box (Emulation)
 
+**NOTE :** Please note [https://www.virtualbox.org/ticket/19873](https://www.virtualbox.org/ticket/19873) as this affects the VMs resolution.
+The AGL demo images do require 1920x1080. The instructions below have been adapted.
+
   1. Download the [compressed vbox disk image](https://download.automotivelinux.org/AGL/snapshots/master/latest/qemux86-64/deploy/images/qemux86-64/agl-demo-platform-crosssdk-qemux86-64.wic.vmdk.xz).
 
   2. Install and set up [Virtual Box](https://www.virtualbox.org/wiki/Linux_Downloads).
@@ -96,7 +99,11 @@ AGL provides a number of pre-built ready-made images of various versions.
     - Go to `Storage`, and change the attribute to `Type : AHCI` and click on `OK`.
     ![vbox-step-5](images/vbox-5.png)
     - Next go to `Display` and change the attribute to 'VMSVGA' for the graphics driver. Change the graphics memory to be at least 64MB.
-    - Click on `Start`.
+    - **Important:**: Open a new terminal window and execute this command:
+    ```sh
+    VBoxManage setextradata agl-demo VBoxInternal2/EfiGraphicsResolution 1920x1080
+    ```
+    - Return to the UI and click on `Start`.
     - For troubleshooting, you can refer [here](https://lists.automotivelinux.org/g/agl-dev-community/message/8474).
 
 ### 3. x86 physical system
