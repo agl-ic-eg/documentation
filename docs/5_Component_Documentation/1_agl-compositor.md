@@ -192,6 +192,12 @@ implemented by the client, for instance [xdg-output](https://gitlab.freedesktop.
 is the one recommended way and provides a mapping between a human
 representation of the output and the wayland one.
 
+One can also choose the output where the application can start, by configuring
+directly the AGL compositor. Under the `[output]` section one can use
+`agl-shell-app-id=appid` restart the AGL compositor unitd systemd service and
+start the application. Currently this *only* applies to regular applications, the
+client shell having to handle it in the code.
+
 ## Available toolkits, application conversions and available eco-systems
 
 Users and OEM vendors alike have the possibility, depending on their use-cases,
@@ -238,6 +244,11 @@ Cluster) of a car is such a scenario. Just like weston, the AGL compositor is
 capable of loading up libweston modules and make use of them. And just like
 weston, the AGL compositor loads up the remoting-plugin to achieve the same
 thing.
+
+The remoting-plugin uses the DRM virtual output API from libweston together
+with gstreamer pipeline to capture, using DMA buffers, the DRM output and to
+stream it, remotely to another machine. They can be over the network, or
+locally.
 
 Further more, to cope with situations where the output is just a
 panel/display, without some kind of compositor driving it, the necessity of
