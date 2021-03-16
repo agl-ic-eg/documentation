@@ -56,9 +56,9 @@ The remainder of this section provides steps on how to download the AGL source f
 
      ```sh
      $ cd $AGL_TOP
-     $ mkdir jellyfish
-     $ cd jellyfish
-     $ repo init -b jellyfish -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo
+     $ mkdir koi
+     $ cd koi
+     $ repo init -b koi -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo
      $ repo sync
      ```
 
