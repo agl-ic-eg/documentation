@@ -7,7 +7,7 @@ system.
 
 Please be sure that you are subscribed to the [mailing
 list](https://lists.automotivelinux.org/g/agl-dev-community) and of course, you
-can reach out on IRC at the #automotive channel on Freenode.net
+can reach out on IRC at the #automotive channel on irc.libera.chat
 
 Gerrit assigns the following roles to users:
 

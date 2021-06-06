@@ -59,18 +59,18 @@ You can become an active community member that contributes feedback,
 ideas, suggestions, bugs and documentation.
 
 * Join the IRC conversation using the `#automotive` channel on
-  `irc.freenode.net`.
+  `irc.libera.chat`. Make sure to turn on SSL and register your nickname.
 
 * Subscribe to the AGL discussions mailing list at
-  [automotive-discussions](http://lists.linuxfoundation.org/mailman/listinfo/automotive-discussions).
+  [agl-dev-community](https://lists.automotivelinux.org/g/agl-dev-community).
 
 * Learn about AGL distribution by visiting the
   "[AGL Distribution](https://wiki.automotivelinux.org/agl-distro)" wiki page.
 
 * Explore further "Getting Started" information by visiting the
-  "[Getting Started with AGL](https://wiki.automotivelinux.org/start/getting-started)"
+  "[Getting Started with AGL](./0_Getting_Started/1_Quickstart/Using_Ready_Made_Images.md)"
   wiki page.
 
 * Learn how to contribute by visiting the
-  "[Contributing to the AGL Distro](https://wiki.automotivelinux.org/agl-distro/contributing)"
+  "[Contributing to the AGL Distro](./6_How_To_Contribute/4_Submitting_Changes.md)"
   wiki page.

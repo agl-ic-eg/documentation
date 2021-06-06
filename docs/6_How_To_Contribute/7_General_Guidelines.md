@@ -8,7 +8,7 @@ If you are looking for something to work on, or need some expert assistance in
 debugging a problem or working out a fix to an issue, our community is always
 eager to help. We hang out on various [developer
 meetings](https://www.automotivelinux.org/developer-meetings/), IRC (#automotive
-on freenode.net) and the [mailing
+on irc.libera.chat) and the [mailing
 lists](https://lists.automotivelinux.org/g/agl-dev-community). We will be glad
 to help. The only silly question is the one you don't ask. Questions are in fact
 a great way to help improve the project as they highlight where our
