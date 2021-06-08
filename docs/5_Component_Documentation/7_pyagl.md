@@ -54,7 +54,7 @@ python3 audiomixer.py 192.168.234.34 --list_controls
 ```
 or if you have installed PyAGL as python package 
 ```
-python3 -m pyagl.services.audiomixer --list_controls
+python3 -m pyagl.services.audiomixer 192.168.234.34 --list_controls
 ```
 should produce the following or similar result depending on how many controls are exposed and which AGL version you are running:
 ```
