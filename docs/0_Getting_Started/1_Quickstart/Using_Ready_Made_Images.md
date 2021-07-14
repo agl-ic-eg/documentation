@@ -360,19 +360,19 @@ The AGL demo images do require 1920x1080. The instructions below have been adapt
 
 ### 3. R-Car H3SK (H3ULCB board)
 
-**NOTE :** The prebuilt image doesn't support graphics (as of yet) and will run headless. For graphical support, a local build with the neccesary graphics driver is required.
+**NOTE :** The prebuilt image does support **non-accelerated** graphics mode (software rendering). For **accelerated** graphics support, a local build with the neccesary graphics driver is required.
 
 
   1. Update the [firmware](https://elinux.org/R-Car/Boards/H3SK#Flashing_firmware) using files from [here](https://download.automotivelinux.org/AGL/snapshots/master/latest/h3ulcb-nogfx/deploy/images/h3ulcb/).
 
-  2. Download the [compressed prebuilt image](https://download.automotivelinux.org/AGL/snapshots/master/latest/h3ulcb-nogfx/deploy/images/h3ulcb/agl-image-ivi-crosssdk-h3ulcb.wic.xz).
+  2. Download the [compressed prebuilt image](https://download.automotivelinux.org/AGL/snapshots/master/latest/h3ulcb-nogfx/deploy/images/h3ulcb/agl-demo-platform-crosssdk-h3ulcb.wic.xz).
 
   3. Extract the image into the boot device :
 
      ```sh
      $ lsblk
      $ sudo umount <boot_device_name>
-     $ xzcat agl-image-ivi-crosssdk-h3ulcb.wic.xz | sudo dd of=<boot_device_name> bs=4M
+     $ xzcat agl-demo-platform-crosssdk-h3ulcb.wic.xz | sudo dd of=<boot_device_name> bs=4M
      $ sync
      ```
 
