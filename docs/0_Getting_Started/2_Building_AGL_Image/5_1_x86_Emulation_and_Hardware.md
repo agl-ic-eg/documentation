@@ -38,6 +38,18 @@ $ echo 'SSTATE_DIR = "$AGL_TOP/sstate-cache/"' >> $AGL_TOP/site.conf
 $ ln -sf $AGL_TOP/site.conf conf/
 ```
 
+**Instrument Cluster with Container isolation demo :**
+
+```sh
+$ source meta-agl/scripts/aglsetup.sh -f -m qemux86-64 -b qemux86-64 agl-lxc
+$ echo '# reuse download directories' >> $AGL_TOP/site.conf
+$ echo 'DL_DIR = "$HOME/downloads/"' >> $AGL_TOP/site.conf
+$ echo 'SSTATE_DIR = "$AGL_TOP/sstate-cache/"' >> $AGL_TOP/site.conf
+$ ln -sf $AGL_TOP/site.conf conf/
+```
+>Note: Current Instrument Cluster demo is not support qemu environment, only to support R-Car.  
+      Please set h3ulcb and m3ulcb to -m option.  
+
 The "-m" option specifies the "qemux86-64" machine.
 The list of AGL features used with script are appropriate for development of
 the AGL demo image suited for either QEMU or VirtualBox.
