@@ -366,10 +366,25 @@ Start the build using the `bitbake` command.
 CPU and and Internet connection speeds.
 The build also takes approximately 100G-bytes of free disk space.
 
+**Qt based IVI demo :**
 For this example, the target is "agl-demo-platform":
 
 ```sh
 bitbake agl-demo-platform
+```
+
+**HTML5 based IVI demo :**
+The target is `agl-demo-platform-html5`.
+
+```sh
+$ time bitbake agl-demo-platform-html5
+```
+
+**Instrument Cluster with Container isolation demo :**
+The target is `lxc-host-image-demo`.
+
+```sh
+$ time bitbake lxc-host-image-demo
 ```
 
 The build process puts the resulting image in the Build Directory:
