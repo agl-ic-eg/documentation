@@ -205,6 +205,39 @@ you need to take steps to make sure your build host is set up correctly.
     "[Initializing Your Build Environment](./3_Initializing_Your_Build_Environment.md)"
     section.
 
+**Qt based IVI demo :**
+
+  ```sh
+  $ source meta-agl/scripts/aglsetup.sh -f -m $MACHINE -b $MACHINE agl-demo agl-devel
+  $ echo '# reuse download directories' >> $AGL_TOP/site.conf
+  $ echo 'DL_DIR = "$HOME/downloads/"' >> $AGL_TOP/site.conf
+  $ echo 'SSTATE_DIR = "$AGL_TOP/sstate-cache/"' >> $AGL_TOP/site.conf
+  $ ln -sf $AGL_TOP/site.conf conf/
+  ```
+
+**HTML5 based IVI demo :**
+
+  ```sh
+  $ source meta-agl/scripts/aglsetup.sh -f -m $MACHINE -b $MACHINE agl-demo agl-devel agl-profile-graphical-html5
+  $ echo '# reuse download directories' >> $AGL_TOP/site.conf
+  $ echo 'DL_DIR = "$HOME/downloads/"' >> $AGL_TOP/site.conf
+  $ echo 'SSTATE_DIR = "$AGL_TOP/sstate-cache/"' >> $AGL_TOP/site.conf
+  $ ln -sf $AGL_TOP/site.conf conf/
+  ```
+
+**Instrument Cluster with Container isolation demo :**
+
+```sh
+$ source meta-agl/scripts/aglsetup.sh -f -m $MACHINE -b $MACHINE agl-lxc
+$ echo '# reuse download directories' >> $AGL_TOP/site.conf
+$ echo 'DL_DIR = "$HOME/downloads/"' >> $AGL_TOP/site.conf
+$ echo 'SSTATE_DIR = "$AGL_TOP/sstate-cache/"' >> $AGL_TOP/site.conf
+$ ln -sf $AGL_TOP/site.conf conf/
+```
+>Note: Current Instrument Cluster demo support h3ulcb and m3ulcb environment only.
+      Please do not set h3ulcb-kf, h3ulcb-nogfx, m3ulcb-kf and m3ulcb-nogfx to -m option.
+	 Do not specify agl-demo feature with agl-lxc.
+
 3. **Examine the Script's Log:**
 
     Running the `aglsetup.sh` script creates the `setup.log` file, which is in
@@ -333,10 +366,25 @@ Start the build using the `bitbake` command.
 CPU and and Internet connection speeds.
 The build also takes approximately 100G-bytes of free disk space.
 
+**Qt based IVI demo :**
 For this example, the target is "agl-demo-platform":
 
 ```sh
 bitbake agl-demo-platform
+```
+
+**HTML5 based IVI demo :**
+The target is `agl-demo-platform-html5`.
+
+```sh
+$ time bitbake agl-demo-platform-html5
+```
+
+**Instrument Cluster with Container isolation demo :**
+The target is `lxc-host-image-demo`.
+
+```sh
+$ time bitbake lxc-host-image-demo
 ```
 
 The build process puts the resulting image in the Build Directory:
