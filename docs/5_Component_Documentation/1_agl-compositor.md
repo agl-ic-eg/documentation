@@ -377,3 +377,61 @@ Both approaches could end up not actually using the GPU, but the latter does
 actually use the GL library and perform the operations in software, while the
 former does not use any GL whatsover. All back-ends support disabling the
 GL-render to make sure it does not interfere with the composing process.
+
+## Multiple output set-up and touch input devices
+
+There's no deterministic way in which the compositor enables the outputs and
+depending on the input devices, specifically touch input devices, and the way
+the connectors are wired, a touch input device might be associated with a
+different output than the one intended.
+
+A consistent way, that survives a reboot, is to use
+[udev rules](https://man7.org/linux/man-pages/man7/udev.7.html), which
+libweston would be able to use such that a particular output is tied/associated
+to a particular touch input device.
+
+For instance, assuming that you have a set-up consisting of 4 outputs, a 4
+touch input devices, when the outputs are being enabled the compositor
+front-end will associate all 4 touch input device -- if they haven't been
+previously being associated to a particular output, to the first enabled
+output.
+
+In order to avoid that, and associate each touch input device to
+their respective output an udev rule can be installed, for the default
+seat (named `seat0`).
+
+Example of a udev rule:
+
+```
+SUBSYSTEM=="input", ATTRS{idVendor}=="222a", ATTRS{idProduct}=="004a", OWNER="display", ENV{ID_SEAT}="seat0", ENV{WL_OUTPUT}="HDMI-A-1"
+SUBSYSTEM=="input", ATTRS{idVendor}=="222a", ATTRS{idProduct}=="004b", OWNER="display", ENV{ID_SEAT}="seat0", ENV{WL_OUTPUT}="HDMI-A-2"
+SUBSYSTEM=="input", ATTRS{idVendor}=="222a", ATTRS{idProduct}=="004c", OWNER="display", ENV{ID_SEAT}="seat0", ENV{WL_OUTPUT}="HDMI-A-3"
+SUBSYSTEM=="input", ATTRS{idVendor}=="222a", ATTRS{idProduct}=="004d", OWNER="display", ENV{ID_SEAT}="seat0", ENV{WL_OUTPUT}="HDMI-A-4"
+```
+
+Add the following under `/etc/udev/rules.d/91-output.rules` and reload udev
+rules for these changes to take effect:
+
+	$ udevadm control --reload-rules && udevadm trigger
+
+Note that in the above example, we use physical seat, named `seat0` which is
+the default physical seat. You can verify that these changes have been applied by
+checking the compositor logs (under `/run/platform/display/compositor.log` file)
+You should be seeing `CONNECTOR-NO by udev` message like the following:
+
+```
+associating input device event0 with output HDMI-A-1 (HDMI-A-1 by udev)
+```
+
+vs
+
+```
+associating input device event0 with output HDMI-A-2 (none by udev)
+```
+
+where the rules are either incorrect or badly written.
+
+Retrieving device attributes could be done archaically using `lsusb` or `lspci`
+or using `udevadm info -a /dev/input/event*` which can provide with a multitude
+of attributes to use. In our above example we only relied `idVendor` and
+`idProduct` but potentially other attributes might be used.
