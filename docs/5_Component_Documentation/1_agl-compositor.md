@@ -180,7 +180,7 @@ present/running, it will attempt to make the surface backing that application
 the current activate one, with each output having independently active
 surfaces.
 
-#### Explicit output
+## Explicit output
 
 The activation and setting surface roles requires passing a Wayland output
 (wl_output).  The output is the wayland interface representation of an output
@@ -362,7 +362,7 @@ integration. Worth mentioning are:
 * `hide-cursor=[false]` - do not advertise pointer/cursor to clients. Present
   in the `[core]` section.
 
-### Running with software rendering
+## Running with software rendering
 
 By default the compositor will attempt to use the GL-renderer, and implicitly
 the GPU. One could instead use the CPU, by making use of the Pixman library. To
