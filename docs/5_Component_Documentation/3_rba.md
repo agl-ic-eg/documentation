@@ -1182,6 +1182,26 @@ Stereotype<ViewContent> display_warnning (name,allocatable,priority) @BEGIN@
         height: 100
     }
     State NORMAL { piority: @{priority} }
-
 @END@
 ```
+
+## Generate .json from .rba file
+Download [prebuilt package](https://git.automotivelinux.org/staging/rba-tool/tree/tool_bin)
+
+- If some errors occur, RBAModel.json is not generated (exit code 1).
+````
+java -cp ./ -jar JSONGenerator.jar "[path to model directory]" "[path to output directory]"
+````
+
+Example:
+
+- RBAModel.json file is generated in directory same as JSONGenerator.jar
+````
+java -cp ./ -jar JSONGenerator.jar "./RBAModel.rba"
+````
+
+- RBAModel.json file is generated in ~/ directory
+````
+java -cp ./ -jar JSONGenerator.jar "./RBAModel.rba" "~/"
+````
+Note: For the reference .rba file is given under the path [prebuilt package/sample_model](https://git.automotivelinux.org/staging/rba-tool/tree/tool_bin/sample_model)
