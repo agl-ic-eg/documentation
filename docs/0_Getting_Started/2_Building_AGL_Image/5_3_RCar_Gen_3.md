@@ -183,12 +183,38 @@ cd $AGL_TOP
 source meta-agl/scripts/aglsetup.sh -m $MACHINE -b build agl-devel agl-demo
 ```
 
+**NOTE:**
+To avoid useless download and rebuild, it's important to set the variable DL_DIR and SSTATE_DIR in your configuration.
+
+```sh
+echo '# reuse download directories' >> $AGL_TOP/site.conf
+echo 'DL_DIR = "$HOME/downloads/"' >> $AGL_TOP/site.conf
+echo 'SSTATE_DIR = "$AGL_TOP/sstate-cache/"' >> $AGL_TOP/site.conf
+ln -sf $AGL_TOP/site.conf conf/
+```
+
+**Reference Hardware :**
+
 If building for the AGL Reference Hardware (with `MACHINE` set to "h3ulcb" or
 "h3ulcb-nogfx"), add `agl-refhw-h3`, for example:
 
 ```sh
 cd $AGL_TOP
 source meta-agl/scripts/aglsetup.sh -m $MACHINE -b build agl-devel agl-demo agl-refhw-h3
+```
+
+**HTML5 based IVI demo :**
+
+For HTML5 based IVI demo the feature "agl-profile-graphical-html5" is needed.
+
+```sh
+$ source meta-agl/scripts/aglsetup.sh -f -m $MACHINE -b $MACHINE agl-demo agl-devel agl-profile-graphical-html5
+```
+
+**Instrument Cluster with Container isolation demo :**
+
+```sh
+$ source meta-agl/scripts/aglsetup.sh -f -m $MACHINE -b $MACHINE agl-lxc
 ```
 
 **NOTE:**
