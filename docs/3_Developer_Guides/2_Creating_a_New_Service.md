@@ -52,7 +52,7 @@ This tutorial provides instructions on **Creating a New Service** from scratch.
     # Project Info
     # ------------------
     set(PROJECT_NAME hellocount)    # INSERT NEW PROJECT NAME
-    set(API_NAME hellocount)    #INSERT NEW API NAME
+    set(API_NAME "hellocount")    #INSERT NEW API NAME
     set(PROJECT_PRETTY_NAME "Example")
     set(PROJECT_DESCRIPTION "AGL hellocount application example")   # INSERT CONCISE PROJECT DESCRIPTION
     set(PROJECT_URL "https://gerrit.automotivelinux.org/gerrit/apps/cmake-apps-module")
@@ -68,7 +68,7 @@ This tutorial provides instructions on **Creating a New Service** from scratch.
 
     # Where are stored the project configuration files
     # relative to the root project directory
-    set(PROJECT_CMAKE_CONF_DIR "conf.d")
+    set(PROJECT_CMAKE_CONF_DIR "conf.d/cmake")
 
     # Compilation Mode (DEBUG, RELEASE, COVERAGE or PROFILING)
     # ----------------------------------
@@ -98,11 +98,23 @@ This tutorial provides instructions on **Creating a New Service** from scratch.
     set (PKG_REQUIRED_LIST
       json-c
       afb-daemon
+      afb-helpers
     )
 
     # You can also consider to include libsystemd
     # -----------------------------------
     #list (APPEND PKG_REQUIRED_LIST libsystemd>=222)
+
+    if(IS_DIRECTORY $ENV{HOME}/opt/afb-monitoring)
+    set(MONITORING_ALIAS "--alias=/monitoring:$ENV{HOME}/opt/afb-monitoring")
+    endif()
+
+    # Print a helper message when every thing is finished
+    # ----------------------------------------------------
+    set(CLOSING_MESSAGE "Debug from afb-daemon --port=1234 ${MONITORING_ALIAS} --ldpaths=package --workdir=. --roothttp=../htdocs --token= --verbose ")
+    set(PACKAGE_MESSAGE "Install widget file using in the target : afm-util install ${PROJECT_NAME}.wgt")
+
+
 
     # Prefix path where will be installed the files
     # Default: /usr/local (need root permission to write in)
@@ -164,6 +176,12 @@ This tutorial provides instructions on **Creating a New Service** from scratch.
     # -Wl,-z,relro,-z,now
     # CACHE STRING "Compilation flags for RELEASE build type.")
 
+    # (BUG!!!) as PKG_CONFIG_PATH does not work [should be an env variable]
+    # ---------------------------------------------------------------------
+    set(INSTALL_PREFIX $ENV{HOME}/opt)
+    set(CMAKE_PREFIX_PATH ${CMAKE_INSTALL_PREFIX}/lib64/pkgconfig ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig)
+    set(LD_LIBRARY_PATH ${CMAKE_INSTALL_PREFIX}/lib64 ${CMAKE_INSTALL_PREFIX}/lib)
+
     # Location for config.xml.in template file.
     #
     # If you keep them commented then it will build with a default minimal widget
@@ -171,7 +189,8 @@ This tutorial provides instructions on **Creating a New Service** from scratch.
     # to your app.
     # -----------------------------------------
     #set(WIDGET_ICON "conf.d/wgt/${PROJECT_ICON}" CACHE PATH "Path to the widget icon")
-    set(WIDGET_CONFIG_TEMPLATE "${CMAKE_CURRENT_SOURCE_DIR}/conf.d/wgt/config.xml.in" CACHE PATH "Path to widget config file template (config.xml.in)")   # UNCOMMENT WIDGET_CONFIG_TEMPLATE
+    set(WIDGET_ICON ${PROJECT_APP_TEMPLATES_DIR}/wgt/${PROJECT_ICON})
+    set(WIDGET_CONFIG_TEMPLATE ${CMAKE_SOURCE_DIR}/conf.d/wgt/config.xml.in CACHE PATH "Path to widget config file template (config.xml.in)")   # UNCOMMENT WIDGET_CONFIG_TEMPLATE
     #set(TEST_WIDGET_CONFIG_TEMPLATE "${CMAKE_CURRENT_SOURCE_DIR}/conf.d/wgt/test-config.xml.in" CACHE PATH "Path to the test widget config file template (test-config.xml.in)")
 
     # Mandatory widget Mimetype specification of the main unit
@@ -196,7 +215,7 @@ This tutorial provides instructions on **Creating a New Service** from scratch.
     # This is the file that will be executed, loaded,
     # at launch time by the application framework.
     #
-    set(WIDGET_ENTRY_POINT lib/libhellocount.so)    # UNCOMMENT WIDGET_ENTRY_POINT
+    set(WIDGET_ENTRY_POINT config.xml)    # UNCOMMENT WIDGET_ENTRY_POINT
 
     # Optional dependencies order
     # ---------------------------
@@ -224,11 +243,6 @@ This tutorial provides instructions on **Creating a New Service** from scratch.
     #set(AFB_TOKEN   ""     CACHE PATH "Default binder security token")   # COMMENT AFB_TOKEN
     #set(AFB_REMPORT "1234" CACHE PATH "Default binder listening port")   # COMMENT AFB_REMPORT
 
-    # Print a helper message when every thing is finished
-    # ----------------------------------------------------
-    set(CLOSING_MESSAGE "Typical binding launch: cd ${CMAKE_BINARY_DIR}/package \\&\\& afb-daemon --port=${AFB_REMPORT} --workdir=. --ldpaths=lib --roothttp=htdocs  --token=\"${AFB_TOKEN}\" --tracereq=common --verbose")
-    set(PACKAGE_MESSAGE "Install widget file using in the target : afm-util install ${PROJECT_NAME}.wgt")
-
     # Optional schema validator about now only XML, LUA and JSON
     # are supported
     #------------------------------------------------------------
@@ -245,6 +259,31 @@ This tutorial provides instructions on **Creating a New Service** from scratch.
   $ mkdir -p conf.d/wgt
   $ cp ${OECORE_NATIVE_SYSROOT}/usr/share/doc/CMakeAfbTemplates/samples.d/config.xml.in.sample conf.d/wgt/config.xml.in
   ```
+  - Edit `config.xml` file
+    ```sh
+    $ vim conf.d/wgt/config.xml.in
+
+      <?xml version="1.0" encoding="UTF-8"?>
+      <widget xmlns="http://www.w3.org/ns/widgets" id="@PROJECT_NAME@" version="@PROJECT_VERSION@">
+        <name>@PROJECT_NAME@</name>
+        <icon src="@PROJECT_ICON@"/>
+        <content src="@WIDGET_ENTRY_POINT@" type="@WIDGET_TYPE@"/>
+        <description>@PROJECT_DESCRIPTION@</description>
+        <author>@PROJECT_AUTHOR@ &lt;@PROJECT_AUTHOR_MAIL@&gt;</author>
+        <license>@PROJECT_LICENSE@</license>
+        <feature name="urn:AGL:widget:required-permission">
+           <param name="urn:AGL:permission::partner:scope-platform" value="required" />
+        </feature>
+        <feature name="urn:AGL:widget:provided-api">
+           <param name="hellocount" value="ws" />
+        </feature>
+        <feature name="urn:AGL:widget:required-binding">
+           <param name="lib/afb-hellocount.so" value="local" />
+        </feature>
+      </widget>
+
+    ```
+
 
 ### 6. Run CMAKE and Generate autobuild
 
@@ -327,7 +366,7 @@ This tutorial provides instructions on **Creating a New Service** from scratch.
 
       const afb_binding_t afbBindingExport =
       {
-        .api = "count",
+        .api = "hellocount",
         .specification = "HelloCount API",
         .verbs = verbs,
         .preinit = NULL,
