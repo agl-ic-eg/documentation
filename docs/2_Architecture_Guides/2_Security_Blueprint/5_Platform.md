@@ -653,7 +653,7 @@ vulnerable to attack. For example, if the kernel is stopped and restarted with
 the *security=none* flag, then SMACK is not enabled. Furthermore, `systemd`
 starts the loading of **SMACK** rules during start-up. If this start-up process
 is interfered with, then **SMACK** will not run. Alternatively, new policies can
-be added with `smackload` allowing unforseen privileges to alternative
+be added with `smackload` allowing unforeseen privileges to alternative
 applications/executables.
 
 Another intrusion on the kernel level is to rebuild the kernel (as it is
