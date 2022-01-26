@@ -14,7 +14,7 @@ quickstart the service and application development process.
       - **AARCH64 - ARM 64bit** : [qemuarm64](https://download.automotivelinux.org/AGL/snapshots/master/latest/qemuarm64/deploy/sdk/poky-agl-glibc-x86_64-agl-demo-platform-crosssdk-aarch64-qemuarm64-toolchain-10.90.0+snapshot.sh)
 
         *Henceforth,* **qemux86-64** *is used in these guides, unless specified
-        otherwise.*
+        otherwise. We also use the 'agl-demo-platform-crosssdk' as example.*
 
 2. Create application developmment directory and copy SDK into them :
 

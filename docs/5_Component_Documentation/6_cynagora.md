@@ -1,7 +1,0 @@
----
-title: Cynagora
----
-
-# cynagora
-
-FIXME.

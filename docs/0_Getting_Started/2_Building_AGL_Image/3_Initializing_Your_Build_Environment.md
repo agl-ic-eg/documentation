@@ -36,8 +36,6 @@ Available machines:
        bbe                        # BeagleBoneEnhanced
        beaglebone                 # BeagleBone
        cubox-i                    # multiple i.MX6 boards
-       cyclone5                   # CycloneV
-       dra7xx-evm                 # TI DRA7xx-EVM 'vayu'
        dragonboard-410c           # Qualcomm Dragonboard 410c
        dragonboard-820c           # Qualcomm Dragonboard 820c
        ebisu                      # Renesas RCar Ebisu
@@ -50,6 +48,7 @@ Available machines:
        imx8mqevk                  # i.MX8 w etnaviv
        imx8mqevk-viv              # i.MX8 w vivante
        intel-corei7-64            # x86-64 (Intel flavour)
+       j7-evm                     # TI Jacinto 7 EVM
        m3-salvator-x              # Renesas RCar Salvator/M3
        m3ulcb                     # Renesas RCar M3
        m3ulcb-kf                  # Renesas RCar M3 w Kingfisher Board
@@ -59,6 +58,8 @@ Available machines:
        qemuarm64                  # Qemu AArch 64 (ARM 64bit)
      * qemux86-64                 # Qemu x86-64
        raspberrypi4               # Raspberry Pi 4
+       virtio-aarch64             # Virtio Guest
+
 ```
 
 ## AGL Features
@@ -72,54 +73,50 @@ Following is a list of the available features:
 
 ```sh
 Available features:
-   [meta-agl]
-       agl-all-features :( agl-demo  agl-appfw-smack  agl-hmi-framework  agl-profile-graphical-qt5  agl-profile-graphical  agl-pipewire  agl-speech-framework  agl-netboot )
-       agl-appfw-smack
-       agl-archiver
-       agl-buildstats
-       agl-ci
-       agl-ci-change-features :( agl-demo  agl-appfw-smack  agl-hmi-framework  agl-profile-graphical-qt5  agl-profile-graphical  agl-pipewire  agl-speech-framework  agl-devel  agl-netboot  agl-pipewire  agl-cloudproxy  agl-buildstats  agl-ptest )
-       agl-ci-change-features-nogfx :( agl-demo  agl-appfw-smack  agl-hmi-framework  agl-profile-graphical-qt5  agl-profile-graphical  agl-pipewire  agl-speech-framework  agl-devel  agl-netboot  agl-pipewire  agl-cloudproxy  agl-buildstats  agl-ptest )
-       agl-ci-snapshot-features :( agl-demo  agl-appfw-smack  agl-hmi-framework  agl-profile-graphical-qt5  agl-profile-graphical  agl-pipewire  agl-speech-framework  agl-devel  agl-netboot  agl-archiver  agl-pipewire  agl-buildstats  agl-ptest )
-       agl-ci-snapshot-features-nogfx :( agl-demo  agl-appfw-smack  agl-hmi-framework  agl-profile-graphical-qt5  agl-profile-graphical  agl-pipewire  agl-speech-framework  agl-devel  agl-netboot  agl-archiver  agl-pipewire  agl-buildstats  agl-ptest )
-       agl-devel
-       agl-fossdriver
-       agl-gplv2
-       agl-hmi-framework
-       agl-netboot
-       agl-pipewire
-       agl-profile-cluster :( agl-profile-graphical )
-       agl-profile-cluster-qt5 :( agl-profile-graphical-qt5  agl-profile-graphical )
-       agl-profile-graphical
-       agl-profile-graphical-html5 :( agl-profile-graphical )
-       agl-profile-graphical-qt5 :( agl-profile-graphical )
-       agl-profile-hud
-       agl-profile-telematics
-       agl-ptest
-       agl-sign-wgts
-       agl-sota
-       agl-virt
-       agl-virt-guest-xen
-       agl-virt-xen :( agl-virt )
-       agl-weston-remoting :( agl-profile-graphical )
-   [meta-agl-cluster-demo]
-       agl-cluster-demo :( agl-profile-cluster-qt5  agl-profile-graphical-qt5  agl-profile-graphical  agl-hmi-framework )
-       agl-cluster-demo-preload
-   [meta-agl-demo]
-       agl-cloudproxy
-       agl-cluster-demo-support :( agl-weston-remoting  agl-profile-graphical )
-       agl-demo :( agl-appfw-smack  agl-hmi-framework  agl-profile-graphical-qt5  agl-profile-graphical  agl-pipewire  agl-speech-framework )
-       agl-demo-preload
-       agl-demo-soundmanager :( agl-appfw-smack  agl-hmi-framework  agl-profile-graphical-qt5  agl-profile-graphical  agl-audio-soundmanager-framework )
-   [meta-agl-devel]
-       agl-jailhouse
-       agl-speech-framework
-       agl-voiceagent-alexa :( agl-speech-framework )
-       agl-voiceagent-alexa-wakeword :( agl-voiceagent-alexa  agl-speech-framework )
-   [meta-agl-extra]
-       agl-localdev
-   [meta-agl-telematics-demo]
-       agl-telematics-demo :( agl-profile-telematics )
+
+   [meta-agl]                                    # CORE layer
+       agl-all-features :( agl-demo  agl-pipewire  agl-app-framework  agl-netboot )
+                                                 # For the usual demo image
+       agl-app-framework                         # Application Framework
+       agl-archiver                              # Source Archiver
+       agl-buildstats                            # Build Statistics
+       agl-devel :( agl-package-management )     # Developer Env (root login)
+       agl-fossdriver                            # Fossology integration
+       agl-gplv2                                 # GPLv2-only packages
+       agl-localdev                              # inclusion of local development folder
+       agl-netboot                               # network boot (e.g. CI)
+       agl-package-management                    # include package management (e.g. rpm)
+       agl-pipewire                              # include pipewire
+       agl-ptest                                 # enable ptest pckages
+       agl-refhw-h3                              # enable reference hardware
+       agl-virt                                  # EG-Virt features
+       agl-virt-guest-xen                        # EG-Virt features
+       agl-virt-xen :( agl-virt )                # EG-Virt features
+       agl-weston-remoting :( agl-demo  agl-pipewire  agl-app-framework )
+       agl-weston-waltham-remoting :( agl-demo  agl-pipewire  agl-app-framework )
+
+   [meta-agl-demo]                                    # DEMO layer
+       agl-cluster-demo-support :( agl-weston-remoting  agl-demo  agl-pipewire  agl-app-framework )
+                                                      # sample IVI demo
+       agl-demo :( agl-pipewire  agl-app-framework )  # default IVI demo
+       agl-demo-preload                               # Add Tokens and sample files
+
+   [meta-agl-devel]                                   # Development layer
+       agl-basesystem                                 # Toyota basesystem
+       agl-drm-lease                                  # DRM lease support
+       agl-egvirt                                     # EG-Virt feature
+       agl-flutter                                    # Flutter support
+       agl-jailhouse                                  # GSoC: jailhouse enablement
+       agl-lxc :( agl-drm-lease  agl-pipewire )       # IC-EG container support
+       agl-ros2                                       # GSoC: ros2 enablement
+
+Specialized features (e.g. CI):
+       agl-ci                                                                         # Tweaks for CI
+       agl-ci-change-features :( agl-demo  agl-pipewire  agl-app-framework  agl-devel  agl-package-management  agl-netboot  agl-pipewire  agl-buildstats  agl-ptest )
+       agl-ci-change-features-nogfx :( agl-demo  agl-pipewire  agl-app-framework  agl-devel  agl-package-management  agl-netboot  agl-pipewire  agl-buildstats  agl-ptest )
+       agl-ci-snapshot-features :( agl-demo  agl-pipewire  agl-app-framework  agl-devel  agl-package-management  agl-netboot  agl-archiver  agl-pipewire  agl-buildstats  agl-ptest )
+       agl-ci-snapshot-features-nogfx :( agl-demo  agl-pipewire  agl-app-framework  agl-devel  agl-package-management  agl-netboot  agl-archiver  agl-pipewire  agl-buildstats  agl-ptest )
+
 ```
 
 To find out exactly what a feature provides, check out the respective layer and its README.
@@ -136,8 +133,7 @@ Following are brief descriptions of the AGL features you can specify on the
 * **agl-all-features**: A set of AGL default features.
   Do not think of this set of features as all the AGL features.
 
-* **agl-appfw-smack**: Enables IoT.bzh Application Framework plus SMACK and
-  Cynara.
+* **agl-app-framework**: Application Framework
 
 * **agl-archiver**: Enables the archiver class for releases.
 
@@ -163,44 +159,14 @@ Following are brief descriptions of the AGL features you can specify on the
   Netboot is needed for CI and useful for development to avoid writing
   sdcards. Needs additional setup.
 
-<!--
-* **agl-profile**: A group or set of Layers and a Package Group as used
-  by the Yocto Project.
-  This feature helps define dependency for various profiles and layers
-  used during the build.
-  For example, "agl-demo" depends on "agl-profile-graphical-qt", which
-  in turn depends on "agl-profile-graphical", which in turn depends
-  on "agl-profile-core".
-
-  agl-profile-graphical
-  agl-profile-graphical-html5
-  agl-profile-graphical-qt5
-  agl-profile-hud
-  agl-profile-telematics
-
-  **NOTE:** For information on Package Groups, see the
-  "[Customizing Images Using Custom Package Groups](https://www.yoctoproject.org/docs/3.1.4/dev-manual/dev-manual.html#usingpoky-extend-customimage-customtasks)"
-  section in the Yocto Project Development Tasks Manual.
-  You can also find general information about Layers in the
-  "[Layers](https://www.yoctoproject.org/docs/3.1.4/dev-manual/dev-manual.html#yocto-project-layers)"
-  section in that same manual.
--->
-
 * **agl-ptest**: Enables
   [Ptest](https://yoctoproject.org/docs/3.1.4/dev-manual/dev-manual.html#testing-packages-with-ptest)
   as part of the build.
 
-* **agl-sota**: Enables Software Over-the-Air (SOTA) components and dependencies.
-  Includes meta-updater, meta-updater-qemux86-64, meta-filesystems, and meta-python.
-
 * **agl-demo**: Enables the layers meta-agl-demo and meta-qt5.
   You need agl-demo if you are going to build the agl-demo-platform.
 
-* **agl-sdl**: Enables or adds SDL to the build.
-
 * **agl-pipewire**: Enables AGLs pipewire support.
-
-* **agl-audio-soundmanager-framework**: Enables Soundmanager framework, which is an exclusive switch for audio framework.
 
 * **agl-localdev**: Adds a local layer named "meta-localdev" in the
   meta directory and a local.dev.inc configuration file when that file

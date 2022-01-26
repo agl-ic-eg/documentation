@@ -18,7 +18,7 @@ using the `aglsetup.sh` script.
 If you are building the AGL demo image for emulation, you need to specify some
 specific options when you run the script:
 
-**Qt based IVI demo :**
+**Sample Qt based IVI demo :**
 
 ```sh
 $ source meta-agl/scripts/aglsetup.sh -f -m qemux86-64 -b qemux86-64 agl-demo agl-devel
@@ -28,7 +28,7 @@ $ echo 'SSTATE_DIR = "$AGL_TOP/sstate-cache/"' >> $AGL_TOP/site.conf
 $ ln -sf $AGL_TOP/site.conf conf/
 ```
 
-**HTML5 based IVI demo :**
+**Sample HTML5 based IVI demo :**
 
 ```sh
 $ source meta-agl/scripts/aglsetup.sh -f -m qemux86-64 -b qemux86-64 agl-demo agl-devel agl-profile-graphical-html5
@@ -36,6 +36,26 @@ $ echo '# reuse download directories' >> $AGL_TOP/site.conf
 $ echo 'DL_DIR = "$HOME/downloads/"' >> $AGL_TOP/site.conf
 $ echo 'SSTATE_DIR = "$AGL_TOP/sstate-cache/"' >> $AGL_TOP/site.conf
 $ ln -sf $AGL_TOP/site.conf conf/
+```
+
+**IVI-EG Flutter based demo :**
+
+```sh
+$ source meta-agl/scripts/aglsetup.sh -f -m qemux86-64 -b qemux86-64 agl-flutter agl-devel
+$ echo '# reuse download directories' >> $AGL_TOP/site.conf
+$ echo 'DL_DIR = "$HOME/downloads/"' >> $AGL_TOP/site.conf
+$ echo 'SSTATE_DIR = "$AGL_TOP/sstate-cache/"' >> $AGL_TOP/site.conf
+$ ln -sf $AGL_TOP/site.conf conf/
+```
+
+**IC-EG container image :**
+```sh
+### TBD
+```
+
+**Virt-EG demo image :** 
+```sh
+### TBD
 ```
 
 The "-m" option specifies the "qemux86-64" machine.
@@ -50,7 +70,7 @@ Start the build using the `bitbake` command.
 CPU and and Internet connection speeds.
 The build also takes approximately 100G-bytes of free disk space.
 
-**Qt based IVI demo :**
+**Sample Qt based IVI demo :**
 The target is `agl-demo-platform`.
 
 ```sh
@@ -65,7 +85,7 @@ By default, the build process puts the resulting image in the Build Directory an
 $ export IMAGE_NAME=agl-demo-platform-qemux86-64.vmdk.xz
 ```
 
-**HTML5 based IVI demo :**
+**Sample HTML5 based IVI demo :**
 The target is `agl-demo-platform-html5`.
 
 ```sh
@@ -80,10 +100,29 @@ By default, the build process puts the resulting image in the Build Directory an
 $ export IMAGE_NAME=agl-demo-platform-html5-qemux86-64.vmdk.xz
 ```
 
+**IVI-EG Flutter based demo :**
+The target is `agl-image-flutter`.
+
+```sh
+$ time bitbake agl-image-flutter
+```
+
+**IC-EG container image :**
+```sh
+# TBD
+```
+
+**Virt-EG demo image :**
+```sh
+# TBD
+```
+
 ## 3. Deploying the AGL Demo Image
 
 Deploying the image consists of decompressing the image and then
 booting it using either QEMU, VirtualBox or physical system.
+The examples below are usually for the 'agl-demo-platform' target.
+Please adapt accordingly to your target image.
 
 **3.1 QEMU**
 
