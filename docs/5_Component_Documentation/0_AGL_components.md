@@ -14,6 +14,7 @@ title: AGL Components
 ### Sound
 
 - [Pipewire & Wireplumber](8_pipewire_wireplumber.md)
+- [IC and Sound Manager](7_ic-sound-manager.md)
 
 
 ### Policies
@@ -24,9 +25,3 @@ title: AGL Components
 ### Lifecycle management
 
 - [Application Framework](5_appfw.md)
-- [Cynagora](6_cynagora.md)
-
-
-### Test
-
-- [PyAGL](7_pyagl.md)
