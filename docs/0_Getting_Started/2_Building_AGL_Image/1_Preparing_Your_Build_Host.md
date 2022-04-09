@@ -34,12 +34,11 @@ section for more information on the ready-made images.
 2. **Be Sure Your Build Host Has Enough Free Disk Space:**
    Your build host should have at least 100 Gbytes.
 
-3. **Be Sure Tools are Recent:**  You need to have recent versions for
-   the following tools:
+3. **Be Sure Tools are Recent:**  You need to have recent versions for the following tools:
 
-   * Git 1.8.3.1 or greater
-   * Tar 1.27 or greater
-   * Python 3.4.0 or greater
+      - Git 1.8.3.1 or greater
+      - Tar 1.27 or greater
+      - Python 3.4.0 or greater
 
    If your distribution does not meet these minimal requirements, see the
    "[Required Git, tar, and Python Versions](https://www.yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#required-git-tar-and-python-versions)"
