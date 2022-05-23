@@ -13,7 +13,7 @@ title: AGL Components
 
 ### Sound
 
-- [Pipewire & Wireplumber](8_pipewire_wireplumber.md)
+- [Pipewire & Wireplumber](6_pipewire_wireplumber.md)
 - [IC and Sound Manager](7_ic-sound-manager.md)
 
 
