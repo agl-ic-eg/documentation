@@ -16,14 +16,12 @@ library, to control and signal back to the compositor when applications were
 started, among other things.
 
 Management of applications, starting, running and stopping them is done in AGL
-with AFM [Application Framework Management](../3_Developer_Guides/1_Application_Framework/1_Introduction.md),
+with AppFW [Application Framework Management](../3_Developer_Guides/1_Application_Framework/1_Introduction.md),
 which is an umbrella name to denote the suite of tools and daemons that handle
-all of that. It is integrated with systemd and with the current security model,
-SMACK (Simplified Mandatory Access Control Kernel), a Linux kernel security
-module. Applications can use AFM to hang off data, and to pass it down to
-other services. Together with AFM, and with the help of a library,
-applications could tell the compositor which application to activate or to
-switch to.
+all of that. It is integrated with systemd and with the current security model.
+Applications can use AppFW to hang off data, and to pass it down to
+other services. Together with AppFW, applications could tell the compositor
+which application to activate or to switch to.
 
 
 ## Simplifying the graphical stack
