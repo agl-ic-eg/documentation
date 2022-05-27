@@ -16,7 +16,7 @@ library, to control and signal back to the compositor when applications were
 started, among other things.
 
 Management of applications, starting, running and stopping them is done in AGL
-with AFM [Application Framework Management](5_appfw.md),
+with AFM [Application Framework Management](../3_Developer_Guides/1_Application_Framework/1_Introduction.md),
 which is an umbrella name to denote the suite of tools and daemons that handle
 all of that. It is integrated with systemd and with the current security model,
 SMACK (Simplified Mandatory Access Control Kernel), a Linux kernel security

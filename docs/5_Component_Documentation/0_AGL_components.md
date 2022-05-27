@@ -24,4 +24,4 @@ title: AGL Components
 
 ### Lifecycle management
 
-- [Application Framework](5_appfw.md)
+- [Application Framework](../3_Developer_Guides/1_Application_Framework/1_Introduction.md)
