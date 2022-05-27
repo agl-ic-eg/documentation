@@ -76,11 +76,21 @@ seen as one and the same, and in practice, this happens on desktop
 environments. For AGL, the shell client can be represented under different
 forms, as well as the fact that the process management has another layer
 baked-in to handle MAC (Mandatory Access Control) labels and use the
-above-mentioned Application Framework Management. These are all tightly
+above-mentioned Application Framework. These are all tightly
 integrated and therefore, the AGL compositor will not automatically start the
-shell client, although there's code to handle that. One can modify the
-configuration file, add the shell client path, and the compositor will attempt
-to start it.
+shell client, although there's code to handle that.
+
+## Specifying a shell client to be started by the compositor
+
+Nevertheless, one can modify the configuration file, add the shell client path, and the
+compositor will attempt to start it.
+
+```
+[shell-client]
+command=/path/to/your/client/shell
+```
+
+
 
 ## Private extensions
 
