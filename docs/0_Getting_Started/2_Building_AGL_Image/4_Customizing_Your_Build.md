@@ -138,9 +138,9 @@ section of the Yocto Project Reference Manual.
 ## Common Settings using Symbolic Link with site.conf
 
 ```sh
-$ echo '# reuse download directories' >> $AGL_TOP/site.conf
-$ echo 'DL_DIR = "$HOME/downloads/"' >> $AGL_TOP/site.conf
-$ echo 'SSTATE_DIR = "$AGL_TOP/sstate-cache/"' >> $AGL_TOP/site.conf
+$ echo "# reuse download directories" >> $AGL_TOP/site.conf
+$ echo "DL_DIR = \"$HOME/downloads/\"" >> $AGL_TOP/site.conf
+$ echo "SSTATE_DIR = \"$AGL_TOP/sstate-cache/\"" >> $AGL_TOP/site.conf
 $ cd $AGL_TOP/master/qemux86-64/
 $ ln -sf $AGL_TOP/site.conf conf/
 

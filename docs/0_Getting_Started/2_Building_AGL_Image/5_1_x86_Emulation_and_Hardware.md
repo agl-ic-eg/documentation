@@ -22,9 +22,9 @@ specific options when you run the script:
 
 ```sh
 $ source meta-agl/scripts/aglsetup.sh -f -m qemux86-64 -b qemux86-64 agl-demo agl-devel
-$ echo '# reuse download directories' >> $AGL_TOP/site.conf
-$ echo 'DL_DIR = "$HOME/downloads/"' >> $AGL_TOP/site.conf
-$ echo 'SSTATE_DIR = "$AGL_TOP/sstate-cache/"' >> $AGL_TOP/site.conf
+$ echo "# reuse download directories" >> $AGL_TOP/site.conf
+$ echo "DL_DIR = \"$HOME/downloads/\"" >> $AGL_TOP/site.conf
+$ echo "SSTATE_DIR = \"$AGL_TOP/sstate-cache/\"" >> $AGL_TOP/site.conf
 $ ln -sf $AGL_TOP/site.conf conf/
 ```
 
@@ -32,9 +32,9 @@ $ ln -sf $AGL_TOP/site.conf conf/
 
 ```sh
 $ source meta-agl/scripts/aglsetup.sh -f -m qemux86-64 -b qemux86-64 agl-demo agl-devel agl-profile-graphical-html5
-$ echo '# reuse download directories' >> $AGL_TOP/site.conf
-$ echo 'DL_DIR = "$HOME/downloads/"' >> $AGL_TOP/site.conf
-$ echo 'SSTATE_DIR = "$AGL_TOP/sstate-cache/"' >> $AGL_TOP/site.conf
+$ echo "# reuse download directories" >> $AGL_TOP/site.conf
+$ echo "DL_DIR = \"$HOME/downloads/\"" >> $AGL_TOP/site.conf
+$ echo "SSTATE_DIR = \"$AGL_TOP/sstate-cache/\"" >> $AGL_TOP/site.conf
 $ ln -sf $AGL_TOP/site.conf conf/
 ```
 
@@ -42,9 +42,9 @@ $ ln -sf $AGL_TOP/site.conf conf/
 
 ```sh
 $ source meta-agl/scripts/aglsetup.sh -f -m qemux86-64 -b qemux86-64 agl-flutter agl-devel
-$ echo '# reuse download directories' >> $AGL_TOP/site.conf
-$ echo 'DL_DIR = "$HOME/downloads/"' >> $AGL_TOP/site.conf
-$ echo 'SSTATE_DIR = "$AGL_TOP/sstate-cache/"' >> $AGL_TOP/site.conf
+$ echo "# reuse download directories" >> $AGL_TOP/site.conf
+$ echo "DL_DIR = \"$HOME/downloads/\"" >> $AGL_TOP/site.conf
+$ echo "SSTATE_DIR = \"$AGL_TOP/sstate-cache/\"" >> $AGL_TOP/site.conf
 $ ln -sf $AGL_TOP/site.conf conf/
 ```
 

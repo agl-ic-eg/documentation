@@ -187,9 +187,9 @@ source meta-agl/scripts/aglsetup.sh -m $MACHINE -b build agl-devel agl-demo
 To avoid useless download and rebuild, it's important to set the variable DL_DIR and SSTATE_DIR in your configuration.
 
 ```sh
-echo '# reuse download directories' >> $AGL_TOP/site.conf
-echo 'DL_DIR = "$HOME/downloads/"' >> $AGL_TOP/site.conf
-echo 'SSTATE_DIR = "$AGL_TOP/sstate-cache/"' >> $AGL_TOP/site.conf
+echo "# reuse download directories" >> $AGL_TOP/site.conf
+echo "DL_DIR = \"$HOME/downloads/\"" >> $AGL_TOP/site.conf
+echo "SSTATE_DIR = \"$AGL_TOP/sstate-cache/\"" >> $AGL_TOP/site.conf
 ln -sf $AGL_TOP/site.conf conf/
 ```
 
