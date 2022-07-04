@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/6_How_To_Contribute/3_Working_with_Gerrit/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Working with Gerrit - AGL Documentation</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Getting deeper into Gerrit", url: "#_top", children: [
+          ]},
+          {title: "Working with a local clone of the repository", url: "#working-with-a-local-clone-of-the-repository", children: [
+          ]},
+          {title: "Using git review", url: "#using-git-review", children: [
+          ]},
+          {title: "Typical Review Workflow", url: "#typical-review-workflow", children: [
+          ]},
+          {title: "Reviewing Using Gerrit", url: "#reviewing-using-gerrit", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../4_Submitting_Changes/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../4_Submitting_Changes/" class="btn btn-xs btn-link">
+        Submitting Changes
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../2_Using_Jira_for_current_work_items/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../2_Using_Jira_for_current_work_items/" class="btn btn-xs btn-link">
+        Using Jira for current work items
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p>Follow these instructions to collaborate on AGL through the Gerrit review
+system.</p>
+<p>Please be sure that you are subscribed to the <a href="https://lists.automotivelinux.org/g/agl-dev-community">mailing
+list</a> and of course, you
+can reach out on IRC at the #automotive channel on irc.libera.chat</p>
+<p>Gerrit assigns the following roles to users:</p>
+<ul>
+<li><strong>Submitters</strong>: May submit changes for consideration, review other code
+   changes, and make recommendations for acceptance or rejection by voting +1 or
+   -1, respectively.</li>
+<li><strong>Maintainers</strong>: May approve or reject changes based upon feedback from
+   reviewers voting +2 or -2, respectively.</li>
+</ul>
+<h2 id="getting-deeper-into-gerrit">Getting deeper into Gerrit</h2>
+<p>A comprehensive walk-through of Gerrit is beyond the scope of this document.
+There are plenty of resources available on the Internet. A good summary can be
+found <a href="https://www.mediawiki.org/wiki/Gerrit/Tutorial">here</a> and <a href="https://gerrit-review.googlesource.com/Documentation/intro-gerrit-walkthrough-github.html">Basic Gerrit
+Walkthrough for GitHub
+Users</a>.</p>
+<h2 id="working-with-a-local-clone-of-the-repository">Working with a local clone of the repository</h2>
+<p>To work on something, whether a new feature or a bugfix:</p>
+<ol>
+<li>
+<p>Open the Gerrit <a href="https://gerrit.automotivelinux.org/gerrit/admin/repos/">repo
+   page</a>.</p>
+</li>
+<li>
+<p>Select the repository you wish to work on.</p>
+</li>
+<li>
+<p>Open a terminal window and clone the project locally using the <code>Clone with
+   git hook</code> URL. Be sure that <code>ssh</code> is also selected, as this will make
+   authentication much simpler. For example, for <code>documentation</code> repository:</p>
+<div class="highlight"><pre><span></span><code>$ git clone <span class="s2">&quot;ssh://&lt;LFID&gt;@gerrit.automotivelinux.org:29418/AGL/documentation&quot;</span> <span class="o">&amp;&amp;</span> scp -p -P
+<span class="m">29418</span> &lt;LFID&gt;@gerrit.automotivelinux.org:hooks/commit-msg <span class="s2">&quot;documentation/.git/hooks/&quot;</span>
+</code></pre></div>
+</li>
+<li>
+<p>Setup <code>user</code> and <code>email</code> for git config</p>
+<div class="highlight"><pre><span></span><code> $ <span class="nb">cd</span> documentation
+ $ git.config --global user.name <span class="s2">&quot;Your Full Name&quot;</span>
+ $ git config --global user.email <span class="s2">&quot;your@email.com&quot;</span>
+</code></pre></div>
+<p><strong>NOTE:</strong> To only configure for a particular repository :</p>
+<div class="highlight"><pre><span></span><code> $ <span class="nb">cd</span> documentation
+ $ git.config user.name <span class="s2">&quot;Your Full Name&quot;</span>
+ $ git config user.email <span class="s2">&quot;your@email.com&quot;</span>
+</code></pre></div>
+</li>
+<li>
+<p>Create a descriptively-named branch off of your cloned repository</p>
+<div class="highlight"><pre><span></span><code> $ git checkout -b issue-nname
+</code></pre></div>
+</li>
+</ol>
+<h2 id="using-git-review">Using git review</h2>
+<p>There's a <strong>very</strong> useful tool for working with Gerrit called
+<a href="https://www.mediawiki.org/wiki/Gerrit/git-review">git-review</a>. This
+command-line tool can automate most of the ensuing sections for you. Ofcourse,
+reading the information below is also highly recommended so that you understand
+what's going on behind the scenes.</p>
+<p><div class="highlight"><pre><span></span><code><span class="c1"># for first time use only</span>
+$ git review -s
+</code></pre></div>
+If <code>.gitreview</code> is missing, add the following section to <code>.git/config</code>, and
+replace <code>&lt;LFID&gt;</code> with your LFID id.</p>
+<div class="highlight"><pre><span></span><code><span class="o">[</span>remote <span class="s2">&quot;gerrit&quot;</span><span class="o">]</span>
+   <span class="nv">url</span> <span class="o">=</span> ssh://&lt;LFID&gt;@gerrit.automotivelinux.org:29418/AGL/documentation.git
+   <span class="nv">fetch</span> <span class="o">=</span> +refs/heads/*:refs/remotes/gerrit/*
+</code></pre></div>
+<p>Then submit your change with <code>git review</code>.</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">cd</span> documentation
+$ git review
+</code></pre></div>
+<p>When you update your patch, you can commit with <code>git commit --amend</code>, and then
+repeat the <code>git review</code> command.</p>
+<h2 id="typical-review-workflow">Typical Review Workflow</h2>
+<ul>
+<li>
+<p>New Fresh Change</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">cd</span> documentation                              <span class="c1"># Working Repository</span>
+$ git remote -v update                          <span class="c1"># Updating wrt remote</span>
+$ git checkout -b mytopicbranch origin/master   <span class="c1"># Creating new branch</span>
+<span class="c1">### CODE the CHANGES</span>
+$ git add  &lt;file&gt;                               <span class="c1"># Track the changed files</span>
+$ git commit -s                                 <span class="c1"># Signed Commit Message</span>
+$ git review                                    <span class="c1"># Submit Changes to review</span>
+</code></pre></div>
+</li>
+<li>
+<p>Updating existing Gerrit Review</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">cd</span> documentation                              <span class="c1"># Working Repository</span>
+$ git review -d <span class="m">25678</span>                           <span class="c1"># Download review, 25678 is change number</span>
+<span class="c1">### CODE the CHANGES</span>
+$ git add  &lt;file&gt;                               <span class="c1"># Track the changed files</span>
+$ git commit -s                                 <span class="c1"># Signed Commit Message</span>
+$ git review                                    <span class="c1"># Submit Changes to review</span>
+$ git checkout master                           <span class="c1"># Return to master branch</span>
+</code></pre></div>
+</li>
+</ul>
+<h2 id="reviewing-using-gerrit">Reviewing Using Gerrit</h2>
+<ul>
+<li>
+<p><strong>Add</strong>: This button allows the change submitter to manually add names of
+   people who should review a change; start typing a name and the system will
+   auto-complete based on the list of people registered and with access to the
+   system. They will be notified by email that you are requesting their input.</p>
+</li>
+<li>
+<p><strong>Abandon</strong>: This button is available to the submitter only; it allows a
+   committer to abandon a change and remove it from the merge queue.</p>
+</li>
+<li>
+<p><strong>Change-ID</strong>: This ID is generated by Gerrit (or system). It becomes useful
+   when the review process determines that your commit(s) have to be amended.
+   You may submit a new version; and if the same Change-ID header (and value)
+   are present, Gerrit will remember it and present it as another version of the
+   same change.</p>
+</li>
+<li>
+<p><strong>Status</strong>: Currently, the example change is in review status, as indicated
+   by “Needs Verified” in the upper-left corner. The list of Reviewers will all
+   emit their opinion, voting +1 if they agree to the merge, -1 if they
+   disagree. Gerrit users with a Maintainer role can agree to the merge or
+   refuse it by voting +2 or -2 respectively.</p>
+</li>
+</ul>
+<p>Notifications are sent to the email address in your commit message's
+Signed-off-by line. Visit your <a href="https://gerrit.automotivelinux.org/gerrit/dashboard/self">Gerrit
+dashboard</a>, to check
+the progress of your requests.</p>
+<p>The history tab in Gerrit will show you the in-line comments and the author of
+the review.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../4_Submitting_Changes/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../4_Submitting_Changes/" class="btn btn-xs btn-link">
+        Submitting Changes
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../2_Using_Jira_for_current_work_items/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../2_Using_Jira_for_current_work_items/" class="btn btn-xs btn-link">
+        Using Jira for current work items
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

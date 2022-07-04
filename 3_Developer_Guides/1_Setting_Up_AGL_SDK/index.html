@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/3_Developer_Guides/1_Setting_Up_AGL_SDK/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Setting Up AGL SDK - AGL Documentation</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../2_Creating_a_New_Service/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../2_Creating_a_New_Service/" class="btn btn-xs btn-link">
+        Creating a New Service
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../0_FIXME/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../0_FIXME/" class="btn btn-xs btn-link">
+        0 FIXME
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p>AGL provides a pre-built ready-made Software Development Kit (SDK) to help
+quickstart the service and application development process.</p>
+<ol>
+<li>
+<p>Download the prebuilt SDK :</p>
+<ul>
+<li>
+<p><strong>x86</strong> : <a href="https://download.automotivelinux.org/AGL/snapshots/master/latest/qemux86-64/deploy/sdk/poky-agl-glibc-x86_64-agl-demo-platform-crosssdk-corei7-64-qemux86-64-toolchain-10.90.0+snapshot.sh">qemux86-64</a></p>
+</li>
+<li>
+<p><strong>ARM 32 bit</strong> : <a href="https://download.automotivelinux.org/AGL/snapshots/master/latest/qemuarm/deploy/sdk/poky-agl-glibc-x86_64-agl-demo-platform-crosssdk-armv7vet2hf-neon-vfpv4-qemuarm-toolchain-10.90.0+snapshot.sh">qemuarm</a></p>
+</li>
+<li>
+<p><strong>AARCH64 - ARM 64bit</strong> : <a href="https://download.automotivelinux.org/AGL/snapshots/master/latest/qemuarm64/deploy/sdk/poky-agl-glibc-x86_64-agl-demo-platform-crosssdk-aarch64-qemuarm64-toolchain-10.90.0+snapshot.sh">qemuarm64</a></p>
+<p><em>Henceforth,</em> <strong>qemux86-64</strong> <em>is used in these guides, unless specified
+otherwise. We also use the 'agl-demo-platform-crosssdk' as example.</em></p>
+</li>
+</ul>
+</li>
+<li>
+<p>Create application developmment directory and copy SDK into them :</p>
+<div class="highlight"><pre><span></span><code>$ mkdir ~/agl-app
+$ cp ~/Downloads/poky-agl-glibc-x86_64-agl-demo-platform-crosssdk-corei7-64-qemux86-64-toolchain-10.90.0+snapshot.sh ~/agl-app/
+$ <span class="nb">cd</span> ~/agl-app
+</code></pre></div>
+</li>
+<li>
+<p>Install the downloaded SDK :</p>
+<p><div class="highlight"><pre><span></span><code>$ chmod <span class="m">777</span> poky-agl-glibc-x86_64-agl-demo-platform-crosssdk-corei7-64-qemux86-64-toolchain-10.90.0+snapshot.sh
+$ mkdir agl-sdk/
+$ ./poky-agl-glibc-x86_64-agl-demo-platform-crosssdk-corei7-64-qemux86-64-toolchain-10.90.0+snapshot.sh
+</code></pre></div>
+Select target directory for SDK : <code>~/agl-app/agl-sdk</code></p>
+<div class="highlight"><pre><span></span><code>Automotive Grade Linux SDK installer version <span class="m">10</span>.90.0+snapshot
+<span class="o">=============================================================</span>
+Enter target directory <span class="k">for</span> SDK <span class="o">(</span>default: /opt/agl-sdk/10.90.0+snapshot-corei7-64<span class="o">)</span>: ~/agl-app/agl-sdk
+You are about to install the SDK to <span class="s2">&quot;/home/boron/agl-app/agl-sdk&quot;</span>. Proceed <span class="o">[</span>Y/n<span class="o">]</span>? Y
+Extracting SDK..........................................................................................................................................done
+Setting it up...done
+SDK has been successfully <span class="nb">set</span> up and is ready to be used.
+Each <span class="nb">time</span> you wish to use the SDK <span class="k">in</span> a new shell session, you need to <span class="nb">source</span> the environment setup script e.g.
+$ . /home/boron/agl-app/agl-sdk/environment-setup-corei7-64-agl-linux
+</code></pre></div>
+</li>
+<li>
+<p>Source the SDK environment setup, each time you wish to use the SDK in a new shell session :</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">source</span> ~/agl-app/agl-sdk/environment-setup-corei7-64-agl-linux
+</code></pre></div>
+</li>
+</ol>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../2_Creating_a_New_Service/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../2_Creating_a_New_Service/" class="btn btn-xs btn-link">
+        Creating a New Service
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../0_FIXME/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../0_FIXME/" class="btn btn-xs btn-link">
+        0 FIXME
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

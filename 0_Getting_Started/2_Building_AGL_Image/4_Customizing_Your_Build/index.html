@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/0_Getting_Started/2_Building_AGL_Image/4_Customizing_Your_Build/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Customizing Your Build - AGL Documentation</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Capturing Build History", url: "#_top", children: [
+          ]},
+          {title: "Deleting Temporary Workspace", url: "#deleting-temporary-workspace", children: [
+          ]},
+          {title: "Pointing at Shared State Cache Locations", url: "#pointing-at-shared-state-cache-locations", children: [
+          ]},
+          {title: "Preserving the Download Directory", url: "#preserving-the-download-directory", children: [
+          ]},
+          {title: "Using a Shared State (sstate) Mirror", url: "#using-a-shared-state-sstate-mirror", children: [
+          ]},
+          {title: "Common Settings using Symbolic Link with site.conf", url: "#common-settings-using-symbolic-link-with-siteconf", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../5_0_Building_the_AGL_Image/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../5_0_Building_the_AGL_Image/" class="btn btn-xs btn-link">
+        Building the AGL Image
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../3_Initializing_Your_Build_Environment/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../3_Initializing_Your_Build_Environment/" class="btn btn-xs btn-link">
+        Initializing Your Build Environment
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p>Because the build process is based on BitBake and the Yocto Project,
+build customizations are driven through configuration files used during
+the build.</p>
+<p>Lots of configuration files exist that define a build.
+However, the primary one that acts as a global configuration mechanism is the
+<code>local.conf</code> file, which is found in the Build Directory in a folder named "conf".</p>
+<p>Before you start your build process, you should open up the <code>local.conf</code> file
+and look through it to be sure the general configurations are correct.
+The file is well commented so you should be able to understand what the
+various variables accomplish.</p>
+<p>To view and customize the <code>local.conf</code> file, use any text editor:</p>
+<div class="highlight"><pre><span></span><code>$ vim <span class="nv">$AGL_TOP</span>/&lt;release-branch-name&gt;/&lt;build-dir&gt;/conf/local.conf
+</code></pre></div>
+<p>As mentioned in the "<a href="../3_Initializing_Your_Build_Environment/">Initializing Your Build Environment</a>" section,
+the <code>local.conf</code> file gets augmented with AGL configuration fragments based on
+how you execute the <code>aglsetup.sh</code> script.
+You can see those fragments at the end the configuration file.</p>
+<p>Even though your build should work fine after running the <code>aglsetup.sh</code> script,
+you might consider editing your <code>local.conf</code> file to use one or more of the
+following configurations.</p>
+<h2 id="capturing-build-history">Capturing Build History</h2>
+<p>You can enable build history to help maintain the quality of your build output.
+You can use it to highlight unexpected and possibly unwanted changes in the build output.
+Basically, with build history enabled, you get a record of information about the contents
+of each package and image.
+That information is committed to a local Git repository where you can examine it.</p>
+<p>To enable build history, make sure the following two lines are in your
+<code>local.conf</code> file:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">INHERIT</span> <span class="o">+=</span> <span class="s2">&quot;buildhistory&quot;</span>
+<span class="nv">BUILDHISTORY_COMMIT</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
+</code></pre></div>
+<p>See the
+"<a href="https://www.yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#maintaining-build-output-quality">Maintaining Build Output Quality</a>"
+section in the Yocto Project Reference Manual for a complete discussion on
+build history.</p>
+<h2 id="deleting-temporary-workspace">Deleting Temporary Workspace</h2>
+<p>During a build, the build system uses a lot of disk space to store temporary files.
+You can ease the burden on your system and speed up the build by configuring the build
+to remove temporary workspace.</p>
+<p>You need to inherit the <code>rm_work</code> class by using this statement in the <code>local.conf</code> file:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">INHERIT</span> <span class="o">+=</span> <span class="s2">&quot;rm_work&quot;</span>
+</code></pre></div>
+<p>You can read about the class in the
+"<a href="https://www.yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#ref-classes-rm-work">rm_work.bbclass</a>"
+section of the Yocto Project Reference Manual for more information.</p>
+<h2 id="pointing-at-shared-state-cache-locations">Pointing at Shared State Cache Locations</h2>
+<p>The build system creates everything from scratch unless BitBake can determine that parts do not need to be rebuilt. Fundamentally, building from scratch is attractive as it means all parts are built fresh and there is no possibility of stale data causing problems.
+When developers hit problems, they typically default back to building from scratch so they know the state
+of things from the start.</p>
+<p>The build process uses Shared State Cache (sstate) to speed up subsequent builds.
+This cache retains artifacts that can be re-used once it is determined that they
+would not be different as compared to a re-built module.</p>
+<p>For the AGL build, you can specify the location for sstate files by including the
+following in the <code>local.conf</code> file:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">SSTATE_DIR</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">AGL_TOP</span><span class="si">}</span><span class="s2">/sstate-cache&quot;</span>
+</code></pre></div>
+<p>Also, in the <code>local.conf</code> file, you can specify additional directories in which the build
+system can look for shared state information.
+Use the following form in your file to list out the directories you want the build
+process to look at for sstate information:</p>
+<div class="highlight"><pre><span></span><code>SSTATE_MIRRORS ?<span class="o">=</span> <span class="s2">&quot;\</span>
+<span class="s2">    file://.* http://someserver.tld/share/sstate/PATH;downloadfilename=PATH \n \</span>
+<span class="s2">    file://.* file:///some/local/dir/sstate/PATH&quot;</span>
+</code></pre></div>
+<p>If you want to know more about the Yocto Project sstate mechanism, see the
+"<a href="https://www.yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#shared-state-cache">Shared State Cache</a>"
+section in the Yocto Project Reference Manual.</p>
+<h2 id="preserving-the-download-directory">Preserving the Download Directory</h2>
+<p>During the initial build, the system downloads many different source code tarballs
+from various upstream projects.
+Downloading these files can take a while, particularly if your network
+connection is slow.
+The process downloads files into a
+"<a href="https://www.yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#var-DL_DIR">download directory</a>".
+The <code>DL_DIR</code> variable defines the download directory.
+For subsequent builds, you can preserve this directory to speed up the download
+part of a build.</p>
+<p>The default download directory is in a folder named "downloads".
+For the AGL build you can set the download directory by adding the following to your
+<code>local.conf</code> file:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">DL_DIR</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">AGL_TOP</span><span class="si">}</span><span class="s2">/downloads&quot;</span>
+</code></pre></div>
+<h2 id="using-a-shared-state-sstate-mirror">Using a Shared State (sstate) Mirror</h2>
+<p>The underlying Yocto Project build system uses Shared State Mirrors to cache
+artifacts from previous builds.
+You can significantly speed up builds and guard against fetcher failures by
+using mirrors.
+To use mirrors, add this line to your <code>local.conf</code> file in the Build directory:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">SSTATE_MIRRORS_append</span> <span class="o">=</span> <span class="s2">&quot; file://.* https://download.automotivelinux.org/sstate-mirror/master/</span><span class="si">${</span><span class="nv">DEFAULTTUNE</span><span class="si">}</span><span class="s2">/PATH \n &quot;</span>
+</code></pre></div>
+<p>You can learn more about shared state and how it is used in the
+"<a href="https://yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#shared-state-cache">Shared State Cache</a>"
+section of the Yocto Project Reference Manual.</p>
+<h2 id="common-settings-using-symbolic-link-with-siteconf">Common Settings using Symbolic Link with site.conf</h2>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">echo</span> <span class="s2">&quot;# reuse download directories&quot;</span> &gt;&gt; <span class="nv">$AGL_TOP</span>/site.conf
+$ <span class="nb">echo</span> <span class="s2">&quot;DL_DIR = \&quot;</span><span class="nv">$HOME</span><span class="s2">/downloads/\&quot;&quot;</span> &gt;&gt; <span class="nv">$AGL_TOP</span>/site.conf
+$ <span class="nb">echo</span> <span class="s2">&quot;SSTATE_DIR = \&quot;</span><span class="nv">$AGL_TOP</span><span class="s2">/sstate-cache/\&quot;&quot;</span> &gt;&gt; <span class="nv">$AGL_TOP</span>/site.conf
+$ <span class="nb">cd</span> <span class="nv">$AGL_TOP</span>/master/qemux86-64/
+$ ln -sf <span class="nv">$AGL_TOP</span>/site.conf conf/
+
+In General<span class="p">;</span>
+$ <span class="nb">cd</span> <span class="nv">$AGL_TOP</span>/&lt;release-branch-name&gt;/&lt;build-dir&gt;/
+$ ln -sf <span class="nv">$AGL_TOP</span>/site.conf conf/
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../5_0_Building_the_AGL_Image/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../5_0_Building_the_AGL_Image/" class="btn btn-xs btn-link">
+        Building the AGL Image
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../3_Initializing_Your_Build_Environment/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../3_Initializing_Your_Build_Environment/" class="btn btn-xs btn-link">
+        Initializing Your Build Environment
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

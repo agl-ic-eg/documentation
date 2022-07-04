@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/2_Architecture_Guides/2_Security_Blueprint/2_Secure_Boot/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Secure Boot - AGL Documentation</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Acronyms and Abbreviations", url: "#_top", children: [
+          ]},
+          {title: "Image", url: "#image", children: [
+              {title: "Image selection", url: "#image-selection" },
+              {title: "Image authenticity", url: "#image-authenticity" },
+          ]},
+          {title: "Communication modes", url: "#communication-modes", children: [
+              {title: "Disable USB, Serial and DOCSIS Support", url: "#disable-usb-serial-and-docsis-support" },
+              {title: "Disable all unused Network Interfaces", url: "#disable-all-unused-network-interfaces" },
+              {title: "Remove or Disable Unnecessary Services, Ports, and Devices", url: "#remove-or-disable-unnecessary-services-ports-and-devices" },
+              {title: "Disable flash access", url: "#disable-flash-access" },
+          ]},
+          {title: "Consoles", url: "#consoles", children: [
+              {title: "Disable serial console", url: "#disable-serial-console" },
+              {title: "Immutable environment variables", url: "#immutable-environment-variables" },
+              {title: "(Recommendation) Removal of memory dump commands", url: "#recommendation-removal-of-memory-dump-commands" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../3_Hypervisor/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../3_Hypervisor/" class="btn btn-xs btn-link">
+        Hypervisor
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../1_Hardware/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../1_Hardware/" class="btn btn-xs btn-link">
+        Hardware
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Abstract-1</td>
+<td>More generic and add examples (The chain of trust).</td>
+</tr>
+</tbody>
+</table>
+<p>Secure boot refers to preventing malicious software applications and
+“unauthorized” operating systems from loading during the system start-up
+process. The goal is to protect users from rootkits and other low-level malware
+attacks. Modern bootloaders come with features that can be used to enable secure
+boot in the system.</p>
+<p><strong>Boot Hardening</strong>: Steps/requirements to configure the boot sequence, in order
+to restrict the device from executing anything other than the approved software
+image.</p>
+<p>In this part, we will see a series of settings that will allow us to improve
+security during boot phase. For the purposes of reference and explanation, we
+are providing guidance on how to configure an embedded device that runs with a
+3.10.17 Linux kernel. If the integrity is not checked or if a critical error
+occurs, the system must boot on a very stable backup image.</p>
+<p><strong>Requirements</strong>: These requirements must be met even if an alternative version
+of the Linux kernel is chosen.</p>
+<p><strong>Recommendations</strong>: Detailed best practices that should be applied in order to
+secure a device. Although they are not currently listed as hard requirements,
+they may be upgraded to requirements status in the future. In addition, specific
+operators may change some of these recommendations into requirements based on
+their specific needs and objectives.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Abstract-1</td>
+<td>Review the definition of the "boot loader".</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Boot loader</strong>: The boot loader consists of the Primary boot loader residing in
+<strong>OTP</strong> memory, sboot, U-Boot and Secure loader residing in external flash (NAND
+or SPI/NOR flash memory). The CPU on power on or reset executes the primary boot
+loader. The <strong>OTP</strong> primary boot loader makes the necessary initial system
+configuration and then loads the secondary boot loader sboot from external flash
+memory to ram memory. The sboot then loads the U-Boot along with the Secure
+loader. U-Boot then verifies the Kernel/system image integrity, then loads the
+Kernel/system image before passing control to it.</p>
+<hr />
+<h2 id="acronyms-and-abbreviations">Acronyms and Abbreviations</h2>
+<p>The following table lists the terms utilized within this part of the document.</p>
+<table>
+<thead>
+<tr>
+<th>Acronyms or Abbreviations</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>FUSE</em></td>
+<td><strong>F</strong>ilesystem in <strong>U</strong>ser<strong>S</strong>pac<strong>E</strong></td>
+</tr>
+<tr>
+<td><em>OTP</em></td>
+<td><strong>O</strong>ne-<strong>T</strong>ime-<strong>P</strong>rogrammable</td>
+</tr>
+<tr>
+<td><em>DOCSIS</em></td>
+<td><strong>D</strong>ata <strong>O</strong>ver <strong>C</strong>able <strong>S</strong>ervice <strong>I</strong>nterface <strong>S</strong>pecification</td>
+</tr>
+</tbody>
+</table>
+<h1 id="image">Image</h1>
+<h2 id="image-selection">Image selection</h2>
+<p>The boot process shall be uninterruptible and shall irrevocably boot the image
+as specified in the boot environment.</p>
+<p>In U-Boot set the "<em>bootdelay</em>" environment variable and/or define
+<code>CONFIG_BOOTDELAY</code> to <em>-2</em>.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><em>Variable</em> / <code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Image-Selection-1</td>
+<td><code>CONFIG_BOOTDELAY</code></td>
+<td><code>-2</code></td>
+</tr>
+<tr>
+<td>Boot-Image-Selection-2</td>
+<td><em>bootdelay</em></td>
+<td><code>-2</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="image-authenticity">Image authenticity</h2>
+<p>It shall not be possible to boot from an unverified image. The secure boot
+feature in U-Boot shall be enabled. The secure boot feature is available from
+U-Boot 2013.07 version. To enable the secure boot feature, enable the following
+features:</p>
+<div class="highlight"><pre><span></span><code>CONFIG_FIT: Enables support <span class="k">for</span> Flat Image Tree <span class="o">(</span>FIT<span class="o">)</span> uImage format.
+CONFIG_FIT_SIGNATURE: Enables signature verification of FIT images.
+CONFIG_RSA: Enables RSA algorithm used <span class="k">for</span> FIT image verification.
+CONFIG_OF_CONTROL: Enables Flattened Device Tree <span class="o">(</span>FDT<span class="o">)</span> configuration.
+CONFIG_OF_SEPARATE: Enables separate build of u-Boot from the device tree.
+CONFIG_DEFAULT_DEVICE_TREE: Specifies the default Device Tree used <span class="k">for</span> the run-time configuration of U-Boot.
+</code></pre></div>
+<p>Generate the U-Boot image with public keys to validate and load the image. It
+shall use RSA2048 and SHA256 for authentication.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Image-Authenticity-1</td>
+<td><code>CONFIG_FIT</code></td>
+<td><em>Enable</em></td>
+</tr>
+<tr>
+<td>Boot-Image-Authenticity-2</td>
+<td><code>CONFIG_FIT_SIGNATURE</code></td>
+<td><em>Enable</em></td>
+</tr>
+<tr>
+<td>Boot-Image-Authenticity-3</td>
+<td><code>CONFIG_RSA</code></td>
+<td><em>Enable</em></td>
+</tr>
+<tr>
+<td>Boot-Image-Authenticity-4</td>
+<td><code>CONFIG_OF_CONTROL</code></td>
+<td><em>Enable</em></td>
+</tr>
+<tr>
+<td>Boot-Image-Authenticity-5</td>
+<td><code>CONFIG_OF_SEPARATE</code></td>
+<td><em>Enable</em></td>
+</tr>
+<tr>
+<td>Boot-Image-Authenticity-6</td>
+<td><code>CONFIG_DEFAULT_DEVICE_TREE</code></td>
+<td><em>Enable</em></td>
+</tr>
+</tbody>
+</table>
+<h1 id="communication-modes">Communication modes</h1>
+<h2 id="disable-usb-serial-and-docsis-support">Disable USB, Serial and DOCSIS Support</h2>
+<p>To disable USB support in U-Boot, following config's shall not be defined:</p>
+<div class="highlight"><pre><span></span><code>CONFIG_CMD_USB: Enables basic USB support and the usb command.
+CONFIG_USB_UHCI: Defines the lowlevel part.
+CONFIG_USB_KEYBOARD: Enables the USB Keyboard.
+CONFIG_USB_STORAGE: Enables the USB storage devices.
+CONFIG_USB_HOST_ETHER: Enables USB Ethernet adapter support.
+</code></pre></div>
+<p>In addition, disable unnecessary communication modes like Ethernet, Serial
+ports, DOCSIS in U-Boot and sboot that are not necessary.</p>
+<p>Linux Kernel support for USB should be compiled-out if not required. If it is
+needed, the Linux Kernel should be configured to only enable the minimum
+required USB devices. User-initiated USB-filesystems should be treated with
+special care. Whether or not the filesystems are mounted in userspace
+(<strong>FUSE</strong>), restricted mount options should be observed.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Communication modes</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Communication-1</td>
+<td><code>USB</code></td>
+<td><em>Disabled</em> and <em>Compiled-out</em> if not required.</td>
+</tr>
+<tr>
+<td>Boot-Communication-2</td>
+<td><code>USB</code></td>
+<td>Else, Kernel should be configured to only enable the minimum required USB devices and filesystems should be treated with special care.</td>
+</tr>
+<tr>
+<td>Boot-Communication-3</td>
+<td><code>Ethernet</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Boot-Communication-4</td>
+<td>U-boot and sboot <code>DOCSIS</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Boot-Communication-5</td>
+<td><code>Serial ports</code></td>
+<td><em>Disabled</em></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Communication-USB-1</td>
+<td><code>CONFIG_CMD_USB</code></td>
+<td><em>Not defined</em></td>
+</tr>
+<tr>
+<td>Boot-Communication-USB-2</td>
+<td><code>CONFIG_USB_UHCI</code></td>
+<td><em>Not defined</em></td>
+</tr>
+<tr>
+<td>Boot-Communication-USB-3</td>
+<td><code>CONFIG_USB_KEYBOARD</code></td>
+<td><em>Not defined</em></td>
+</tr>
+<tr>
+<td>Boot-Communication-USB-4</td>
+<td><code>CONFIG_USB_STORAGE</code></td>
+<td><em>Not defined</em></td>
+</tr>
+<tr>
+<td>Boot-Communication-USB-5</td>
+<td><code>CONFIG_USB_HOST_ETHER</code></td>
+<td><em>Not defined</em></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="disable-all-unused-network-interfaces">Disable all unused Network Interfaces</h2>
+<p>Only used network interfaces should be enabled. Where possible, services should
+also be limited to those necessary.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Communication modes</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Communication-1</td>
+<td><code>Network interfaces</code></td>
+<td>Preferably <em>no network interface is allowed</em>, otherwise, restrict the services to those used.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="remove-or-disable-unnecessary-services-ports-and-devices">Remove or Disable Unnecessary Services, Ports, and Devices</h2>
+<p>Restrict the <code>services</code>, <code>ports</code> and <code>devices</code> to those used.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Communication-1</td>
+<td><code>Services</code>, <code>ports</code> and <code>devices</code></td>
+<td>Restrict the <code>services</code>, <code>ports</code> and <code>devices</code> to those used.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="disable-flash-access">Disable flash access</h2>
+<p><strong>Recommendation</strong>:</p>
+<p>In U-Boot following flash memory commands shall be disabled:</p>
+<p><strong>NAND</strong>: Support for nand flash access available through <code>do_nand</code> has to be
+disabled.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Command</code> name</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Communication-Flash-1</td>
+<td><code>do_nand</code></td>
+<td><em>Disable</em></td>
+</tr>
+</tbody>
+</table>
+<p>Similarly sboot should disable flash access support through command line if any.</p>
+<h1 id="consoles">Consoles</h1>
+<h2 id="disable-serial-console">Disable serial console</h2>
+<p>Serial console output shall be disabled. To disable console output in U-Boot,
+set the following macros:</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Consoles-Serial-1</td>
+<td><code>CONFIG_SILENT_CONSOLE</code></td>
+<td><code>Disable</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Serial-2</td>
+<td><code>CONFIG_SYS_DEVICE_NULLDEV</code></td>
+<td><code>Disable</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Serial-3</td>
+<td><code>CONFIG_SILENT_CONSOLE_UPDATE_ON_RELOC</code></td>
+<td><code>Disable</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Consoles-1</td>
+<td>Secure loader: No reference earlier?</td>
+</tr>
+</tbody>
+</table>
+<p>And set "<strong>silent</strong>" environment variable. For the Secure loader, disable the
+traces by not defining the below macro:</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Environment variable</code> name</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Consoles-Serial-1</td>
+<td><code>INC_DEBUG_PRINT</code></td>
+<td><em>Not defined</em></td>
+</tr>
+</tbody>
+</table>
+<p>For sboot proper configuration needs to be done to disable the serial console.</p>
+<hr />
+<h2 id="immutable-environment-variables">Immutable environment variables</h2>
+<p>In U-Boot, ensure Kernel command line, boot commands, boot delay and other
+environment variables are immutable. This will prevent side-loading of alternate
+images, by restricting the boot selection to only the image in FLASH.</p>
+<p>The environment variables shall be part of the text region in U-Boot as default
+environment variable and not in non-volatile memory.</p>
+<p>Remove configuration options related to non-volatile memory, such as:</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Consoles-Variables-1</td>
+<td><code>CONFIG_ENV_IS_IN_MMC</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-2</td>
+<td><code>CONFIG_ENV_IS_IN_EEPROM</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-3</td>
+<td><code>CONFIG_ENV_IS_IN_FLASH</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-4</td>
+<td><code>CONFIG_ENV_IS_IN_DATAFLASH</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-5</td>
+<td><code>CONFIG_ENV_IS_IN_FAT</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-6</td>
+<td><code>CONFIG_ENV_IS_IN_NAND</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-7</td>
+<td><code>CONFIG_ENV_IS_IN_NVRAM</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-8</td>
+<td><code>CONFIG_ENV_IS_IN_ONENAND</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-9</td>
+<td><code>CONFIG_ENV_IS_IN_SPI_FLASH</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-10</td>
+<td><code>CONFIG_ENV_IS_IN_REMOTE</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-11</td>
+<td><code>CONFIG_ENV_IS_IN_UBI</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-12</td>
+<td><code>CONFIG_ENV_IS_NOWHERE</code></td>
+<td><code>#define</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="recommendation-removal-of-memory-dump-commands">(Recommendation) Removal of memory dump commands</h2>
+<p>In U-Boot, following commands shall be disabled to avoid memory dumps:</p>
+<div class="highlight"><pre><span></span><code>md : Memory Display command.
+mm : Memory modify command - auto incrementing address.
+nm : Memory modify command - constant address.
+mw : Memory write.
+cp : Memory copy.
+mwc : Memory write cyclic.
+mdc : Memory display cyclic.
+mtest : Simple ram read/write test.
+loopw : Infinite write loop on address range.
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Command</code> name</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Consoles-MemDump-1</td>
+<td><code>md</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Boot-Consoles-MemDump-2</td>
+<td><code>mm</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Boot-Consoles-MemDump-3</td>
+<td><code>nm</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Boot-Consoles-MemDump-4</td>
+<td><code>mw</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Boot-Consoles-MemDump-5</td>
+<td><code>cp</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Boot-Consoles-MemDump-6</td>
+<td><code>mwc</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Boot-Consoles-MemDump-7</td>
+<td><code>mdc</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Boot-Consoles-MemDump-8</td>
+<td><code>mtest</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Boot-Consoles-MemDump-9</td>
+<td><code>loopw</code></td>
+<td><em>Disabled</em></td>
+</tr>
+</tbody>
+</table>
+<p>Similarly, memory dump support shall be disabled from sboot.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../3_Hypervisor/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../3_Hypervisor/" class="btn btn-xs btn-link">
+        Hypervisor
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../1_Hardware/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../1_Hardware/" class="btn btn-xs btn-link">
+        Hardware
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

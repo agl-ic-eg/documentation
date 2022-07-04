@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/3_Developer_Guides/6_AGL_Layers/3_meta-agl-demo/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>meta-agl-demo - AGL Documentation</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Introduction", url: "#_top", children: [
+          ]},
+          {title: "Layer Dependencies", url: "#layer-dependencies", children: [
+              {title: "Base Dependencies", url: "#base-dependencies" },
+              {title: "Hardware Dependencies", url: "#hardware-dependencies" },
+              {title: "Feature Dependencies", url: "#feature-dependencies" },
+          ]},
+          {title: "Packagegroups", url: "#packagegroups", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../4_meta-agl-devel/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../4_meta-agl-devel/" class="btn btn-xs btn-link">
+        meta-agl-devel
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../2_meta-agl/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../2_meta-agl/" class="btn btn-xs btn-link">
+        meta-agl
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="introduction">Introduction</h2>
+<p>The <code>meta-agl-demo</code> layer is the reference user interface layer for the DEMO
+platform of Automotive Grade Linux (AGL).
+The layer provides a reference platform and applications.
+The BitBake target name for the DEMO platform is <code>agl-demo-platform</code>, which is
+the full DEMO platform image.</p>
+<h2 id="layer-dependencies">Layer Dependencies</h2>
+<p>This section describes dependencies for the <code>meta-agl-demo</code> layer.
+Dependencies are grouped into base, hardware, and feature dependencies.</p>
+<h3 id="base-dependencies">Base Dependencies</h3>
+<p>The <code>meta-agl-demo</code> layer has the following base dependencies:</p>
+<ul>
+<li>
+<p>Yocto Project Release:</p>
+<ul>
+<li>URI: git://git.yoctoproject.org/poky</li>
+<li>Branch: "thud"</li>
+<li>Tested Revision: See the
+  <a href="https://github.com/leon-anavi/AGL-repo/blob/master/default.xml"><code>default.xml</code></a>
+  manifest file for the <code>AGL-repo</code> repository for revision information.</li>
+</ul>
+</li>
+<li>
+<p>AGL <code>meta-agl</code> Layer:</p>
+<ul>
+<li>URI: https://gerrit.automotivelinux.org/gerrit/AGL/meta-agl</li>
+<li>Branch: "master"</li>
+</ul>
+</li>
+<li>
+<p>OpenEmbedded <code>meta-openembedded</code> Layer:</p>
+<ul>
+<li>Branch: "thud"</li>
+<li>Tested Revision: See the
+  <a href="https://github.com/leon-anavi/AGL-repo/blob/master/default.xml"><code>default.xml</code></a>
+  manifest file for the <code>AGL-repo</code> repository for revision information.</li>
+</ul>
+<p>Specifically, out of <code>meta-openembedded</code>, these sub-layers are used:</p>
+<ul>
+<li><code>meta-oe</code></li>
+<li><code>meta-multimedia</code></li>
+<li><code>meta-networking</code></li>
+<li><code>meta-python</code></li>
+</ul>
+</li>
+<li>
+<p>Yocto Project <code>meta-qt5</code> Layer from the
+  <a href="https://layers.openembedded.org/layerindex/branch/master/layers/">OpenEmbedded Layer Index</a>:</p>
+<ul>
+<li>URI: https://github.com/meta-qt5/meta-qt5.git</li>
+<li>Branch: "thud"</li>
+<li>Tested Revision: See the
+  <a href="https://github.com/leon-anavi/AGL-repo/blob/master/default.xml"><code>default.xml</code></a>
+  manifest file for the <code>AGL-repo</code> repository for revision information.</li>
+</ul>
+</li>
+</ul>
+<h3 id="hardware-dependencies">Hardware Dependencies</h3>
+<p>Aside from the previously listed base dependencies, if you are using a
+<a href="../../../0_Getting_Started/2_Building_AGL_Image/5_3_RCar_Gen_3/">supported Renesas board</a>
+supported Renesas board, these dependencies exist:</p>
+<ul>
+<li>
+<p>AGL's <code>meta-renesas</code> Layer:</p>
+<ul>
+<li>URI: https://gerrit.automotivelinux.org/gerrit/AGL/meta-renesas</li>
+</ul>
+</li>
+</ul>
+<h3 id="feature-dependencies">Feature Dependencies</h3>
+<p>The <code>meta-agl-demo</code> layer has the following AGL <a href="../../../0_Getting_Started/2_Building_AGL_Image/3_Initializing_Your_Build_Environment/#agl-features">feature</a>
+dependencies:</p>
+<ul>
+<li>
+<p>Yocto Project <code>meta-security</code> Layer:</p>
+<ul>
+<li>URI: https://git.yoctoproject.org/cgit/cgit.cgi/meta-security</li>
+<li>Branch: "master"</li>
+<li>Tested Revision: See the
+  <a href="https://github.com/leon-anavi/AGL-repo/blob/master/default.xml"><code>default.xml</code></a>
+  manifest file for the <code>AGL-repo</code> repository for revision information.</li>
+</ul>
+</li>
+<li>
+<p>AGL's <code>meta-app-framework</code> Layer within the <code>meta-agl</code> Layer:</p>
+<ul>
+<li>URI: https://gerrit.automotivelinux.org/gerrit/gitweb?p=AGL/meta-agl.git</li>
+<li>Branch: "master"</li>
+</ul>
+</li>
+</ul>
+<p><strong>The <code>agl-sota</code> Feature:</strong></p>
+<ul>
+<li>
+<p>Here Technologies' <code>meta-updater</code> Layer:</p>
+<ul>
+<li>URI: https://github.com/advancedtelematic/meta-updater/</li>
+<li>Branch: "thud"</li>
+</ul>
+</li>
+<li>
+<p>Here Technologies' <code>meta-updater-qemux86-64</code> Layer:</p>
+<ul>
+<li>URI: https://github.com/advancedtelematic/meta-updater-qemux86-64/</li>
+<li>Branch: "thud"</li>
+</ul>
+</li>
+<li>
+<p>OpenEmbedded's <code>meta-openembedded</code> Layer:</p>
+<ul>
+<li>URI: https://github.com/openembedded/meta-openembedded</li>
+<li>Branch: "thud"</li>
+<li>Tested Revision: See the
+  <a href="https://github.com/leon-anavi/AGL-repo/blob/master/default.xml"><code>default.xml</code></a>
+  manifest file for the <code>AGL-repo</code> repository for revision information.</li>
+</ul>
+<p>Specifically, out of <code>meta-openembedded</code>, these sub-layers are used:</p>
+<ul>
+<li><code>meta-filesystems</code></li>
+<li><code>meta-oe</code></li>
+<li><code>meta-python</code></li>
+</ul>
+</li>
+</ul>
+<p><strong>The <code>agl-netboot</code> Feature:</strong></p>
+<ul>
+<li>
+<p>AGL's <code>meta-netboot</code> Layer within the <code>meta-agl</code> Layer:</p>
+<ul>
+<li>URI: https://gerrit.automotivelinux.org/gerrit/gitweb?p=AGL/meta-agl.git</li>
+<li>Branch: "master"</li>
+</ul>
+</li>
+</ul>
+<h2 id="packagegroups">Packagegroups</h2>
+<p>AGL DEMO Platform's <a href="https://www.yoctoproject.org/docs/3.1.4/dev-manual/dev-manual.html#usingpoky-extend-customimage-customtasks">packagegroups</a>
+consist of the following:</p>
+<ul>
+<li>
+<p>packagegroup-agl-demo-platform</p>
+<p>This packagegroup is used for generating the <code>agl-demo-platform</code> image,
+which is the full image for the AGL distributions IVI profile. You can see the
+recipe (i.e. <code>agl-demo-platform.bb</code>) that installs the
+<code>packagegroup-agl-demo-platform</code> packagegroup <a href="https://git.automotivelinux.org/AGL/meta-agl-demo/tree/recipes-platform/images/agl-demo-platform.bb">here</a>.</p>
+<p>As meta-agl's design of packagegroups, the <code>agl-demo-platform.bb</code> recipe installs
+only <code>packagegroup-agl-demo-platform</code> and the packages of the DEMO applications.</p>
+<p><code>agl-demo-platform</code> contains the following three packagegroups:</p>
+<ul>
+<li><code>packagegroup-agl-image-minimal</code></li>
+<li><code>packagegroup-agl-image-ivi</code></li>
+<li><code>packagegroup-agl-demo-platform</code></li>
+</ul>
+</li>
+<li>
+<p>packagegroup-agl-appfw*</p>
+<p>These packagegroups contain packages for the AGL distribution's
+Application Framework. Subsystem should maintain
+<code>packagegroup-agl-appfw-[subsystem].bb</code>, which should hold sufficient packages
+for the Application Framework.</p>
+<p>Subsystems also can maintain their own packagegroups using appropriate
+<code>recipes-*/</code>.</p>
+<p>For example, Qt5 has two packagegroups in <code>meta-agl-demo</code>:
+<code>packagegroup-agl-appfw-native-qt5</code> and <code>packagegroup-agl-demo-qt-examples</code>,
+which are under <code>recipes-qt/</code>.</p>
+<p>The <code>packagegroup-agl-appfw-native-qt5</code> is included by <code>packagegroup-agl-appfw-native</code> because Qt5 belongs to native application framework of AGL Distro.</p>
+<p>Because the <code>packagegroup-agl-demo-qt-examples</code> is not mandatory for the AGL
+Application Framework and the AGL DEMO, the packagegroup is added to the layer's
+<code>local.conf</code> file only when needed.</p>
+</li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../4_meta-agl-devel/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../4_meta-agl-devel/" class="btn btn-xs btn-link">
+        meta-agl-devel
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../2_meta-agl/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../2_meta-agl/" class="btn btn-xs btn-link">
+        meta-agl
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

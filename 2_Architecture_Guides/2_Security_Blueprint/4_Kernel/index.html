@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/2_Architecture_Guides/2_Security_Blueprint/4_Kernel/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Kernel - AGL Documentation</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Kernel Version", url: "#_top", children: [
+          ]},
+          {title: "Kernel Build Configuration", url: "#kernel-build-configuration", children: [
+          ]},
+          {title: "General configuration", url: "#general-configuration", children: [
+              {title: "Mandatory Access Control", url: "#mandatory-access-control" },
+              {title: "Disable kexec", url: "#disable-kexec" },
+              {title: "Disable kernel IP auto-configuration", url: "#disable-kernel-ip-auto-configuration" },
+              {title: "Disable Sysctl syscall support", url: "#disable-sysctl-syscall-support" },
+              {title: "Disable Legacy Linux Support", url: "#disable-legacy-linux-support" },
+              {title: "Disable firmware auto-loading user mode helper", url: "#disable-firmware-auto-loading-user-mode-helper" },
+              {title: "Enable Kernel Panic on OOPS", url: "#enable-kernel-panic-on-oops" },
+              {title: "Disable socket monitoring interface", url: "#disable-socket-monitoring-interface" },
+              {title: "Disable BPF JIT", url: "#disable-bpf-jit" },
+              {title: "Enable Enforced Module Signing", url: "#enable-enforced-module-signing" },
+              {title: "Disable all USB, PCMCIA (and other hotplug bus) drivers that aren\u0027t needed", url: "#disable-all-usb-pcmcia-and-other-hotplug-bus-drivers-that-arent-needed" },
+              {title: "Position Independent Executables", url: "#position-independent-executables" },
+              {title: "Prevent Overwrite Attacks", url: "#prevent-overwrite-attacks" },
+              {title: "Library linking", url: "#library-linking" },
+          ]},
+          {title: "Memory", url: "#memory", children: [
+              {title: "Restrict access to kernel memory", url: "#restrict-access-to-kernel-memory" },
+              {title: "Disable access to a kernel core dump", url: "#disable-access-to-a-kernel-core-dump" },
+              {title: "Disable swap", url: "#disable-swap" },
+              {title: "Disable \"Load All Symbols\"", url: "#disable-load-all-symbols" },
+              {title: "Stack protection", url: "#stack-protection" },
+              {title: "Disable access to /dev/mem", url: "#disable-access-to-devmem" },
+              {title: "Disable cross-memory attach", url: "#disable-cross-memory-attach" },
+              {title: "Stack Smashing Attacks", url: "#stack-smashing-attacks" },
+              {title: "Detect Buffer Overflows", url: "#detect-buffer-overflows" },
+          ]},
+          {title: "Serial", url: "#serial", children: [
+              {title: "Disable serial console", url: "#disable-serial-console" },
+              {title: "Bake-in the kernel command-line", url: "#bake-in-the-kernel-command-line" },
+              {title: "Disable KGDB", url: "#disable-kgdb" },
+              {title: "Disable magic sysrq support", url: "#disable-magic-sysrq-support" },
+              {title: "Disable support for binary formats other than ELF", url: "#disable-support-for-binary-formats-other-than-elf" },
+          ]},
+          {title: "Debug", url: "#debug", children: [
+              {title: "Kernel debug symbols", url: "#kernel-debug-symbols" },
+              {title: "Disable Kprobes", url: "#disable-kprobes" },
+              {title: "Disable Tracing", url: "#disable-tracing" },
+              {title: "Disable Profiling", url: "#disable-profiling" },
+              {title: "Disable OOPS print on BUG()", url: "#disable-oops-print-on-bug" },
+              {title: "Disable Kernel Debugging", url: "#disable-kernel-debugging" },
+              {title: "Disable the kernel debug filesystem", url: "#disable-the-kernel-debug-filesystem" },
+              {title: "Disable BUG() support", url: "#disable-bug-support" },
+              {title: "Disable core dumps", url: "#disable-core-dumps" },
+              {title: "Kernel Address Display Restriction", url: "#kernel-address-display-restriction" },
+              {title: "DMESG Restrictions", url: "#dmesg-restrictions" },
+              {title: "Disable /proc/config.gz", url: "#disable-procconfiggz" },
+          ]},
+          {title: "File System", url: "#file-system", children: [
+              {title: "Disable all file systems not needed", url: "#disable-all-file-systems-not-needed" },
+              {title: "Partition Mount Options", url: "#partition-mount-options" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../5_Platform/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../5_Platform/" class="btn btn-xs btn-link">
+        Platform
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../3_Hypervisor/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../3_Hypervisor/" class="btn btn-xs btn-link">
+        Hypervisor
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p><strong>System Hardening:</strong> Best practices associated with the configuration of an
+embedded Linux based operating system. This section includes both hardening of
+the kernel itself, as well as specific configurations and patches used to
+protect against known vulnerabilities within the build and configuration of the
+root filesystem.</p>
+<p>At the Kernel level, we must ensure that no console can be launched. It could be
+used to change the behavior of the system or to have more information about it.
+Another aspect is the protection of the memory used by the Kernel.</p>
+<p>The next sub-sections contain information on various kernel configuration
+options to enhance the security in the kernel (3.10.17) and also for
+applications compiled to take advantage of these security features.
+Additionally, there are also configuration options that protect from known
+vulnerable configuration options. Here's a high level summary of various kernel
+configurations that shall be required for deployment.</p>
+<h2 id="kernel-version">Kernel Version</h2>
+<p>The choice of kernel version for the AGL system is essential to its security.
+Depending on the type of board and eventual production system, different kernel
+versions are used. For example, one of the systems under study uses the Linux
+kernel version 3.10, while another uses the Linux kernel version 4.4. For the
+Linux kernel version 3.10.31, there are 25 known vulnerabilities. These
+vulnerabilities would allow an attacker to gain privileges, bypass access
+restrictions, allow memory to be corrupted, or cause denial of service. In
+contrast, the Linux kernel version of 4.4 has many fewer known vulnerabilities.
+For this reason, we would in general recommend the later kernel version as a
+basis for the platform.</p>
+<p>Note that, although there are fewer known vulnerabilities in the most recent
+kernel versions there may be many unknown vulnerabilities underlying. A rule of
+thumb is to update the kernel as much as possible to avoid the problems you do
+know, but you should not be complacent in the trust that you place in it. A
+defense-in-depth approach would then apply.</p>
+<p>If there are constraints and dependencies in upgrading to a newer kernel version
+(e.g. device drivers, board support providers) and you are forced to an older
+Linux kernel version, there need to be additional provisions made to reduce the
+risk of kernel exploits, which can include memory monitoring, watch-dog
+services, and system call hooking. In this case, further defense-in-depth
+techniques may be required to mitigate the risk of attacks to known
+vulnerabilities, which can also include runtime integrity verification of
+components that are vulnerable to tampering.</p>
+<h2 id="kernel-build-configuration">Kernel Build Configuration</h2>
+<p>The kernel build configuration is extremely important for determining the level
+of access to services and to reduce the breadth of the attack surface. Linux
+contains a great and flexible number of capabilities and this is only controlled
+through the build configuration. For example, the <code>CONFIG_MODULES</code> parameter
+allows kernel modules to be loaded at runtime extending the capabilities of the
+kernel. This capability needs to be either inhibited or controlled at runtime
+through other configuration parameters. For example, <code>CONFIG_MODULE_SIG_FORCE=y</code>
+ensures that only signed modules are loaded. There is a very large number of
+kernel configuration parameters, and these are discussed in detail in this
+section.</p>
+<h1 id="general-configuration">General configuration</h1>
+<h2 id="mandatory-access-control">Mandatory Access Control</h2>
+<p>Kernel should controls access with labels and policy.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-MAC-1</td>
+<td>CONFIG_IP_NF_SECURITY</td>
+<td>m</td>
+</tr>
+<tr>
+<td>Kernel-General-MAC-2</td>
+<td>CONFIG_IP6_NF_SECURITY</td>
+<td>m</td>
+</tr>
+<tr>
+<td>Kernel-General-MAC-3</td>
+<td>CONFIG_EXT2_FS_SECURITY</td>
+<td>y</td>
+</tr>
+<tr>
+<td>Kernel-General-MAC-4</td>
+<td>CONFIG_EXT3_FS_SECURITY</td>
+<td>y</td>
+</tr>
+<tr>
+<td>Kernel-General-MAC-5</td>
+<td>CONFIG_EXT4_FS_SECURITY</td>
+<td>y</td>
+</tr>
+<tr>
+<td>Kernel-General-MAC-6</td>
+<td>CONFIG_SECURITY</td>
+<td>y</td>
+</tr>
+<tr>
+<td>Kernel-General-MAC-7</td>
+<td>CONFIG_SECURITY_SMACK</td>
+<td>y</td>
+</tr>
+<tr>
+<td>Kernel-General-MAC-8</td>
+<td>CONFIG_TMPFS_XATTR</td>
+<td>y</td>
+</tr>
+</tbody>
+</table>
+<p>Please also refer to the <a href="../5_Platform/">Mandatory Access Control documentation in
+Platform</a>. You can also find useful documentation and
+links on wikipedia about
+<a href="https://en.wikipedia.org/wiki/Mandatory_access_control"><strong>MAC</strong></a> and about
+<a href="https://en.wikipedia.org/wiki/Simplified_Mandatory_Access_Control_Kernel"><strong>SMACK</strong></a>.</p>
+<hr />
+<h2 id="disable-kexec">Disable kexec</h2>
+<p><strong>Kexec</strong> is a system call that enables you to load and boot into another kernel
+from the currently running kernel. This feature is not required in a production
+environment.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-kexec-1</td>
+<td><code>CONFIG_KEXEC</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>kexec</strong> can load arbitrary kernels but signing of new kernel can be enforced
+like it is can be enforced for new modules.</p>
+<hr />
+<h2 id="disable-kernel-ip-auto-configuration">Disable kernel IP auto-configuration</h2>
+<p>It is preferable to have an IP configuration performed using a user-space tool
+as these tend to have more validation. We do not want the network interface
+coming up until the system has come up properly.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-IPAutoConf-1</td>
+<td><code>CONFIG_IP_PNP</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="disable-sysctl-syscall-support">Disable Sysctl syscall support</h2>
+<p>Enabling this will result in code being included that is hard to maintain and
+not well tested.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-SysCtl_SysCall-1</td>
+<td><code>CONFIG_SYSCTL_SYSCALL</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="disable-legacy-linux-support">Disable Legacy Linux Support</h2>
+<p>There are some Kernel Configs which are present only to support legacy binaries.
+See also "Consoles" part in order to disabling support for legacy binary
+formats. The <code>uselib</code> system call, in particular, has no valid use in any
+<code>libc6</code> or <code>uclibc</code> system in recent times. This configuration is supported in
+<strong>Linux 3.15 and greater</strong> and thus should only be disabled for such versions.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-LegacyLinux-1</td>
+<td><code>CONFIG_USELIB</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="disable-firmware-auto-loading-user-mode-helper">Disable firmware auto-loading user mode helper</h2>
+<p>The firmware auto loading helper, which is a utility executed by the kernel on
+<code>hotplug</code> events requiring firmware, can to be set <code>setuid</code>. As a result of
+this, the helper utility is an attractive target for attackers with control of
+physical ports on the device. Disabling this configuration that is supported in
+<strong>Linux 3.9 and greater</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-FirmHelper-1</td>
+<td><code>CONFIG_FW_LOADER_USER_HELPER</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<p>It doesn't strictly need to be <code>setuid</code>, there is an option of shipping firmware
+builtin into kernel without initrd/filesystem.</p>
+<hr />
+<h2 id="enable-kernel-panic-on-oops">Enable Kernel Panic on OOPS</h2>
+<p>When fuzzing the kernel or attempting kernel exploits attackers are likely to
+trigger kernel OOPSes. Setting the behavior on OOPS to PANIC can impede their
+progress.</p>
+<p>This configuration is supported in <strong>Linux 3.5 and greater</strong> and thus should
+only be enabled for such versions.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-PanicOnOOPS-1</td>
+<td><code>CONFIG_PANIC_ON_OOPS</code></td>
+<td><code>y</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="disable-socket-monitoring-interface">Disable socket monitoring interface</h2>
+<p>These monitors can be used to inspect shared file descriptors on Unix Domain
+sockets or traffic on 'localhost' which is otherwise assumed to be confidential.</p>
+<p>The <code>CONFIG_PACKET_DIAG</code> configuration is supported in <strong>Linux 3.7 and greater</strong>
+and thus should only be disabled for such versions.</p>
+<p>The <code>CONFIG_UNIX_DIAG</code> configuration is supported in <strong>Linux 3.3 and greater</strong>
+and thus should only be disabled for such versions.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-SocketMon-1</td>
+<td><code>CONFIG_PACKET_DIAG</code></td>
+<td><code>n</code></td>
+</tr>
+<tr>
+<td>Kernel-General-SocketMon-2</td>
+<td><code>CONFIG_UNIX_DIAG</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="disable-bpf-jit">Disable BPF JIT</h2>
+<p>The BPF JIT can be used to create kernel-payloads from firewall table rules.</p>
+<p>This configuration for is supported in <strong>Linux 3.16 and greater</strong> and thus
+should only be disabled for such versions.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-BPF_JIT-1</td>
+<td><code>CONFIG_BPF_JIT</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="enable-enforced-module-signing">Enable Enforced Module Signing</h2>
+<p>The kernel should never allow an unprivileged user the ability to load specific
+kernel modules, since that would provide a facility to unexpectedly extend the
+available attack surface.</p>
+<p>To protect against even privileged users, systems may need to either disable
+module loading entirely, or provide signed modules (e.g.
+<code>CONFIG_MODULE_SIG_FORCE</code>, or dm-crypt with LoadPin), to keep from having root
+load arbitrary kernel code via the module loader interface.</p>
+<p>This configuration is supported in <strong>Linux 3.7 and greater</strong> and thus should
+only be enabled for such versions.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-ModuleSigning-1</td>
+<td><code>CONFIG_MODULE_SIG_FORCE</code></td>
+<td><code>y</code></td>
+</tr>
+</tbody>
+</table>
+<p>It is also possible to block the loading of modules after startup with
+"kernel.modules_disabled".</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Variable</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-ModuleSigning-2</td>
+<td><code>kernel.modules_disabled</code></td>
+<td><code>1</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="disable-all-usb-pcmcia-and-other-hotplug-bus-drivers-that-arent-needed">Disable all USB, PCMCIA (and other <code>hotplug</code> bus) drivers that aren't needed</h2>
+<p>To reduce the attack surface, the driver enumeration, probe, and operation
+happen in the kernel. The driver data is parsed by the kernel, so any logic bugs
+in these drivers can become kernel exploits.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-Drivers-1</td>
+<td><code>USB</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Kernel-General-Drivers-2</td>
+<td><code>PCMCIA</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Kernel-General-Drivers-3</td>
+<td>Other <code>hotplug</code> bus</td>
+<td><em>Disabled</em></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="position-independent-executables">Position Independent Executables</h2>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-IndependentExec-1</td>
+<td>Kernel or/and platform part ?</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>compiler</code> and <code>linker</code> options</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-IndependentExec-1</td>
+<td><code>-pie -fpic</code></td>
+<td><em>Enable</em></td>
+</tr>
+</tbody>
+</table>
+<p>Produce a position independent executable on targets which supports it.</p>
+<hr />
+<h2 id="prevent-overwrite-attacks">Prevent Overwrite Attacks</h2>
+<p><code>-z,relro</code> linking option helps during program load, several ELF memory sections
+need to be written by the linker, but can be turned read-only before turning
+over control to the program. This prevents some Global Offset Table GOT
+overwrite attacks, or in the dtors section of the ELF binary.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>compiler</code> and <code>linker</code> options</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-OverwriteAttacks-1</td>
+<td><code>-z,relro</code></td>
+<td><em>Enable</em></td>
+</tr>
+<tr>
+<td>Kernel-General-OverwriteAttacks-2</td>
+<td><code>-z,now</code></td>
+<td><em>Enable</em></td>
+</tr>
+</tbody>
+</table>
+<p>During program load, all dynamic symbols are resolved, allowing for the complete
+GOT to be marked read-only (due to <code>-z relro</code> above). This prevents GOT
+overwrite attacks. For very large application, this can incur some performance
+loss during initial load while symbols are resolved, but this shouldn't be an
+issue for daemons.</p>
+<hr />
+<h2 id="library-linking">Library linking</h2>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-LibraryLinking-1</td>
+<td>Keep this part?</td>
+</tr>
+</tbody>
+</table>
+<p>It is recommended that dynamic linking should generally not be allowed. This
+will avoid the user from replacing a library with malicious library.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-LibraryLinking-1</td>
+<td>Dynamic linking</td>
+<td>Should generally not be allowed.</td>
+</tr>
+</tbody>
+</table>
+<p>Linking everything statically doesn't change anything wrt security as binaries
+will live under same user:group as libraries and setuid executables ignore
+<code>LD_PRELOAD/LD_LIBRARY_PATH</code>. It also increases RSS footprint and creates
+problems with upgrading.</p>
+<h1 id="memory">Memory</h1>
+<h2 id="restrict-access-to-kernel-memory">Restrict access to kernel memory</h2>
+<p>The /dev/kmem file in Linux systems is directly mapped to kernel virtual memory.
+This can be disastrous if an attacker gains root access, as the attacker would
+have direct access to kernel virtual memory.</p>
+<p>To disable the /dev/kmem file, which is very infrequently used by applications,
+the following kernel option should be set in the compile-time kernel
+configuration:</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Memory-RestrictAccess-1</td>
+<td><code>CONFIG_DEVKMEM</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<p>In case applications in userspace need /dev/kmem support, it should be available
+only for authenticated applications.</p>
+<hr />
+<h2 id="disable-access-to-a-kernel-core-dump">Disable access to a kernel core dump</h2>
+<p>This kernel configuration disables access to a kernel core dump from user space.
+If enabled, it gives attackers a useful view into kernel memory.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Memory-CoreDump-1</td>
+<td><code>CONFIG_PROC_KCORE</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="disable-swap">Disable swap</h2>
+<p>If not disabled, attackers can enable swap at runtime, add pressure to the
+memory subsystem and then scour the pages written to swap for useful
+information.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Memory-Swap-1</td>
+<td><code>CONFIG_SWAP</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Enabling swap at runtime require <code>CAP_SYS_ADMIN</code>.</li>
+<li>Swap block device is usually under root:disk.</li>
+<li>Linux never swaps kernel pages.</li>
+<li>If swap disabling is not possible, swap encryption should be enabled.</li>
+</ul>
+<hr />
+<h2 id="disable-load-all-symbols">Disable "Load All Symbols"</h2>
+<p>There is a /proc/kallsyms file which exposes the kernel memory space address of
+many kernel symbols (functions, variables, etc...). This information is useful
+to attackers in identifying kernel versions/configurations and in preparing
+payloads for the exploits of kernel space.</p>
+<p>Both <code>KALLSYMS_ALL</code> and <code>KALLSYMS</code> shall be disabled;</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Memory-LoadAllSymbols-1</td>
+<td><code>CONFIG_KALLSYMS</code></td>
+<td><code>n</code></td>
+</tr>
+<tr>
+<td>Kernel-Memory-LoadAllSymbols-2</td>
+<td><code>CONFIG_KALLSYMS_ALL</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="stack-protection">Stack protection</h2>
+<p>To prevent stack-smashing, similar to the stack protector used for ELF programs
+in user-space, the kernel can protect its internal stacks as well.</p>
+<p>This configuration is supported in <strong>Linux 3.11 and greater</strong> and thus should
+only be enabled for such versions.</p>
+<p>This configuration also requires building the kernel with the <strong>gcc compiler 4.2
+or greater</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Memory-Stack-1</td>
+<td><code>CONFIG_CC_STACKPROTECTOR</code></td>
+<td><code>y</code></td>
+</tr>
+</tbody>
+</table>
+<p>Other defenses include things like shadow stacks.</p>
+<hr />
+<h2 id="disable-access-to-devmem">Disable access to /dev/mem</h2>
+<p>The /dev/mem file in Linux systems is directly mapped to physical memory. This
+can be disastrous if an attacker gains root access, as the attacker would have
+direct access to physical memory through this convenient device file. It may not
+always be possible to disable such file, as some applications might need such
+support. In that case, then this device file should be available only for
+authenticated applications.</p>
+<p>This configuration is supported in <strong>Linux 4.0 and greater</strong> and thus should
+only be disabled for such versions.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Memory-Access-1</td>
+<td><code>CONFIG_DEVMEM</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="disable-cross-memory-attach">Disable cross-memory attach</h2>
+<p>Disable the process_vm_*v syscalls which allow one process to peek/poke the
+virtual memory of another.</p>
+<p>This configuration is supported in <strong>Linux 3.5 and greater</strong> and thus should
+only be disabled for such versions.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Memory-CrossMemAttach-1</td>
+<td><code>CROSS_MEMORY_ATTACH</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="stack-smashing-attacks">Stack Smashing Attacks</h2>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>compiler</code> and <code>linker</code> options</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Memory-StackSmashing-1</td>
+<td><code>-fstack-protector-all</code></td>
+<td><em>Enable</em></td>
+</tr>
+</tbody>
+</table>
+<p>Emit extra code to check for buffer overflows, such as stack smashing attacks.</p>
+<hr />
+<h2 id="detect-buffer-overflows">Detect Buffer Overflows</h2>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>compiler</code> options and <code>config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Memory-BufferOverflows-1</td>
+<td><code>-D_FORTIFY_SOURCE</code></td>
+<td><code>2</code></td>
+</tr>
+<tr>
+<td>Kernel-Memory-BufferOverflows-2</td>
+<td><code>CONFIG_FORTIFY_SOURCE</code></td>
+<td><code>y</code></td>
+</tr>
+</tbody>
+</table>
+<p>Helps detect some buffer overflow errors.</p>
+<h1 id="serial">Serial</h1>
+<h2 id="disable-serial-console">Disable serial console</h2>
+<p>The serial console should be disabled to prevent an attacker from accessing this
+powerful interface.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Consoles-Serial-1</td>
+<td><code>CONFIG_SERIAL_8250</code></td>
+<td><code>n</code></td>
+</tr>
+<tr>
+<td>Kernel-Consoles-Serial-2</td>
+<td><code>CONFIG_SERIAL_8250_CONSOLE</code></td>
+<td><code>n</code></td>
+</tr>
+<tr>
+<td>Kernel-Consoles-Serial-3</td>
+<td><code>CONFIG_SERIAL_CORE</code></td>
+<td><code>n</code></td>
+</tr>
+<tr>
+<td>Kernel-Consoles-Serial-4</td>
+<td><code>CONFIG_SERIAL_CORE_CONSOLE</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="bake-in-the-kernel-command-line">Bake-in the kernel command-line</h2>
+<p>The kernel command-line is used to control many aspects of the booting kernel,
+and is prone to tampering as they are passed in RAM with little to no reverse
+validation on these parameters. To prevent this type of attack, the kernel shall
+be configured to ignore commands line arguments, and use pre-configured (compile
+time) options instead.</p>
+<p>Set the kernel command line in the <code>CONFIG_CMDLINE KConfig</code> item and then pass
+no arguments from the bootloader.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Consoles-CommandLine-1</td>
+<td><code>CONFIG_CMDLINE_BOOL</code></td>
+<td><code>y</code></td>
+</tr>
+<tr>
+<td>Kernel-Consoles-CommandLine-2</td>
+<td><code>CONFIG_CMDLINE</code></td>
+<td><code>"insert kernel command line here"</code></td>
+</tr>
+<tr>
+<td>Kernel-Consoles-CommandLine-3</td>
+<td><code>CONFIG_CMDLINE_OVERRIDE</code></td>
+<td><code>y</code></td>
+</tr>
+</tbody>
+</table>
+<p>It is recommended that any per-device settings (e.g: MAC addresses, serial
+numbers, etc.) be stored and accessed from read-only memory (or files), and that
+any such parameters be verified (signature checking) prior to their use.</p>
+<hr />
+<h2 id="disable-kgdb">Disable KGDB</h2>
+<p>The Linux kernel supports KGDB over USB and console ports. These mechanisms are
+controlled by the <code>kgdbdbgp</code> and <code>kgdboc</code> kernel command-line parameters. It is
+important to ensure that no shipping product contains a kernel with KGDB
+compiled-in.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Consoles-KDBG-1</td>
+<td><code>CONFIG_KGDB</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="disable-magic-sysrq-support">Disable magic sysrq support</h2>
+<p>On a few architectures, you can access a powerful debugger interface from the
+keyboard. The same powerful interface can be present on the serial console
+(responding to serial break) of Linux on other architectures. Disable to avoid
+potentially exposing this powerful backdoor.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Consoles-SysRQ-1</td>
+<td><code>CONFIG_MAGIC_SYSRQ</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="disable-support-for-binary-formats-other-than-elf">Disable support for binary formats other than ELF</h2>
+<p>This will make possible to plug wrapper-driven binary formats into the kernel.
+It enables support for binary formats other than ELF. Providing the ability to
+use alternate interpreters would assist an attacker in discovering attack
+vectors.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Consoles-BinaryFormat-1</td>
+<td><code>CONFIG_BINFMT_MISC</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<h1 id="debug">Debug</h1>
+<p>No debuggers shall be present on the file system. This includes, but is not
+limited to, the GNU Debugger client/server (commonly known in their short form
+names such as the <code>gdb</code> and <code>gdbserver</code> executable binaries respectively), the
+<code>LLDB</code> next generation debugger or the <code>TCF</code> (Target Communications Framework)
+agnostic framework. Including these binaries as part of the file system will
+facilitate an attacker's ability to reverse engineer and debug (either locally
+or remotely) any process that is currently executing on the device.</p>
+<h2 id="kernel-debug-symbols">Kernel debug symbols</h2>
+<p>Debug symbols should always be removed from production kernels as they provide a
+lot of information to attackers.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-Symbols-1</td>
+<td><code>CONFIG_DEBUG_INFO</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<p>These kernel debug symbols are enabled by other config items in the kernel. Care
+should be taken to disable those also. If <code>CONFIG_DEBUG_INFO</code> cannot be
+disabled, then enabling <code>CONFIG_DEBUG_INFO_REDUCED</code> is second best.</p>
+<p>At least <code>CONFIG_DEBUG_INFO_REDUCED</code> should be always enabled for developers to
+convert addresses in oops messages to line numbers.</p>
+<hr />
+<h2 id="disable-kprobes">Disable Kprobes</h2>
+<p>Kprobes enables you to dynamically break into any kernel routine and collect
+debugging and performance information non-disruptively. You can trap at almost
+any kernel code address, specifying a handler routine to be invoked when the
+breakpoint is hit.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-Kprobes-1</td>
+<td><code>CONFIG_KPROBES</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="disable-tracing">Disable Tracing</h2>
+<p>FTrace enables the kernel to trace every kernel function. Providing kernel trace
+functionality would assist an attacker in discovering attack vectors.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-Tracing-1</td>
+<td><code>CONFIG_FTRACE</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="disable-profiling">Disable Profiling</h2>
+<p>Profiling and OProfile enables profiling the whole system, include the kernel,
+kernel modules, libraries, and applications. Providing profiling functionality
+would assist an attacker in discovering attack vectors.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-Profiling-1</td>
+<td><code>CONFIG_OPROFILE</code></td>
+<td><code>n</code></td>
+</tr>
+<tr>
+<td>Kernel-Debug-Profiling-2</td>
+<td><code>CONFIG_PROFILING</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="disable-oops-print-on-bug">Disable OOPS print on BUG()</h2>
+<p>The output from OOPS print can be helpful in Return Oriented Programming (ROP)
+when trying to determine the effectiveness of an exploit.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-OOPSOnBUG-1</td>
+<td><code>CONFIG_DEBUG_BUGVERBOSE</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="disable-kernel-debugging">Disable Kernel Debugging</h2>
+<p>There are development-only branches of code in the kernel enabled by the
+<code>DEBUG_KERNEL</code> conf. This should be disabled to compile-out these branches.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-Dev-1</td>
+<td><code>CONFIG_DEBUG_KERNEL</code></td>
+<td><code>n</code></td>
+</tr>
+<tr>
+<td>Kernel-Debug-Dev-2</td>
+<td><code>CONFIG_EMBEDDED</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<p>In some kernel versions, disabling this requires also disabling
+<code>CONFIG_EMBEDDED</code>, and <code>CONFIG_EXPERT</code>. Disabling <code>CONFIG_EXPERT</code> makes it
+impossible to disable <code>COREDUMP</code>, <code>DEBUG_BUGVERBOSE</code>, <code>NAMESPACES</code>, <code>KALLSYMS</code>
+and <code>BUG</code>. In which case it is better to leave this enabled than enable the
+others.</p>
+<hr />
+<h2 id="disable-the-kernel-debug-filesystem">Disable the kernel debug filesystem</h2>
+<p>The kernel debug filesystem presents a lot of useful information and means of
+manipulation of the kernel to an attacker.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-FileSystem-1</td>
+<td><code>CONFIG_DEBUG_FS</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="disable-bug-support">Disable BUG() support</h2>
+<p>The kernel will display backtrace and register information for BUGs and WARNs in
+kernel space, making it easier for attackers to develop exploits.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-BUG-1</td>
+<td><code>CONFIG_BUG</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="disable-core-dumps">Disable core dumps</h2>
+<p>Core dumps provide a lot of debug information for hackers. So disabling core
+dumps are recommended in production builds.</p>
+<p>This configuration is supported in <strong>Linux 3.7 and greater</strong> and thus should
+only be disabled for such versions.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-CoreDumps-1</td>
+<td><code>CONFIG_COREDUMP</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="kernel-address-display-restriction">Kernel Address Display Restriction</h2>
+<p>When attackers try to develop "run anywhere" exploits for kernel
+vulnerabilities, they frequently need to know the location of internal kernel
+structures. By treating kernel addresses as sensitive information, those
+locations are not visible to regular local users.</p>
+<p><strong>/proc/sys/kernel/kptr_restrict is set to "1"</strong> to block the reporting of known
+kernel address leaks.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>File</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-AdressDisplay-1</td>
+<td><code>/proc/sys/kernel/kptr_restrict</code></td>
+<td><code>1</code></td>
+</tr>
+</tbody>
+</table>
+<p>Additionally, various files and directories should be readable only by the root
+user: <code>/boot/vmlinuz*</code>, <code>/boot/System.map*</code>, <code>/sys/kernel/debug/</code>,
+<code>/proc/slabinfo</code></p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>File</code> or <code>Directorie</code> name</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-AdressDisplay-1</td>
+<td><code>/boot/vmlinuz*</code></td>
+<td><em>Readable Only for root user</em></td>
+</tr>
+<tr>
+<td>Kernel-Debug-AdressDisplay-2</td>
+<td><code>/boot/System.map*</code></td>
+<td><em>Readable Only for root user</em></td>
+</tr>
+<tr>
+<td>Kernel-Debug-AdressDisplay-3</td>
+<td><code>/sys/kernel/debug/</code></td>
+<td><em>Readable Only for root user</em></td>
+</tr>
+<tr>
+<td>Kernel-Debug-AdressDisplay-4</td>
+<td><code>/proc/slabinfo</code></td>
+<td><em>Readable Only for root user</em></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="dmesg-restrictions">DMESG Restrictions</h2>
+<p>When attackers try to develop "run anywhere" exploits for vulnerabilities, they
+frequently will use <code>dmesg</code> output. By treating <code>dmesg</code> output as sensitive
+information, this output is not available to the attacker.</p>
+<p><strong>/proc/sys/kernel/dmesg_restrict can be set to "1"</strong> to treat dmesg output as
+sensitive.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>File</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-DMESG-1</td>
+<td><code>/proc/sys/kernel/dmesg_restrict</code></td>
+<td><code>1</code></td>
+</tr>
+</tbody>
+</table>
+<p>Enable the below compiler and linker options when building user-space
+applications to avoid stack smashing, buffer overflow attacks.</p>
+<hr />
+<h2 id="disable-procconfiggz">Disable /proc/config.gz</h2>
+<p>It is extremely important to not expose the kernel configuration used on a
+production device to a potential attacker. With access to the kernel config, it
+could be possible for an attacker to build a custom kernel for the device that
+may disable critical security features.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-Config-1</td>
+<td><code>CONFIG_IKCONFIG</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<h1 id="file-system">File System</h1>
+<h2 id="disable-all-file-systems-not-needed">Disable all file systems not needed</h2>
+<p>To reduce the attack surface, file system data is parsed by the kernel, so any
+logic bugs in file system drivers can become kernel exploits.</p>
+<h3 id="disable-nfs-file-system">Disable NFS file system</h3>
+<p>NFS FileSystems are useful during development phases, but this can be a very
+helpful way for an attacker to get files when you are in production mode, so we
+must disable them.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-FileSystems-NFS-1</td>
+<td><code>CONFIG_NFSD</code></td>
+<td><code>n</code></td>
+</tr>
+<tr>
+<td>Kernel-FileSystems-NFS-2</td>
+<td><code>CONFIG_NFS_FS</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="partition-mount-options">Partition Mount Options</h2>
+<p>There are several security restrictions that can be set on a filesystem when it
+is mounted. Some common security options include, but are not limited to:</p>
+<p><code>nosuid</code> - Do not allow set-user-identifier or set-group-identifier bits to take
+effect.</p>
+<p><code>nodev</code> - Do not interpret character or block special devices on the filesystem.</p>
+<p><code>noexec</code> - Do not allow execution of any binaries on the mounted filesystem.</p>
+<p><code>ro</code> - Mount filesystem as read-only.</p>
+<p>The following flags shall be used for mounting common filesystems:</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Partition</code></th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-FileSystems-Mount-1</td>
+<td><code>/boot</code></td>
+<td><code>nosuid</code>, <code>nodev</code> and <code>noexec</code>.</td>
+</tr>
+<tr>
+<td>Kernel-FileSystems-Mount-2</td>
+<td><code>/var</code> &amp; <code>/tmp</code></td>
+<td>In <code>/etc/fstab</code> or <code>vfstab</code>, add <code>nosuid</code>, <code>nodev</code> and <code>noexec</code>.</td>
+</tr>
+<tr>
+<td>Kernel-FileSystems-Mount-3</td>
+<td><em>Non-root local</em></td>
+<td>If type is <code>ext2</code> or <code>ext3</code> and mount point not '/', add <code>nodev</code>.</td>
+</tr>
+<tr>
+<td>Kernel-FileSystems-Mount-4</td>
+<td><em>Removable storage</em></td>
+<td>Add <code>nosuid</code>, <code>nodev</code> and <code>noexec</code>.</td>
+</tr>
+<tr>
+<td>Kernel-FileSystems-Mount-5</td>
+<td><em>Temporary storage</em></td>
+<td>Add <code>nosuid</code>, <code>nodev</code> and <code>noexec</code>.</td>
+</tr>
+<tr>
+<td>Kernel-FileSystems-Mount-6</td>
+<td><code>/dev/shm</code></td>
+<td>Add <code>nosuid</code>, <code>nodev</code> and <code>noexec</code>.</td>
+</tr>
+<tr>
+<td>Kernel-FileSystems-Mount-7</td>
+<td><code>/dev</code></td>
+<td>Add <code>nosuid</code> and <code>noexec</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>If <code>CONFIG_DEVTMPFS_MOUNT</code> is set, then the kernel will mount /dev and will not
+apply the <code>nosuid</code>, <code>noexec</code> options. Either disable <code>CONFIG_DEVTMPFS_MOUNT</code> or
+add a remount with <code>noexec</code> and <code>nosuid</code> options to system startup.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><em>State</em> or <code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-FileSystems-Mount-1</td>
+<td><code>CONFIG_DEVTMPFS_MOUNT</code></td>
+<td><em>Disabled</em> or add remount with <code>noexec</code> and <code>nosuid</code> to system startup.</td>
+</tr>
+</tbody>
+</table>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../5_Platform/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../5_Platform/" class="btn btn-xs btn-link">
+        Platform
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../3_Hypervisor/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../3_Hypervisor/" class="btn btn-xs btn-link">
+        Hypervisor
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

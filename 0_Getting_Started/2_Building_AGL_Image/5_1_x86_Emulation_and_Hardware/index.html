@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/0_Getting_Started/2_Building_AGL_Image/5_1_x86_Emulation_and_Hardware/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Building for x86 (Emulation and Hardware) - AGL Documentation</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "1. Making Sure Your Build Environment is Correct", url: "#_top", children: [
+          ]},
+          {title: "2. Using BitBake", url: "#2-using-bitbake", children: [
+          ]},
+          {title: "3. Deploying the AGL Demo Image", url: "#3-deploying-the-agl-demo-image", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../5_2_Raspberry_Pi_4/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../5_2_Raspberry_Pi_4/" class="btn btn-xs btn-link">
+        Building for Raspberry Pi 4
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../5_0_Building_the_AGL_Image/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../5_0_Building_the_AGL_Image/" class="btn btn-xs btn-link">
+        Building the AGL Image
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p>Building an image for emulation allows you to simulate your
+image without actual target hardware.</p>
+<p>This section describes the steps you need to take to build the
+AGL demo image for emulation using either Quick EMUlator (QEMU) or
+VirtualBox, and later the same image can be used to boot any hardware.</p>
+<h2 id="1-making-sure-your-build-environment-is-correct">1. Making Sure Your Build Environment is Correct</h2>
+<p>The
+"<a href="../3_Initializing_Your_Build_Environment/">Initializing Your Build Environment</a>"
+section presented generic information for setting up your build environment
+using the <code>aglsetup.sh</code> script.
+If you are building the AGL demo image for emulation, you need to specify some
+specific options when you run the script:</p>
+<p><strong>Sample Qt based IVI demo :</strong></p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">source</span> meta-agl/scripts/aglsetup.sh -f -m qemux86-64 -b qemux86-64 agl-demo agl-devel
+$ <span class="nb">echo</span> <span class="s2">&quot;# reuse download directories&quot;</span> &gt;&gt; <span class="nv">$AGL_TOP</span>/site.conf
+$ <span class="nb">echo</span> <span class="s2">&quot;DL_DIR = \&quot;</span><span class="nv">$HOME</span><span class="s2">/downloads/\&quot;&quot;</span> &gt;&gt; <span class="nv">$AGL_TOP</span>/site.conf
+$ <span class="nb">echo</span> <span class="s2">&quot;SSTATE_DIR = \&quot;</span><span class="nv">$AGL_TOP</span><span class="s2">/sstate-cache/\&quot;&quot;</span> &gt;&gt; <span class="nv">$AGL_TOP</span>/site.conf
+$ ln -sf <span class="nv">$AGL_TOP</span>/site.conf conf/
+</code></pre></div>
+<p><strong>Sample HTML5 based IVI demo :</strong></p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">source</span> meta-agl/scripts/aglsetup.sh -f -m qemux86-64 -b qemux86-64 agl-demo agl-devel agl-profile-graphical-html5
+$ <span class="nb">echo</span> <span class="s2">&quot;# reuse download directories&quot;</span> &gt;&gt; <span class="nv">$AGL_TOP</span>/site.conf
+$ <span class="nb">echo</span> <span class="s2">&quot;DL_DIR = \&quot;</span><span class="nv">$HOME</span><span class="s2">/downloads/\&quot;&quot;</span> &gt;&gt; <span class="nv">$AGL_TOP</span>/site.conf
+$ <span class="nb">echo</span> <span class="s2">&quot;SSTATE_DIR = \&quot;</span><span class="nv">$AGL_TOP</span><span class="s2">/sstate-cache/\&quot;&quot;</span> &gt;&gt; <span class="nv">$AGL_TOP</span>/site.conf
+$ ln -sf <span class="nv">$AGL_TOP</span>/site.conf conf/
+</code></pre></div>
+<p><strong>IVI-EG Flutter based demo :</strong></p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">source</span> meta-agl/scripts/aglsetup.sh -f -m qemux86-64 -b qemux86-64 agl-flutter agl-devel
+$ <span class="nb">echo</span> <span class="s2">&quot;# reuse download directories&quot;</span> &gt;&gt; <span class="nv">$AGL_TOP</span>/site.conf
+$ <span class="nb">echo</span> <span class="s2">&quot;DL_DIR = \&quot;</span><span class="nv">$HOME</span><span class="s2">/downloads/\&quot;&quot;</span> &gt;&gt; <span class="nv">$AGL_TOP</span>/site.conf
+$ <span class="nb">echo</span> <span class="s2">&quot;SSTATE_DIR = \&quot;</span><span class="nv">$AGL_TOP</span><span class="s2">/sstate-cache/\&quot;&quot;</span> &gt;&gt; <span class="nv">$AGL_TOP</span>/site.conf
+$ ln -sf <span class="nv">$AGL_TOP</span>/site.conf conf/
+</code></pre></div>
+<p><strong>IC-EG container image :</strong>
+<div class="highlight"><pre><span></span><code><span class="c1">### TBD</span>
+</code></pre></div></p>
+<p><strong>Virt-EG demo image :</strong> 
+<div class="highlight"><pre><span></span><code><span class="c1">### TBD</span>
+</code></pre></div></p>
+<p>The "-m" option specifies the "qemux86-64" machine.
+The list of AGL features used with script are appropriate for development of
+the AGL demo image suited for either QEMU or VirtualBox.</p>
+<h2 id="2-using-bitbake">2. Using BitBake</h2>
+<p>Start the build using the <code>bitbake</code> command.</p>
+<p><strong>NOTE:</strong> An initial build can take many hours depending on your
+CPU and and Internet connection speeds.
+The build also takes approximately 100G-bytes of free disk space.</p>
+<p><strong>Sample Qt based IVI demo :</strong>
+The target is <code>agl-demo-platform</code>.</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">time</span> bitbake agl-demo-platform
+</code></pre></div>
+<p>By default, the build process puts the resulting image in the Build Directory and further exporting that as <code>$IMAGE_NAME</code>:</p>
+<div class="highlight"><pre><span></span><code>&lt;build_directory&gt;/tmp/deploy/images/qemux86-64/agl-demo-platform-qemux86-64.vmdk.xz
+
+$ <span class="nb">export</span> <span class="nv">IMAGE_NAME</span><span class="o">=</span>agl-demo-platform-qemux86-64.vmdk.xz
+</code></pre></div>
+<p><strong>Sample HTML5 based IVI demo :</strong>
+The target is <code>agl-demo-platform-html5</code>.</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">time</span> bitbake agl-demo-platform-html5
+</code></pre></div>
+<p>By default, the build process puts the resulting image in the Build Directory and further exporting that as <code>$IMAGE_NAME</code>:</p>
+<div class="highlight"><pre><span></span><code>&lt;build_directory&gt;/tmp/deploy/images/qemux86-64/agl-demo-platform-html5-qemux86-64.vmdk.xz
+
+$ <span class="nb">export</span> <span class="nv">IMAGE_NAME</span><span class="o">=</span>agl-demo-platform-html5-qemux86-64.vmdk.xz
+</code></pre></div>
+<p><strong>IVI-EG Flutter based demo :</strong>
+The target is <code>agl-image-flutter</code>.</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">time</span> bitbake agl-image-flutter
+</code></pre></div>
+<p><strong>IC-EG container image :</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># TBD</span>
+</code></pre></div></p>
+<p><strong>Virt-EG demo image :</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># TBD</span>
+</code></pre></div></p>
+<h2 id="3-deploying-the-agl-demo-image">3. Deploying the AGL Demo Image</h2>
+<p>Deploying the image consists of decompressing the image and then
+booting it using either QEMU, VirtualBox or physical system.
+The examples below are usually for the 'agl-demo-platform' target.
+Please adapt accordingly to your target image.</p>
+<p><strong>3.1 QEMU</strong></p>
+<p>Depending on your Linux distribution, use these commands to install QEMU:</p>
+<p>If you built your image with bitbake, you can now just use the <code>runqemu</code> wrapper, after sourcing <code>agl-init-build-env</code> inside the build-dir :</p>
+<p>For this example :</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">source</span> <span class="nv">$AGL_TOP</span>/master/qemux86-64/agl-init-build-env
+</code></pre></div>
+<p>In general :</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">source</span> <span class="nv">$AGL_TOP</span>/&lt;release-branch-name&gt;/&lt;build-dir&gt;/
+</code></pre></div>
+<p>And further use <code>runqemu</code> to boot the image :</p>
+<div class="highlight"><pre><span></span><code>$ runqemu tmp/deploy/images/qemux86-64/agl-demo-platform-qemux86-64.qemuboot.conf kvm serialstdio slirp publicvnc audio
+</code></pre></div>
+<p>If you need to run it outside of the bitbake environment or need special settings for
+hardware pass-through using <code>qemu</code> :</p>
+<p><strong>NOTE:</strong> if you have created an AGL crosssdk, it will contain a
+QEMU binary for the build host.
+This SDK QEMU binary does not support graphics.
+Consequently,  you cannot use it to boot the AGL image and
+need to call your host's qemu binary instead.</p>
+<p><strong>NOTE:</strong> the VM images need UEFI in the emulator to boot. Thus you need
+to install the necessary files with below commands (ovmf).</p>
+<p>If your build host is running
+<a href="https://www.archlinux.org/">Arch Linux</a>, use the following commands:</p>
+<div class="highlight"><pre><span></span><code>sudo pacman -S qemu ovmf
+<span class="nb">export</span> <span class="nv">OVMF_PATH</span><span class="o">=</span>/usr/share/ovmf/x64/OVMF_CODE.fd
+</code></pre></div>
+<p>If your build host is running Debian or Ubuntu, use the following commands:</p>
+<div class="highlight"><pre><span></span><code>sudo apt-get install qemu-system-x86 ovmf
+<span class="nb">export</span> <span class="nv">OVMF_PATH</span><span class="o">=</span>/usr/share/ovmf/OVMF.fd
+</code></pre></div>
+<p>If you build host is running Fedora, use the following commands:</p>
+<div class="highlight"><pre><span></span><code>sudo yum install qemu qemu-kvm edk2-ovmf
+<span class="nb">export</span> <span class="nv">OVMF_PATH</span><span class="o">=</span>/usr/share/edk2/ovmf/OVMF_CODE.fd
+</code></pre></div>
+<p><strong>Note:</strong></p>
+<p>Once QEMU is installed, boot the image with KVM support:</p>
+<div class="highlight"><pre><span></span><code>qemu-system-x86_64 -enable-kvm -m <span class="m">2048</span> <span class="se">\</span>
+    -bios <span class="si">${</span><span class="nv">OVMF_PATH</span><span class="si">}</span> <span class="se">\</span>
+    -hda <span class="si">${</span><span class="nv">IMAGE_NAME</span><span class="si">}</span> <span class="se">\</span>
+    -cpu kvm64 -cpu qemu64,+ssse3,+sse4.1,+sse4.2,+popcnt <span class="se">\</span>
+    -vga virtio -show-cursor <span class="se">\</span>
+    -device virtio-rng-pci <span class="se">\</span>
+    -serial mon:stdio -serial null <span class="se">\</span>
+    -soundhw hda <span class="se">\</span>
+    -net nic <span class="se">\</span>
+    -net user,hostfwd<span class="o">=</span>tcp::2222-:22
+</code></pre></div>
+<p><strong>NOTE:</strong> KVM may not be supported within a virtualized environment such as
+VirtualBox. This is indicated by the qemu command above giving the error
+message <code>Could not access KVM kernel module: No such file or directory</code> or
+the kernel log output contains the error message <code>kvm: no hardware support</code>.
+The image can be booted in such an environment by removing <code>-enable-kvm</code> from
+the qemu command line, however this will result in lower perfromance within
+the AGL demo.</p>
+<p><strong>3.2 VirtualBox</strong></p>
+<p>Once VirtualBox is installed, follow these steps to boot the image:</p>
+<ol>
+<li>
+<p>Install and set up <a href="https://www.virtualbox.org/wiki/Linux_Downloads">Virtual Box</a>.</p>
+</li>
+<li>
+<p>Extract the vmdk file :</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> tmp/deploy/images/qemux86-64
+xz -d <span class="si">${</span><span class="nv">IMAGE_NAME</span><span class="si">}</span>
+</code></pre></div>
+</li>
+<li>
+<p>Configure virtual box for AGL :</p>
+<ul>
+<li>Click on <code>New</code> or <code>Add</code>.</li>
+<li>Enter Name as <code>agl-demo</code>.</li>
+<li>Type as <code>Linux</code>.</li>
+<li>Version as <code>Other Linux (64-bit)</code>, click on <code>Next</code>.
+<img alt="vbox-step-1" src="../images/vbox-1.png" /></li>
+<li>Select Memory size. Recommended is <code>2048 MB</code>, click on <code>Next</code>.
+<img alt="vbox-step-2" src="../images/vbox-2.png" /></li>
+<li>Click on <code>Use an existing virtual hard disk file</code>, and select the extracted <code>agl-demo-platform-qemux86-64.vmdk.xz</code> or <code>&lt;html5-image?&gt;</code> file, click on <code>Create</code>.
+<img alt="vbox-step-3" src="../images/vbox-3.png" /></li>
+<li>Go to <code>Settings</code>, and into <code>System</code>. Select <code>Chipset : IHC9</code>. Check on <code>Enable EFI (special OSes only)</code> and click on <code>OK</code>.
+<img alt="vbox-step-4" src="../images/vbox-4.png" /></li>
+<li>Go to <code>Storage</code>, and change the attribute to <code>Type : AHCI</code> and click on <code>OK</code>.
+<img alt="vbox-step-5" src="../images/vbox-5.png" /></li>
+<li>Click on <code>Start</code>.</li>
+<li>For troubleshooting, you can refer <a href="https://lists.automotivelinux.org/g/agl-dev-community/message/8474">here</a>.</li>
+</ul>
+</li>
+</ol>
+<p><strong>3.3 x86 physical system</strong></p>
+<p><strong>NOTE :</strong> UEFI enabled system is required.</p>
+<ol>
+<li>
+<p>Extract the image into USB drive :</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">cd</span> tmp/deploy/images/qemux86-64
+$ lsblk
+$ sudo umount &lt;usb_device_name&gt;
+$ xzcat agl-demo-platform-qemux86-64.wic.xz <span class="p">|</span> sudo dd <span class="nv">of</span><span class="o">=</span>&lt;usb_device_name&gt; <span class="nv">bs</span><span class="o">=</span>4M
+$ sync
+</code></pre></div>
+</li>
+<li>
+<p>Boot from USB drive on the x86 system.</p>
+</li>
+</ol>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../5_2_Raspberry_Pi_4/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../5_2_Raspberry_Pi_4/" class="btn btn-xs btn-link">
+        Building for Raspberry Pi 4
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../5_0_Building_the_AGL_Image/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../5_0_Building_the_AGL_Image/" class="btn btn-xs btn-link">
+        Building the AGL Image
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

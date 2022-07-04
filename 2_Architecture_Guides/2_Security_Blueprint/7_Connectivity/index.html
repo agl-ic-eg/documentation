@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/2_Architecture_Guides/2_Security_Blueprint/7_Connectivity/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Connectivity - AGL Documentation</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Acronyms and Abbreviations", url: "#_top", children: [
+          ]},
+          {title: "Bus", url: "#bus", children: [
+          ]},
+          {title: "Connectors", url: "#connectors", children: [
+          ]},
+          {title: "Wireless", url: "#wireless", children: [
+              {title: "Wifi", url: "#wifi" },
+              {title: "Bluetooth", url: "#bluetooth" },
+              {title: "Cellular", url: "#cellular" },
+              {title: "Radio", url: "#radio" },
+              {title: "NFC", url: "#nfc" },
+          ]},
+          {title: "Cloud", url: "#cloud", children: [
+              {title: "Download", url: "#download" },
+              {title: "Infrastructure", url: "#infrastructure" },
+              {title: "Transport", url: "#transport" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../8_Update_OTA/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../8_Update_OTA/" class="btn btn-xs btn-link">
+        Update (Over The Air)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../6_Application/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../6_Application/" class="btn btn-xs btn-link">
+        Application
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p>This part shows different Connectivity attacks on the car.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connectivity-Abstract-1</td>
+<td>Improve abstract.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="acronyms-and-abbreviations">Acronyms and Abbreviations</h2>
+<p>The following table lists the terms utilized within this part of the document.</p>
+<table>
+<thead>
+<tr>
+<th>Acronyms or Abbreviations</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>ARP</em></td>
+<td><strong>A</strong>ddress <strong>R</strong>esolution <strong>P</strong>rotocol</td>
+</tr>
+<tr>
+<td><em>BLE</em></td>
+<td><strong>B</strong>luetooth <strong>L</strong>ow <strong>E</strong>nergy</td>
+</tr>
+<tr>
+<td><em>CAN</em></td>
+<td><strong>C</strong>ar <strong>A</strong>rea <strong>N</strong>etwork</td>
+</tr>
+<tr>
+<td><em>CCMP</em></td>
+<td><strong>C</strong>ounter-Mode/<strong>C</strong>BC-<strong>M</strong>ac <strong>P</strong>rotocol</td>
+</tr>
+<tr>
+<td><em>EDGE</em></td>
+<td><strong>E</strong>nhanced <strong>D</strong>ata <strong>R</strong>ates for <strong>GSM</strong> <strong>E</strong>volution - Evolution of <strong>GPRS</strong></td>
+</tr>
+<tr>
+<td><em>GEA</em></td>
+<td><strong>G</strong>PRS <strong>E</strong>ncryption <strong>A</strong>lgorithm</td>
+</tr>
+<tr>
+<td><em>GPRS</em></td>
+<td><strong>G</strong>eneral <strong>P</strong>acket <strong>R</strong>adio <strong>S</strong>ervice (2,5G, 2G+)</td>
+</tr>
+<tr>
+<td><em>GSM</em></td>
+<td><strong>G</strong>lobal <strong>S</strong>ystem for <strong>M</strong>obile Communications (2G)</td>
+</tr>
+<tr>
+<td><em>HSPA</em></td>
+<td><strong>H</strong>igh <strong>S</strong>peed <strong>P</strong>acket <strong>A</strong>ccess (3G+)</td>
+</tr>
+<tr>
+<td><em>IMEI</em></td>
+<td><strong>I</strong>nternational <strong>M</strong>obile <strong>E</strong>quipment <strong>I</strong>dentity</td>
+</tr>
+<tr>
+<td><em>LIN</em></td>
+<td><strong>L</strong>ocal <strong>I</strong>nterconnect <strong>N</strong>etwork</td>
+</tr>
+<tr>
+<td><em>MOST</em></td>
+<td><strong>M</strong>edia <strong>O</strong>riented <strong>S</strong>ystem <strong>T</strong>ransport</td>
+</tr>
+<tr>
+<td><em>NFC</em></td>
+<td><strong>N</strong>ear <strong>F</strong>ield <strong>C</strong>ommunication</td>
+</tr>
+<tr>
+<td><em>OBD</em></td>
+<td><strong>O</strong>n-<strong>B</strong>oard <strong>D</strong>iagnostics</td>
+</tr>
+<tr>
+<td><em>PATS</em></td>
+<td><strong>P</strong>assive <strong>A</strong>nti-<strong>T</strong>heft <strong>S</strong>ystem</td>
+</tr>
+<tr>
+<td><em>PKE</em></td>
+<td><strong>P</strong>assive <strong>K</strong>eyless <strong>E</strong>ntry</td>
+</tr>
+<tr>
+<td><em>PSK</em></td>
+<td><strong>P</strong>hase-<strong>S</strong>hift <strong>K</strong>eying</td>
+</tr>
+<tr>
+<td><em>RDS</em></td>
+<td><strong>R</strong>adio <strong>D</strong>ata <strong>S</strong>ystem</td>
+</tr>
+<tr>
+<td><em>RFID</em></td>
+<td><strong>R</strong>adio <strong>F</strong>requency <strong>I</strong>dentification</td>
+</tr>
+<tr>
+<td><em>RKE</em></td>
+<td><strong>R</strong>emote <strong>K</strong>eyless <strong>E</strong>ntry</td>
+</tr>
+<tr>
+<td><em>SDR</em></td>
+<td><strong>S</strong>oftware <strong>D</strong>efined <strong>R</strong>adio</td>
+</tr>
+<tr>
+<td><em>SSP</em></td>
+<td><strong>S</strong>ecure <strong>S</strong>imple <strong>P</strong>airing</td>
+</tr>
+<tr>
+<td><em>TKIP</em></td>
+<td><strong>T</strong>emporal <strong>K</strong>ey <strong>I</strong>ntegrity <strong>P</strong>rotocol</td>
+</tr>
+<tr>
+<td><em>TPMS</em></td>
+<td><strong>T</strong>ire <strong>P</strong>ressure <strong>M</strong>onitoring <strong>S</strong>ystem</td>
+</tr>
+<tr>
+<td><em>UMTS</em></td>
+<td><strong>U</strong>niversal <strong>M</strong>obile <strong>T</strong>elecommunications <strong>S</strong>ystem (3G)</td>
+</tr>
+<tr>
+<td><em>USB</em></td>
+<td><strong>U</strong>niversal <strong>S</strong>erial <strong>B</strong>us</td>
+</tr>
+<tr>
+<td><em>WEP</em></td>
+<td><strong>W</strong>ired <strong>E</strong>quivalent <strong>P</strong>rivacy</td>
+</tr>
+<tr>
+<td><em>WPA</em></td>
+<td><strong>W</strong>ifi <strong>P</strong>rotected <strong>A</strong>ccess</td>
+</tr>
+</tbody>
+</table>
+<h1 id="bus">Bus</h1>
+<p>We only speak about the <strong>CAN</strong> bus to take an example, because the different
+attacks on bus like <em>FlewRay</em>, <em>ByteFlight</em>, <em>Most</em> and <em>Lin</em> use retro
+engineering and the main argument to improve their security is to encrypt data
+packets. We just describe them a bit:</p>
+<ul>
+<li><strong>CAN</strong>: Controller Area Network, developed in the early 1980s, is an
+  event-triggered controller network for serial communication with data rates up
+  to one MBit/s. <strong>CAN</strong> messages are classified over their respective
+  identifier. <strong>CAN</strong> controller broadcast their messages to all connected nodes
+  and all receiving nodes decide independently if they process the message.</li>
+<li><strong>FlewRay</strong>: Is a deterministic and error-tolerant high-speed bus. With a data
+  rate up to 10 MBit/s.</li>
+<li><strong>ByteFlight</strong>: Is used for safety-critical applications in motor vehicles
+  like air-bags. Byteflight runs at 10Mbps over 2 or 3 wires plastic optical
+  fibers.</li>
+<li><strong>Most</strong>: Media Oriented System Transport, is used for transmitting audio,
+  video, voice, and control data via fiber optic cables. The speed is, for the
+  synchronous way, up to 24 MBit/s and asynchronous way up to 14 MBit/s.
+  <strong>MOST</strong> messages include always a clear sender and receiver address.</li>
+<li><strong>LIN</strong>: Local Interconnect Network, is a single-wire subnet work for
+  low-cost, serial communication between smart sensors and actuators with
+  typical data rates up to 20 kBit/s. It is intended to be used from the year
+  2001 on everywhere in a car, where the bandwidth and versatility of a <strong>CAN</strong>
+  network is not required.</li>
+</ul>
+<p>On just about every vehicle, <strong>ECU</strong>s (<strong>E</strong>lectronic <strong>C</strong>ontrol <strong>U</strong>nits)
+communicate over a CAN bus, which is a two-wire bus using hardware arbitration
+for messages sent on the shared medium. This is essentially a <em>trusted</em> network
+where all traffic is visible to all controllers and any controller can send any
+message.</p>
+<p>A malicious <strong>ECU</strong> on the CAN bus can easily inject messages destined for any
+other device, including things like the instrument cluster and the head unit.
+There are common ways for hardware to do USB to CAN and open source software to
+send and receive messages. For example, there is a driver included in the Linux
+kernel that can be used to send/receive CAN signals. A malicious device on the
+CAN bus can cause a great number of harmful things to happen to the system,
+including: sending bogus information to other devices, sending unintended
+commands to ECUs, causing DOS (Denial Of Service) on the CAN bus, etc.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Tech name</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connectivity-BusAndConnector-Bus-1</td>
+<td>CAN</td>
+<td>Implement hardware solution in order to prohibit sending unwanted signals.</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.92.728&amp;rep=rep1&amp;type=pdf">Security in Automotive Bus
+Systems</a>
+for more information.</p>
+<h1 id="connectors">Connectors</h1>
+<p>For the connectors, we supposed that they were disabled by default. For example,
+the <strong>USB</strong> must be disabled to avoid attacks like BadUSB. If not, configure the
+Kernel to only enable the minimum require <strong>USB</strong> devices. The connectors used
+to diagnose the car like <strong>OBD-II</strong> must be disabled outside garages.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Tech name</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connectivity-BusAndConnector-Connectors-1</td>
+<td>USB</td>
+<td>Must be disabled. If not, only enable the minimum require USB devices.</td>
+</tr>
+<tr>
+<td>Connectivity-BusAndConnector-Connectors-2</td>
+<td>USB</td>
+<td>Confidential data exchanged with the ECU over USB must be secure.</td>
+</tr>
+<tr>
+<td>Connectivity-BusAndConnector-Connectors-3</td>
+<td>USB</td>
+<td>USB Boot on a ECU must be disable.</td>
+</tr>
+<tr>
+<td>Connectivity-BusAndConnector-Connectors-4</td>
+<td>OBD-II</td>
+<td>Must be disabled outside garages.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="wireless">Wireless</h1>
+<p>In this part, we talk about possible remote attacks on a car, according to the
+different areas of possible attacks. For each communication channels, we
+describe attacks and how to prevent them with some recommendations. The main
+recommendation is to always follow the latest updates of these remote
+communication channels.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connectivity-Wireless-1</td>
+<td>Update</td>
+<td>Always follow the latest updates of remote communication channels.</td>
+</tr>
+</tbody>
+</table>
+<p>We will see the following parts:</p>
+<ul>
+<li>
+<p><a href="#wifi">Wifi</a></p>
+</li>
+<li>
+<p><a href="#bluetooth">Bluetooth</a></p>
+</li>
+<li>
+<p><a href="#cellular">Cellular</a></p>
+</li>
+<li>
+<p><a href="#radio">Radio</a></p>
+</li>
+<li>
+<p><a href="#nfc">NFC</a></p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connectivity-Wireless-1</td>
+<td>Add communication channels (RFID, ZigBee?).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p>For existing automotive-specific means, we take examples of existing system
+attacks from the <em>IOActive</em> document (<a href="https://www.ioactive.com/pdfs/IOActive_Remote_Attack_Surfaces.pdf">A Survey of Remote Automotive Attack
+Surfaces</a>)
+and from the ETH document (<a href="https://eprint.iacr.org/2010/332.pdf">Relay Attacks on Passive Keyless Entry and Start
+Systems in Modern Cars</a>).</p>
+<ul>
+<li>
+<p><a href="https://www.ioactive.com/pdfs/IOActive_Remote_Attack_Surfaces.pdf#%5B%7B%22num%22%3A40%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C60%2C720%2C0%5D">Telematics</a></p>
+</li>
+<li>
+<p><a href="https://www.ioactive.com/pdfs/IOActive_Remote_Attack_Surfaces.pdf#%5B%7B%22num%22%3A11%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C60%2C574%2C0%5D">Passive Anti-Theft System
+  (PATS)</a></p>
+</li>
+<li>
+<p><a href="https://www.ioactive.com/pdfs/IOActive_Remote_Attack_Surfaces.pdf#%5B%7B%22num%22%3A17%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C60%2C720%2C0%5D">Tire Pressure Monitoring System
+  (TPMS)</a></p>
+</li>
+<li>
+<p><a href="https://www.ioactive.com/pdfs/IOActive_Remote_Attack_Surfaces.pdf#%5B%7B%22num%22%3A26%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C60%2C720%2C0%5D">Remote Keyless Entry/Start
+  (RKE)</a></p>
+</li>
+<li>
+<p><a href="https://eprint.iacr.org/2010/332.pdf">Passive Keyless Entry (PKE)</a></p>
+</li>
+</ul>
+<hr />
+<h2 id="wifi">Wifi</h2>
+<h3 id="attacks">Attacks</h3>
+<p>We can differentiate existing attacks on wifi in two categories: Those on
+<strong>WEP</strong> and those on <strong>WPA</strong>.</p>
+<ul>
+<li>
+<p><strong>WEP</strong> attacks:</p>
+</li>
+<li>
+<p><strong>FMS</strong>: (<strong>F</strong>luhrer, <strong>M</strong>antin and <strong>S</strong>hamir attack) is a "Stream cipher
+    attack on the widely used RC4 stream cipher. The attack allows an attacker
+    to recover the key in an RC4 encrypted stream from a large number of
+    messages in that stream."</p>
+</li>
+<li><strong>KoreK</strong>: "Allows the attacker to reduce the key space".</li>
+<li><strong>PTW</strong>: (<strong>P</strong>yshkin <strong>T</strong>ews <strong>W</strong>einmann attack).</li>
+<li><strong>Chopchop</strong>: Found by KoreK, "Weakness of the CRC32 checksum and the lack
+    of replay protection."</li>
+<li>
+<p><strong>Fragmentation</strong></p>
+</li>
+<li>
+<p><strong>WPA</strong> attacks:</p>
+</li>
+<li>
+<p><strong>Beck and Tews</strong>: Exploit weakness in <strong>TKIP</strong>. "Allow the attacker to
+    decrypt <strong>ARP</strong> packets and to inject traffic into a network, even allowing
+    him to perform a <strong>DoS</strong> or an <strong>ARP</strong> poisoning".</p>
+</li>
+<li><a href="https://github.com/kristate/krackinfo">KRACK</a>: (K)ey (R)einstallation
+    (A)tta(ck) (<a href="https://jira.automotivelinux.org/browse/SPEC-1017">jira AGL
+    SPEC-1017</a>).</li>
+</ul>
+<h3 id="recommendations">Recommendations</h3>
+<ul>
+<li>
+<p>Do not use <strong>WEP</strong>, <strong>PSK</strong> and <strong>TKIP</strong>.</p>
+</li>
+<li>
+<p>Use <strong>WPA2</strong> with <strong>CCMP</strong>.</p>
+</li>
+<li>
+<p>Should protect data sniffing.</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Tech name or object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connectivity-Wireless-Wifi-1</td>
+<td>WEP, PSK, TKIP</td>
+<td>Disabled</td>
+</tr>
+<tr>
+<td>Connectivity-Wireless-Wifi-2</td>
+<td>WPA2 and AES-CCMP</td>
+<td>Used</td>
+</tr>
+<tr>
+<td>Connectivity-Wireless-Wifi-3</td>
+<td>WPA2</td>
+<td>Should protect data sniffing.</td>
+</tr>
+<tr>
+<td>Connectivity-Wireless-Wifi-4</td>
+<td>PSK</td>
+<td>Changing regularly the password.</td>
+</tr>
+<tr>
+<td>Connectivity-Wireless-Wifi-5</td>
+<td>Device</td>
+<td>Upgraded easily in software or firmware to have the last security update.</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="https://matthieu.io/dl/wifi-attacks-wep-wpa.pdf">Wifi attacks WEP WPA</a> and
+<a href="https://dl.aircrack-ng.org/breakingwepandwpa.pdf">Breaking wep and wpa (Beck and
+Tews)</a> for more information.</p>
+<hr />
+<h2 id="bluetooth">Bluetooth</h2>
+<h3 id="attacks_1">Attacks</h3>
+<ul>
+<li><strong>Bluesnarfing</strong> attacks involve an attacker covertly gaining access to your
+  Bluetooth-enabled device for the purpose of retrieving information, including
+  addresses, calendar information or even the device's <strong>I</strong>nternational
+  <strong>M</strong>obile <strong>E</strong>quipment <strong>I</strong>dentity. With the <strong>IMEI</strong>, an attacker could
+  route your incoming calls to his cell phone.</li>
+<li><strong>Bluebugging</strong> is a form of Bluetooth attack often caused by a lack of
+  awareness. Similar to bluesnarfing, bluebugging accesses and uses all phone
+  features but is limited by the transmitting power of class 2 Bluetooth radios,
+  normally capping its range at 10-15 meters.</li>
+<li><strong>Bluejacking</strong> is the sending of unsolicited messages.</li>
+<li><strong>BLE</strong>: <strong>B</strong>luetooth <strong>L</strong>ow <strong>E</strong>nergy
+  <a href="https://www.usenix.org/system/files/conference/woot13/woot13-ryan.pdf">attacks</a>.</li>
+<li><strong>DoS</strong>: Drain a device's battery or temporarily paralyze the phone.</li>
+</ul>
+<h3 id="recommendations_1">Recommendations</h3>
+<ul>
+<li>Not allowing Bluetooth pairing attempts without the driver's first manually
+  placing the vehicle in pairing mode.</li>
+<li>Monitoring.</li>
+<li>Use <strong>BLE</strong> with caution.</li>
+<li>For v2.1 and later devices using <strong>S</strong>ecure <strong>S</strong>imple <strong>P</strong>airing (<strong>SSP</strong>),
+  avoid using the "Just Works" association model. The device must verify that an
+  authenticated link key was generated during pairing.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Tech name</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connectivity-Wireless-Bluetooth-1</td>
+<td>BLE</td>
+<td>Use with caution.</td>
+</tr>
+<tr>
+<td>Connectivity-Wireless-Bluetooth-2</td>
+<td>Bluetooth</td>
+<td>Monitoring</td>
+</tr>
+<tr>
+<td>Connectivity-Wireless-Bluetooth-3</td>
+<td>SSP</td>
+<td>Avoid using the "Just Works" association model.</td>
+</tr>
+<tr>
+<td>Connectivity-Wireless-Bluetooth-4</td>
+<td>Visibility</td>
+<td>Configured by default as undiscoverable. Except when needed.</td>
+</tr>
+<tr>
+<td>Connectivity-Wireless-Bluetooth-5</td>
+<td>Anti-scanning</td>
+<td>Used, inter alia, to slow down brute force attacks.</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="http://www.ti.com/lit/wp/sway008/sway008.pdf">Low energy and the automotive
+transformation</a>, <a href="http://gattack.io/whitepaper.pdf">Gattacking
+Bluetooth Smart Devices</a>, <a href="http://www.autosec.org/pubs/cars-usenixsec2011.pdf">Comprehensive
+Experimental Analyses of Automotive Attack
+Surfaces</a> and <a href="https://www.usenix.org/system/files/conference/woot13/woot13-ryan.pdf">With Low
+Energy comes Low
+Security</a>
+for more information.</p>
+<hr />
+<h2 id="cellular">Cellular</h2>
+<h3 id="attacks_2">Attacks</h3>
+<ul>
+<li>
+<p><strong>IMSI-Catcher</strong>: Is a telephone eavesdropping device used for intercepting
+  mobile phone traffic and tracking location data of mobile phone users.
+  Essentially a "fake" mobile tower acting between the target mobile phone and
+  the service provider's real towers, it is considered a man-in-the-middle
+  (<strong>MITM</strong>) attack.</p>
+</li>
+<li>
+<p>Lack of mutual authentication (<strong>GPRS</strong>/<strong>EDGE</strong>) and encryption with
+  <strong>GEA0</strong>.</p>
+</li>
+<li>
+<p><strong>Fall back</strong> from <strong>UMTS</strong>/<strong>HSPA</strong> to <strong>GPRS</strong>/<strong>EDGE</strong> (Jamming against
+  <strong>UMTS</strong>/<strong>HSPA</strong>).</p>
+</li>
+<li>
+<p>4G <strong>DoS</strong> attack.</p>
+</li>
+</ul>
+<h3 id="recommendations_2">Recommendations</h3>
+<ul>
+<li>Check antenna legitimacy.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Tech name</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connectivity-Wireless-Cellular-1</td>
+<td>GPRS/EDGE</td>
+<td>Avoid</td>
+</tr>
+<tr>
+<td>Connectivity-Wireless-Cellular-2</td>
+<td>UMTS/HSPA</td>
+<td>Protected against Jamming.</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="https://media.blackhat.com/bh-dc-11/Perez-Pico/BlackHat_DC_2011_Perez-Pico_Mobile_Attacks-wp.pdf">A practical attack against GPRS/EDGE/UMTS/HSPA mobile data
+communications</a>
+for more information.</p>
+<hr />
+<h2 id="radio">Radio</h2>
+<h3 id="attacks_3">Attacks</h3>
+<ul>
+<li>Interception of data with low cost material (<strong>SDR</strong> with hijacked DVB-T/DAB
+  for example).</li>
+</ul>
+<h3 id="recommendations_3">Recommendations</h3>
+<ul>
+<li>Use the <strong>R</strong>adio <strong>D</strong>ata <strong>S</strong>ystem (<strong>RDS</strong>) only to send signals for audio
+  output and meta concerning radio.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Tech name</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connectivity-Wireless-Radio-1</td>
+<td>RDS</td>
+<td>Only audio output and meta concerning radio.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="nfc">NFC</h2>
+<h3 id="attacks_4">Attacks</h3>
+<ul>
+<li><strong>MITM</strong>: Relay and replay attack.</li>
+</ul>
+<h3 id="recommendations_4">Recommendations</h3>
+<ul>
+<li>Should implements protection against relay and replay attacks (Tokens,
+  etc...).</li>
+<li>Disable unneeded and unapproved services and profiles.</li>
+<li>NFC should be use encrypted link (secure channel). A standard key agreement
+  protocol like Diffie-Hellmann based on RSA or Elliptic Curves could be applied
+  to establish a shared secret between two devices.</li>
+<li>Automotive NFC device should be certified by NFC forum entity: The NFC Forum
+  Certification Mark shows that products meet global interoperability standards.</li>
+<li>NFC Modified Miller coding is preferred over NFC Manchester coding.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Tech name</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connectivity-Wireless-NFC-1</td>
+<td>NFC</td>
+<td>Protected against relay and replay attacks.</td>
+</tr>
+<tr>
+<td>Connectivity-Wireless-NFC-2</td>
+<td>Device</td>
+<td>Disable unneeded and unapproved services and profiles.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="cloud">Cloud</h1>
+<h2 id="download">Download</h2>
+<ul>
+<li>
+<p><strong>authentication</strong>: Authentication is the security process that validates the
+  claimed identity of a device, entity or person, relying on one or more
+  characteristics bound to that device, entity or person.</p>
+</li>
+<li>
+<p><strong>Authorization</strong>: Parses the network to allow access to some or all network
+  functionality by providing rules and allowing access or denying access based
+  on a subscriber's profile and services purchased.</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application-Cloud-Download-1</td>
+<td>authentication</td>
+<td>Must implement authentication process.</td>
+</tr>
+<tr>
+<td>Application-Cloud-Download-2</td>
+<td>Authorization</td>
+<td>Must implement Authorization process.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="infrastructure">Infrastructure</h2>
+<ul>
+<li>
+<p><strong>Deep Packet Inspection</strong>: <strong>DPI</strong> provides techniques to analyze the payload
+  of each packet, adding an extra layer of security. <strong>DPI</strong> can detect and
+  neutralize attacks that would be missed by other security mechanisms.</p>
+</li>
+<li>
+<p>A <strong>DoS</strong> protection in order to avoid that the Infrastructure is no more
+  accessible for a period of time.</p>
+</li>
+<li>
+<p><strong>Scanning tools</strong> such as <strong>SATS</strong> and <strong>DAST</strong> assessments perform
+  vulnerability scans on the source code and data flows on web applications.
+  Many of these scanning tools run different security tests that stress
+  applications under certain attack scenarios to discover security issues.</p>
+</li>
+<li>
+<p><strong>IDS &amp; IPS</strong>: <strong>IDS</strong> detect and log inappropriate, incorrect, or anomalous
+  activity. <strong>IDS</strong> can be located in the telecommunications networks and/or
+  within the host server or computer. Telecommunications carriers build
+  intrusion detection capability in all network connections to routers and
+  servers, as well as offering it as a service to enterprise customers. Once
+  <strong>IDS</strong> systems have identified an attack, <strong>IPS</strong> ensures that malicious
+  packets are blocked before they cause any harm to backend systems and
+  networks. <strong>IDS</strong> typically functions via one or more of three systems:</p>
+</li>
+<li>
+<p>Pattern matching.</p>
+</li>
+<li>Anomaly detection.</li>
+<li>Protocol behavior.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application-Cloud-Infrastructure-1</td>
+<td>Packet</td>
+<td>Should implement a DPI.</td>
+</tr>
+<tr>
+<td>Application-Cloud-Infrastructure-2</td>
+<td>DoS</td>
+<td>Must implement a DoS protection.</td>
+</tr>
+<tr>
+<td>Application-Cloud-Infrastructure-3</td>
+<td>Test</td>
+<td>Should implement scanning tools like SATS and DAST.</td>
+</tr>
+<tr>
+<td>Application-Cloud-Infrastructure-4</td>
+<td>Log</td>
+<td>Should implement security tools (IDS and IPS).</td>
+</tr>
+<tr>
+<td>Application-Cloud-Infrastructure-5</td>
+<td>App integrity</td>
+<td>Applications must be signed by the code signing authority.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="transport">Transport</h2>
+<p>For data transport, it is necessary to <strong>encrypt data end-to-end</strong>. To prevent
+<strong>MITM</strong> attacks, no third party should be able to interpret transported data.
+Another aspect is the data anonymization in order to protect the leakage of
+private information on the user or any other third party.</p>
+<p>The use of standards such as <strong>IPSec</strong> provides "<em>private and secure
+communications over IP networks, through the use of cryptographic security
+services, is a set of protocols using algorithms to transport secure data over
+an IP network.</em>". In addition, <strong>IPSec</strong> operates at the network layer of the
+<strong>OSI</strong> model, contrary to previous standards that operate at the application
+layer. This makes its application independent and means that users do not need
+to configure each application to <strong>IPSec</strong> standards.</p>
+<p><strong>IPSec</strong> provides the services below :</p>
+<ul>
+<li>Confidentiality: A service that makes it impossible to interpret data if it is
+  not the recipient. It is the encryption function that provides this service by
+  transforming intelligible (unencrypted) data into unintelligible (encrypted)
+  data.</li>
+<li>Authentication: A service that ensures that a piece of data comes from where
+  it is supposed to come from.</li>
+<li>Integrity: A service that consists in ensuring that data has not been tampered
+  with accidentally or fraudulently.</li>
+<li>Replay Protection: A service that prevents attacks by re-sending a valid
+  intercepted packet to the network for the same authorization. This service is
+  provided by the presence of a sequence number.</li>
+<li>Key management: Mechanism for negotiating the length of encryption keys
+  between two <strong>IPSec</strong> elements and exchange of these keys.</li>
+</ul>
+<p>An additional means of protection would be to do the monitoring between users
+and the cloud as a <strong>CASB</strong> will provide.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application-Cloud-Transport-1</td>
+<td>Integrity, confidentiality and legitimacy</td>
+<td>Should implement IPSec standards.</td>
+</tr>
+</tbody>
+</table>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../8_Update_OTA/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../8_Update_OTA/" class="btn btn-xs btn-link">
+        Update (Over The Air)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../6_Application/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../6_Application/" class="btn btn-xs btn-link">
+        Application
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

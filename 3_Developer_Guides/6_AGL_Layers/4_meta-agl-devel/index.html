@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/3_Developer_Guides/6_AGL_Layers/4_meta-agl-devel/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>meta-agl-devel - AGL Documentation</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Introduction", url: "#_top", children: [
+          ]},
+          {title: "Sub-Layers", url: "#sub-layers", children: [
+          ]},
+          {title: "Additional Sub-Layer Information", url: "#additional-sub-layer-information", children: [
+              {title: "Virtualization Support", url: "#virtualization-support" },
+              {title: "OEM Extra Libraries", url: "#oem-extra-libraries" },
+              {title: "HMI Framework", url: "#hmi-framework" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../../4_APIs_and_Services/FIXME/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../../4_APIs_and_Services/FIXME/" class="btn btn-xs btn-link">
+        FIXME
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../3_meta-agl-demo/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../3_meta-agl-demo/" class="btn btn-xs btn-link">
+        meta-agl-demo
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="introduction">Introduction</h2>
+<p>The <code>meta-agl-devel</code> layer contains components that are being tested or
+still in development.
+The layer also contains software packages that Original Equipment
+Manufacturers (OEMs) need but are not included in the AGL software.</p>
+<h2 id="sub-layers">Sub-Layers</h2>
+<p>The <code>meta-agl-devel</code> layer contains the following files and sub-layers:</p>
+<div class="highlight"><pre><span></span><code>.
+├── meta-agl-telemetry
+├── meta-audio-4a-framework
+├── meta-audio-soundmanager-framework
+├── meta-egvirt
+├── meta-gstrecorder-rcar-gen3
+├── meta-hmi-framework
+├── meta-oem-extra-libs
+├── README.md
+├── templates
+</code></pre></div>
+<p>The following list provides a summary of these sub-layers:</p>
+<ul>
+<li>
+<p><code>meta-agl-telemetry</code>: Provides the smallest AGL image.
+  The image is designed to be used when a device requires restricted
+  scope of responsibilites (e.g. collecting vehicle telemetry).</p>
+</li>
+<li>
+<p><code>meta-audio-4a-framework</code>: A collection of recipes used for the
+  first integration of 4A (i.e. Advanced AGL Audio Architecture).</p>
+</li>
+<li>
+<p><code>meta-pipewire</code>: A collection of recipes used for the integration
+  of the pipewire sound system.</p>
+</li>
+<li>
+<p><code>meta-audio-soundmanager-framework</code>: Supports the Soundmanager
+  Audio Framework features, which maps to the <code>agl-audio-soundmanager-framework</code>
+  AGL feature.</p>
+</li>
+<li>
+<p><code>meta-egvirt</code>: The AGL Virtualization Expert Group (EG-VIRT) layer.
+  This layer supports the design, test, implementation, and assessment
+  of virtualization technologies (e.g. containers, hypervisors, system
+  partitioners, and so forth) aimed at AGL ARMv8 and Intel platforms.</p>
+</li>
+<li>
+<p><code>meta-gstrecorder-rcar-gen3</code>: Supports streaming audio and video for
+  the Pro and Premier board kits (e.g.
+  <a href="https://www.elinux.org/R-Car/Boards/M3SK">Renesas R-Car Starter Kit Pro Board</a>
+  and
+  <a href="https://www.elinux.org/R-Car/Boards/H3SK">Renesas R-Car Starter Kit Premier Board</a>).</p>
+</li>
+<li>
+<p><code>meta-hmi-framework</code>: Provides AGL's Human Machine Interface (HMI) framework
+  through resource management consisting of sounds, windows, and input control.
+  For more information, see the
+  <a href="https://wiki.automotivelinux.org/hmiframework">HMI-Framework Page</a> of the
+  AGL Wiki.</p>
+</li>
+<li>
+<p><code>meta-oem-extra-libs</code>: Provides libraries and software packages needed by
+  OEMs but not provided by the AGL software.</p>
+</li>
+<li>
+<p><code>templates</code>: Feature templates that support the <code>meta-agl-devel</code> layer.</p>
+</li>
+</ul>
+<h2 id="additional-sub-layer-information">Additional Sub-Layer Information</h2>
+<p>This section provides additional information for the <code>meta-egvirt</code>,
+<code>meta-oem-extra-libs</code>, and <code>meta-hmi-framework</code> layers.</p>
+<h3 id="virtualization-support">Virtualization Support</h3>
+<p>The <code>meta-egvirt</code> layer enables virtualization support in AGL.
+The AGL Virtualization Expert (EG-VIRT) group is responsible
+for design and implementation of AGL virtualization solutions
+(.e.g the Virtualization platform architecture of AGL).
+You can read about EG-VERT's efforts on the
+"<a href="https://wiki.automotivelinux.org/eg-virt">Virtualization Expert Group's</a>"
+page of the AGL wiki.</p>
+<p>Additionally, you can learn more about virtualization as it applies to AGL
+by reading
+"<a href="https://www.automotivelinux.org/wp-content/uploads/sites/4/2018/06/agl_software_defined_car_jun18.pdf">The Automotive Grade Linux Software Defined Connected Car Architecture</a>"
+whitepaper.</p>
+<h3 id="oem-extra-libraries">OEM Extra Libraries</h3>
+<p>The <code>meta-oem-extra-libs</code> layer provides additional software packages many OEMs need
+but are not part of the AGL source.
+Following is the list of packages this layer provides:</p>
+<ul>
+<li>boost</li>
+<li>fixesproto</li>
+<li>imagemagick</li>
+<li>iptables</li>
+<li>Xorg-macros</li>
+<li>zlib</li>
+<li>eglibc = glibc</li>
+<li>libcurl</li>
+<li>libgif</li>
+<li>libneon</li>
+<li>mongoose</li>
+<li>fuse</li>
+<li>protocol buffers</li>
+<li>bsdiff</li>
+<li>module-init-tools</li>
+<li>libcroco</li>
+<li>libtiff</li>
+<li>librsvg</li>
+<li>libpcap</li>
+</ul>
+<p>To add these packages to your library, you need to include the
+<code>agl-oem-extra-libs</code> AGL feature when you initialize your build
+environment using the <code>aglsetup.sh</code> script.</p>
+<p>For information on how to use the <code>aglsetup.sh</code> script to initialize
+your build environment, see the
+"<a href="../../../0_Getting_Started/2_Building_AGL_Image/3_Initializing_Your_Build_Environment/">Initializing Your Build Environment</a>"
+section.</p>
+<p>Once you have included the AGL feature, you can build your image.</p>
+<h3 id="hmi-framework">HMI Framework</h3>
+<p>The <code>meta-hmi-framework</code> layer supports the Human-Machine Interface (HMI) Framework.
+The HMI-Framework is the User Interface (UI) to control the Infotainment System.
+Work continues to close the gap between the user experience of a smart phone
+and the Infotainment System in a vehicle, for example.</p>
+<p>You can find more out about HMI Framework progress on the
+"<a href="https://wiki.automotivelinux.org/hmiframework">HMI Framework</a>" page on the AGL Wiki.</p>
+<p>To add HMI Framework support to your image, you need to include the
+<code>hmi-framework</code> AGL feature when you initialize your build
+environment using the <code>aglsetup.sh</code> script.</p>
+<p>For information on how to use the <code>aglsetup.sh</code> script to initialize
+your build environment, see the
+"<a href="../../../0_Getting_Started/2_Building_AGL_Image/3_Initializing_Your_Build_Environment/">Initializing Your Build Environment</a>"
+section.</p>
+<p>Once you have included the AGL feature, you can build your image.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../../4_APIs_and_Services/FIXME/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../../4_APIs_and_Services/FIXME/" class="btn btn-xs btn-link">
+        FIXME
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../3_meta-agl-demo/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../3_meta-agl-demo/" class="btn btn-xs btn-link">
+        meta-agl-demo
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

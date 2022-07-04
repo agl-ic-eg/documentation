@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/3_Developer_Guides/3_Creating_a_New_Application/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Creating a New Application - AGL Documentation</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Basic requirements", url: "#_top", children: [
+          ]},
+          {title: "D-Bus activation", url: "#d-bus-activation", children: [
+          ]},
+          {title: "Graphical applications", url: "#graphical-applications", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../4_Creating_a_custom_recipe/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../4_Creating_a_custom_recipe/" class="btn btn-xs btn-link">
+        Creating a Custom Recipe
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../2_Creating_a_New_Service/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../2_Creating_a_New_Service/" class="btn btn-xs btn-link">
+        Creating a New Service
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p>Applications are either software designed to perform a specific task during a limited amount of
+time, or graphical applications presenting the user with an interface they can interact with.</p>
+<p>Such applications are executed by <code>applaunchd</code>, the AGL
+<a href="1_Application_Framework/2_Application_Startup/">application launcher service</a>.</p>
+<h1 id="basic-requirements">Basic requirements</h1>
+<p>In order to be enumerated by <code>applaunchd</code>, applications must provide the a <code>.desktop</code> file, as
+defined by the <a href="https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html">Desktop Entry specification</a>.</p>
+<p>The desktop entry file should be installed to <code>/usr/share/applications</code> (or the <code>applications</code>
+sub-directory of any entry present in the <code>XDG_DATA_DIRS</code> environment variable) and have a
+meaningful name. It is considered good practice to use reverse-DNS notation for the desktop
+entry file name, following the recommendations of the <a href="https://dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names">D-Bus specification</a>:
+- this avoids potential name collisions with other desktop entry files
+- it makes it easier to enable <a href="#d-bus-activation">D-Bus activation</a> during the application
+  development cycle if needed
+- for <a href="#graphical-applications">graphical applications</a>, it ensures the chosen Wayland <code>app-id</code>
+  will be unique</p>
+<p>Such a file must contain at least the following keys:
+- <code>Type</code>: desktop entry type, must be set to <code>Application</code>
+- <code>Name</code>: application name, as it should be displayed in menus and application launchers
+- <code>Exec</code>: full path to the main executable</p>
+<p>Below is an example of a minimal desktop entry file:</p>
+<div class="highlight"><pre><span></span><code>[Desktop Entry]
+Type=Application
+Name=Example Application
+Exec=/usr/bin/example-app
+</code></pre></div>
+<p>Graphical applications must also provide an <code>Icon</code> entry pointing to the application icon.
+The value for this entry must either be the full path to the icon's file or, for icons part
+of an existing <a href="https://specifications.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html">icon theme</a>,
+the name of an element of this theme.</p>
+<p>In addition, a number of optional fields can be used to change how <code>applaunchd</code> will consider the
+application:
+- <code>Version</code>: version of the Desktop Entry Specification the file conforms to, must be <code>1.5</code>
+- <code>Hidden</code>: boolean value, if <code>true</code> the application is always ignored by <code>applaunchd</code> and
+  won't be listed nor executed
+- <code>Terminal</code>: boolean value, if <code>true</code> the application is excluded when requesting the list of
+  graphical applications from <code>applaunchd</code>
+- <code>DBusActivatable</code>: boolean value, must be <code>true</code> for <a href="#d-bus-activation">D-Bus activated applications</a>
+- <code>Implements</code>: list of D-Bus interfaces the application implements, only used for D-Bus activated
+  applications.</p>
+<p>Finally, graphical applications may also define the <code>StartupWMClass</code> key in some cases. Please
+refer to the <a href="#graphical-applications">graphical applications</a> section for more information.</p>
+<h1 id="d-bus-activation">D-Bus activation</h1>
+<p>Similarly to <a href="2_Creating_a_New_Service.md/#d-bus-activation">services</a>, applications can
+also be activated through D-Bus.</p>
+<p>Such applications must name their <code>.desktop</code> file after the D-Bus name they register. In addition,
+this file must contain the following entries:</p>
+<div class="highlight"><pre><span></span><code>DBusActivatable=true
+Implements=IFACE1;IFACE2;...
+</code></pre></div>
+<p>Where <code>IFACEn</code> are the names of the D-Bus interfaces the application implements.</p>
+<p>In addition, they must provide a D-Bus service file named <code>NAME.service</code> and installed
+to <code>/usr/share/dbus-1/services</code>.</p>
+<p>The contents of the D-Bus service file must be the following:</p>
+<div class="highlight"><pre><span></span><code>[D-BUS Service]
+Name=NAME
+Exec=/path/to/executable
+</code></pre></div>
+<p>For example, an application registering the <code>org.automotivelinux.Example</code> D-Bus name
+and implementing the <code>org.automotivelinux.Example.Search1</code> and <code>org.automotivelinux.Example.Execute1</code>
+interfaces would provide the following files:</p>
+<ul>
+<li>Desktop entry (<code>/usr/share/applications/org.automotivelinux.Example.desktop</code>):</li>
+</ul>
+<div class="highlight"><pre><span></span><code>[Desktop Entry]
+Type=Application
+Version=1.5
+Name=Example Application
+Exec=/usr/bin/example-app
+Icon=example-icon
+Terminal=false
+DBusActivatable=true
+Implements=org.automotivelinux.Example.Search1;org.automotivelinux.Example.Execute1
+</code></pre></div>
+<ul>
+<li>D-Bus service file (<code>/usr/share/dbus-1/services/org.automotivelinux.Example.service</code>):</li>
+</ul>
+<div class="highlight"><pre><span></span><code>[D-BUS Service]
+Name=org.automotivelinux.Example
+Exec=/usr/bin/example-app
+</code></pre></div>
+<p><em>Note: in addition to their own D-Bus interface, D-Bus activated applications must also
+implement the <code>org.freedesktop.Application</code> interface as defined in the
+<a href="https://specifications.freedesktop.org/desktop-entry-spec/1.1/ar01s07.html">Desktop Entry specification</a>.</em></p>
+<h1 id="graphical-applications">Graphical applications</h1>
+<p>In addition, graphical applications need to comply with a few more requirements:</p>
+<ol>
+<li>
+<p>Each application must set a Wayland application ID appropriately as soon as its main window
+is created.</p>
+</li>
+<li>
+<p>The <code>app-id</code> must be specified in the desktop entry file by adding the following line:</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code>StartupWMClass=APP_ID
+</code></pre></div>
+<ol>
+<li>The desktop entry file must be named <code>APP_ID.desktop</code>.</li>
+</ol>
+<p>Doing so will ensure other software can associate the actual <code>app-id</code> to the proper application.</p>
+<p><em>Note: application ID's are set using the <a href="https://wayland-book.com/xdg-shell-basics/xdg-toplevel.html">XDG toplevel</a>
+Wayland interface.</em></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../4_Creating_a_custom_recipe/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../4_Creating_a_custom_recipe/" class="btn btn-xs btn-link">
+        Creating a Custom Recipe
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../2_Creating_a_New_Service/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../2_Creating_a_New_Service/" class="btn btn-xs btn-link">
+        Creating a New Service
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

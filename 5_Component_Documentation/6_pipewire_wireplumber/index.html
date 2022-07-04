@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/5_Component_Documentation/6_pipewire_wireplumber/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>PipeWire / WirePlumber - AGL Documentation</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "PipeWire / WirePlumber", url: "#_top", children: [
+              {title: "Overview", url: "#overview" },
+              {title: "APIs", url: "#apis" },
+              {title: "Tools", url: "#tools" },
+              {title: "Systemd Integration", url: "#systemd-integration" },
+              {title: "Debugging", url: "#debugging" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../7_ic-sound-manager/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../7_ic-sound-manager/" class="btn btn-xs btn-link">
+        Instrument Cluster Sound Management
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../5_application_framework/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../5_application_framework/" class="btn btn-xs btn-link">
+        Application Framework
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="pipewire-wireplumber">PipeWire / WirePlumber</h1>
+<h2 id="overview">Overview</h2>
+<p>AGL uses the PipeWire daemon service to provide audio playback and capture capabilities.
+PipeWire is accompanied by a secondary service, WirePlumber (also referred to as the
+<em>session manager</em>), which provides policy management, device discovery, configuration and more.</p>
+<p>Applications can connect to the PipeWire service through its UNIX socket, by using either the
+<em>libpipewire</em> or <em>libwireplumber</em> libraries as a front-end to that socket.</p>
+<p>Upstream documentation for these components can be found at the links below:</p>
+<ul>
+<li>
+<p><a href="https://docs.pipewire.org/">PipeWire documentation</a></p>
+</li>
+<li>
+<p><a href="https://pipewire.pages.freedesktop.org/wireplumber/">WirePlumber documentation</a> </p>
+</li>
+<li>
+<p><a href="https://gitlab.freedesktop.org/pipewire/pipewire/-/wikis/home">PipeWire Wiki</a></p>
+</li>
+</ul>
+<h2 id="apis">APIs</h2>
+<h3 id="libpipewire">libpipewire</h3>
+<p>The main entry point for applications to access the audio system is the API offered by
+<em>libpipewire</em>. The functionality offered by <em>libpipewire</em> is vast and it is beyond the
+scope of this document to describe it all.</p>
+<p>For playback and capture, applications should use <em>struct pw_stream</em> and its associated methods. 
+See <a href="https://docs.pipewire.org/page_tutorial4.html">PipeWire: Tutorial - Part 4: Playing a tone</a>
+for a starting point.</p>
+<h3 id="gstreamer-recommended">GStreamer (Recommended)</h3>
+<p>For convenience, applications that use GStreamer can use the PipeWire GStreamer elements to 
+plug the functionality offered by <em>struct pw_stream</em> directly in the GStreamer pipeline. These 
+elements are called <em>pipewiresrc</em> and <em>pipewiresink</em></p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code>&gt; gst-launch-1.0 audiotestsrc ! pipewiresink
+</code></pre></div>
+<p>Through these elements, it is possible to specify the application role by setting it in the
+<em>stream-properties</em> property of the element, as shown below:</p>
+<div class="highlight"><pre><span></span><code>&gt; gst-launch-1.0 audiotestsrc ! pipewiresink stream-properties<span class="o">=</span><span class="s2">&quot;p,media.role=Multimedia&quot;&quot;</span>
+</code></pre></div>
+<p>or, in the C API:</p>
+<div class="highlight"><pre><span></span><code><span class="n">gst_util_set_object_arg</span><span class="w"> </span><span class="p">(</span><span class="n">sink</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;stream-properties&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;p,media.role=Multimedia&quot;</span><span class="p">);</span><span class="w"></span>
+</code></pre></div>
+<p>Of course, it is also possible to use <em>alsasink</em> and <em>alsasrc</em> and route audio through the
+virtual ALSA device that is mentioned below. This is also the default behavior of <em>playbin</em>
+and similar auto-plugging elements, because the PipeWire GStreamer elements are not autoplugged
+(this may change in a future version).</p>
+<h3 id="alsa">ALSA</h3>
+<p>PipeWire offers a virtual ALSA device (called <em>pipewire</em>) that redirects audio to PipeWire
+through an ALSA PCM plugin. This device is the default one, so unless you explicitly specify
+a device in your ALSA client application, audio will go through PipeWire instead.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code>&gt; aplay sound.wav  <span class="c1"># the default device is &#39;pipewire&#39;</span>
+&gt; aplay -D pipewire sound.wav
+</code></pre></div>
+<p>In order to specify the application role while using the ALSA compatibility device, pass the role
+as a device parameter like this:</p>
+<div class="highlight"><pre><span></span><code>&gt; aplay -D pipewire:ROLE<span class="o">=</span>Navigation turnleft.wav
+</code></pre></div>
+<h3 id="audiomixer-service">Audiomixer service</h3>
+<p>See the separate <a href="https://git.automotivelinux.org/apps/agl-service-audiomixer/about/">agl-service-audiomixer</a> documentation.</p>
+<h3 id="libwireplumber">libwireplumber</h3>
+<p>The WirePlumber library provides API that wraps libpipewire and makes it easier to work with 
+when you are writing control applications, such as a volume mixer. The audiomixer service is in 
+fact implemented using <em>libwireplumber</em>.</p>
+<p>WirePlumber also provides support for lua-based scripting. Standalone scripts, executed with the 
+<em>wpexec</em> tool, may be used  as a means to rapidly make use of the API provided by <em>libwireplumber</em></p>
+<h2 id="tools">Tools</h2>
+<ul>
+<li>
+<p><strong>wpctl</strong>: allows inspecting the devices, choosing which source &amp; sink are the default ones 
+  and allows volume/mute adjustments to be made on the command line. Try <code>wpctl status</code> and
+  <code>wpctl help</code> to get started with it</p>
+</li>
+<li>
+<p><strong>wpexec</strong>: allows running wireplumber lua scripts standalone, which is useful to implement
+  custom scripts to interact with PipeWire</p>
+</li>
+<li>
+<p><strong>pw-cli</strong>: this is the main tool for interacting with pipewire directly</p>
+</li>
+<li>
+<p><strong>pw-dump</strong>: dumps all the objects in the pipewire graph to a big JSON. The output of this
+  tool is very useful to include in bug reports. It is also suitable for implementing scripts
+  that parse information with jq</p>
+</li>
+<li>
+<p><strong>pw-dot</strong> is a useful debug tool that dumps the objects in a dot graph for easy visualization</p>
+</li>
+<li>
+<p><strong>pw-cat / pw-play / pw-record</strong>: This is a set of tools similar to aplay/arecord, for simple
+  audio operations</p>
+</li>
+<li>
+<p><strong>pw-top</strong>: This is a performance measurement tool that shows realtime timing information
+  about the audio pipeline. Before running this tool, you will need to uncomment the loading
+  of "libpipewire-module-profiler" in /etc/pipewire/pipewire.conf and restart pipewire</p>
+</li>
+</ul>
+<h2 id="systemd-integration">Systemd Integration</h2>
+<p>The PipeWire service, <code>pipewire.service</code>, is activated on demand, via systemd socket activation,
+by <code>pipewire.socket</code>. The WirePlumber service, <code>wireplumber.service</code>, is bound to the pipewire
+service and therefore started and stopped together with the PipeWire service.</p>
+<p>If you wish to manually stop or restart both services, you can do so by using <em>systemctl</em>,
+operating on the <em>.socket</em> unit:</p>
+<div class="highlight"><pre><span></span><code>&gt; systemctl restart pipewire.socket
+&gt; systemctl stop pipewire.socket
+</code></pre></div>
+<h2 id="debugging">Debugging</h2>
+<p>The PipeWire daemon can be configured to be more verbose by editing
+<strong>/etc/pipewire/pipewire.conf</strong> and setting <code>log.level=n</code> (n=0-5) in section
+<code>context.properties</code>.</p>
+<p>Similarly, the WirePlumber daemon can be configured to be more verbose by editing
+<strong>/etc/wireplumber/wireplumber.conf</strong> and setting <code>log.level=n</code> (n=0-5) in section
+<code>context.properties</code>.</p>
+<p>All messages will be available in the systemd journal, inspectable with journalctl.</p>
+<p>For applications, at runtime, <code>PIPEWIRE_DEBUG</code> can be set to a value between 0 and 5, 
+with 5 being the most verbose and 0 the least verbose.</p>
+<p>For applications that use <em>libwireplumber</em> the equivalent environment variable is
+<code>WIREPLUMBER_DEBUG</code>, which also takes values between 0 and 5.</p>
+<p>The default debug level for the daemons is 2, while for applications it's 0
+(with few exceptions).</p>
+<p>More information is also available on 
+<a href="https://pipewire.pages.freedesktop.org/wireplumber/daemon-logging.html">WirePlumber's documentation on debug logging</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../7_ic-sound-manager/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../7_ic-sound-manager/" class="btn btn-xs btn-link">
+        Instrument Cluster Sound Management
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../5_application_framework/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../5_application_framework/" class="btn btn-xs btn-link">
+        Application Framework
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

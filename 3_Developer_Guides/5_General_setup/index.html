@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/3_Developer_Guides/5_General_setup/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Generic devices setup - AGL Documentation</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Camera setup on RPi4", url: "#_top", children: [
+          ]},
+          {title: "Display setup on RPi4", url: "#display-setup-on-rpi4", children: [
+          ]},
+          {title: "Testing out video camera without a real device", url: "#testing-out-video-camera-without-a-real-device", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../1_Application_Framework/1_Introduction/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../1_Application_Framework/1_Introduction/" class="btn btn-xs btn-link">
+        Introduction
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../4_Creating_a_custom_recipe/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../4_Creating_a_custom_recipe/" class="btn btn-xs btn-link">
+        Creating a Custom Recipe
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="camera-setup-on-rpi4">Camera setup on RPi4</h2>
+<p>This assumes that you'll be using the Raspberry Pi Camera Module, which can
+easily hooked on the board using the LVDS connector. Further more information
+about how to connect it, could be found at
+<a href="https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera">Installing a Raspberry Pi camera</a></p>
+<p>With the camera installed, you'll need to enable it by editing /boot/config.txt
+file (if you're booting an AGL image over a sd-card it will be there by
+default, otherwise -- in case of doing netboot, you'll have to create
+manually) and add the following entry:</p>
+<pre><code>## start_x
+##     Set to "1" to enable the camera module.
+##
+##     Enabling the camera requires gpu_mem option to be specified with a value
+##     of at least 128.
+##
+##     Default 0
+##
+start_x=1
+</code></pre>
+<p>And reboot your device. Afterwards, after logging it, make sure that you have
+the /dev/video0 device created. You could also use v4l2-ctl to verify
+that is indeed usable as a capture device:</p>
+<pre><code>$ v4l2-ctl -d /dev/video0 --all
+</code></pre>
+<p>In order to test out video playback, use the following gstreamer pipeline:</p>
+<pre><code>$ gst-launch-1.0 v4l2src device=/dev/video0 ! \
+                    video/x-raw,width=640,height=480 ! waylandsink fullscreen=true
+</code></pre>
+<p>Alternatively, using <a href="https://gerrit.automotivelinux.org/gerrit/gitweb?p=apps/camera-gstreamer.git;a=summary">camera-gstreamer</a>
+application could might be another possibility, but you'll have to build it
+yourself and add it in the image.</p>
+<p>This includes an example on how to create a xdg-toplevel surface and create a
+gstreamer pipeline, instead of relaying on waylandsink to create one for you,
+in a programmatic fashion.</p>
+<h2 id="display-setup-on-rpi4">Display setup on RPi4</h2>
+<p>This assumes that you'll be using the Raspberry Pi 7'' display. Installation
+can be found at <a href="https://www.raspberrypi.com/documentation/accessories/display.html">Rpi Display page</a>.</p>
+<p>If booting over the network, the dtb should already contain the ft5406 dtb,
+while booting over sd-card the following show be in the /boot/config.txt
+file:</p>
+<pre><code>dtoverlay=rpi-ft5406-overlay
+</code></pre>
+<p>Once the board boots up, you should get a rainbow like effect and afterwards
+booting up would display debug scrolling over. You'll need to adjust the
+orientation as the 800x480 is in portrait.  Edit /etc/xdg/weston/weston.ini and
+add a new output entry, like the following:</p>
+<pre><code>[output]
+name=DSI-1
+transform=90
+</code></pre>
+<p>Note that for the Qt platform, the homescreen application, together with the
+other demo applications, is tailored specifically for a 1080p display and it
+will display incorrectly on such a smaller display.</p>
+<h2 id="testing-out-video-camera-without-a-real-device">Testing out video camera without a real device</h2>
+<p>While the above requires having a real video camera device, one can use out
+the <a href="https://docs.kernel.org/admin-guide/media/vivid.html?highlight=vivid#the-virtual-video-test-driver-vivid">vivid module</a>
+to try out your custom application or just testing out camera functionality in AGL.</p>
+<p>You should normally have the module present, not loaded, for either <strong>rpi4</strong> or for
+<strong>h3ulcb</strong> boards. Load the module, like in the following command:</p>
+<pre><code>modprobe vivid allocators=0x1
+</code></pre>
+<p>Have a look at the kernel ring buffer to see what capture devices are created
+and use as source:</p>
+<pre><code>$ gst-launch-1.0 v4l2src device=/dev/videoXX ! \
+            video/x-raw,width=640,height=480 ! waylandsink fullscreen=true
+</code></pre>
+<p>making sure to replace /dev/videoXX with correct capture device. You can check
+that easily using the v4l2-ctl mentioned above.</p>
+<p>Note that using camera-gstreamer will attempt to find the first available
+capture device, so if you happen to have to another one before the one created
+by this module it might not work. You can bypass that, by just making a symlink
+from /dev/videoXX to /dev/video0 to make first available capture device.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../1_Application_Framework/1_Introduction/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../1_Application_Framework/1_Introduction/" class="btn btn-xs btn-link">
+        Introduction
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../4_Creating_a_custom_recipe/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../4_Creating_a_custom_recipe/" class="btn btn-xs btn-link">
+        Creating a Custom Recipe
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

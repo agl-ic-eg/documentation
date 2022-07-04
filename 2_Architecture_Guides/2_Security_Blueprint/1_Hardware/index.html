@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/2_Architecture_Guides/2_Security_Blueprint/1_Hardware/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Hardware - AGL Documentation</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Acronyms and Abbreviations", url: "#_top", children: [
+          ]},
+          {title: "Integrity", url: "#integrity", children: [
+          ]},
+          {title: "Certificates", url: "#certificates", children: [
+          ]},
+          {title: "Memory", url: "#memory", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../2_Secure_Boot/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../2_Secure_Boot/" class="btn btn-xs btn-link">
+        Secure Boot
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../0_Overview/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../0_Overview/" class="btn btn-xs btn-link">
+        Overview
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p>The Automotive Grade Linux platform is a Linux distribution with <strong>AGL</strong>
+compliant applications and services. The platform includes the following
+hardware:</p>
+<ul>
+<li>SoC (System-on-Chip).</li>
+<li>Memory (RAM, ROM, storage, etc.).</li>
+<li>Peripherals.</li>
+</ul>
+<p>You will find in this first part everything that concerns the hardware security.
+The goal is to protect system against all attacks that are trying to gain
+additional privileges by recovering and/or changing cryptographic keys in order
+to alter the integrity of the boot. We should also prevent hardware
+modifications in order to achieve this goal. We will expose below some examples
+of possible configurations.</p>
+<hr />
+<h2 id="acronyms-and-abbreviations">Acronyms and Abbreviations</h2>
+<p>The following table lists the terms utilized within this part of the document.</p>
+<table>
+<thead>
+<tr>
+<th>Acronyms or Abbreviations</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>HSM</em></td>
+<td><strong>H</strong>ardware <strong>S</strong>ecurity <strong>M</strong>odule</td>
+</tr>
+<tr>
+<td><em>NVM</em></td>
+<td><strong>N</strong>on-<strong>V</strong>olatile <strong>M</strong>emory</td>
+</tr>
+<tr>
+<td><em>SHE</em></td>
+<td><strong>S</strong>ecure <strong>H</strong>ardware <strong>E</strong>xtensions</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="integrity">Integrity</h2>
+<p>The board must store hardcoded cryptographic keys in order to verify among
+others the <em>integrity</em> of the <em>bootloader</em>. Manufacturers can use <strong>HSM</strong> and
+<strong>SHE</strong> to enhance the security of their board.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hardware-Integrity-1</td>
+<td>Bootloader</td>
+<td>Must control bootloader integrity.</td>
+</tr>
+<tr>
+<td>Hardware-Integrity-2</td>
+<td>Board</td>
+<td>Must use a HSM.</td>
+</tr>
+<tr>
+<td>Hardware-Integrity-3</td>
+<td>RTC</td>
+<td>Must not be alterable.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="certificates">Certificates</h2>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hardware-Certificate-1</td>
+<td>System</td>
+<td>Shall allow storing dedicated certificates.</td>
+</tr>
+<tr>
+<td>Hardware-Certificate-2</td>
+<td>ECU</td>
+<td>The ECU must verify the certification authority hierarchy.</td>
+</tr>
+<tr>
+<td>Hardware-Certificate-3</td>
+<td>System</td>
+<td>Allow the modification of certificates only if the source can be authenticated by a certificate already stored or in the higher levels of the chain of trust.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="memory">Memory</h2>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hardware-Memory-1</td>
+<td>ECU</td>
+<td>The ECU shall never expose the unencrypted key in RAM when using cryptographic keys.</td>
+</tr>
+<tr>
+<td>Hardware-Memory-2</td>
+<td>Bootloader</td>
+<td>Internal NVM only</td>
+</tr>
+<tr>
+<td>Hardware-Module-3</td>
+<td>-</td>
+<td>HSM must be used to secure keys.</td>
+</tr>
+</tbody>
+</table>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../2_Secure_Boot/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../2_Secure_Boot/" class="btn btn-xs btn-link">
+        Secure Boot
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../0_Overview/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../0_Overview/" class="btn btn-xs btn-link">
+        Overview
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/2_Architecture_Guides/2_Security_Blueprint/5_Platform/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Platform - AGL Documentation</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Discretionary Access Control", url: "#_top", children: [
+          ]},
+          {title: "Mandatory Access Control", url: "#mandatory-access-control", children: [
+          ]},
+          {title: "Acronyms and Abbreviations", url: "#acronyms-and-abbreviations", children: [
+          ]},
+          {title: "Mandatory Access Control", url: "#mandatory-access-control_1", children: [
+              {title: "Floor", url: "#floor" },
+              {title: "System", url: "#system" },
+              {title: "Applications, Services and User", url: "#applications-services-and-user" },
+              {title: "Attack Vectors", url: "#attack-vectors" },
+          ]},
+          {title: "SystemD", url: "#systemd", children: [
+              {title: "Benefits", url: "#benefits" },
+              {title: "CGroups", url: "#cgroups" },
+              {title: "Namespaces", url: "#namespaces" },
+          ]},
+          {title: "D-Bus", url: "#d-bus", children: [
+          ]},
+          {title: "System services and daemons", url: "#system-services-and-daemons", children: [
+              {title: "Tools", url: "#tools" },
+          ]},
+          {title: "Application framework/model (AppFw)", url: "#application-frameworkmodel-appfw", children: [
+              {title: "Cynara", url: "#cynara" },
+              {title: "Holding policies", url: "#holding-policies" },
+              {title: "Attack Vectors", url: "#attack-vectors_1" },
+              {title: "Vulnerable Resources", url: "#vulnerable-resources" },
+          ]},
+          {title: "Utilities", url: "#utilities", children: [
+              {title: "Functionalities to exclude in production mode", url: "#functionalities-to-exclude-in-production-mode" },
+          ]},
+          {title: "Users", url: "#users", children: [
+              {title: "Root Access", url: "#root-access" },
+              {title: "Capabilities", url: "#capabilities" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../6_Application/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../6_Application/" class="btn btn-xs btn-link">
+        Application
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../4_Kernel/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../4_Kernel/" class="btn btn-xs btn-link">
+        Kernel
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p>The Automotive Grade Linux platform is a Linux distribution with <strong>AGL</strong>
+compliant applications and services. The platform includes the following
+software:</p>
+<ul>
+<li>Linux <strong>BSP</strong> configured for reference boards.</li>
+<li>Proprietary device drivers for common peripherals on reference boards.</li>
+<li>Application framework.</li>
+<li>Windows/layer management (graphics).</li>
+<li>Sound resource management.</li>
+<li>An atomic software update system (chapter Update).</li>
+<li>Building and debug tools (based on Yocto project).</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-Abstract-1</td>
+<td>Create a graphics and sound part.</td>
+</tr>
+</tbody>
+</table>
+<p>This part focuses on the AGL platform including all tools and techniques used to
+upgrade the security and downgrade the danger. It must be possible to apply the
+two fundamental principles written at the very beginning of the document. First
+of all, security management must remain simple. You must also prohibit
+everything by default, and then define a set of authorization rules. As cases to
+deal with, we must:</p>
+<ul>
+<li>Implement a <strong>MAC</strong> for processes and files.</li>
+<li>Limit communication between applications (<em>SystemBus</em> and <em>SystemD</em> part).</li>
+<li>Prohibit all tools used during development mode (<em>Utilities</em> and <em>Services</em>
+  part).</li>
+<li>Manage user capabilities (<em>Users</em> part).</li>
+<li>Manage application permissions and policies (<em>AGLFw</em> part).</li>
+</ul>
+<p>The tools and concepts used to meet these needs are only examples. Any other
+tool that meets the need can be used.</p>
+<p>In AGL, as in many other embedded systems, different security mechanisms settle
+in the core layers to ensure isolation and data privacy. While the Mandatory
+Access Control layer (<strong>SMACK</strong>) provides global security and isolation, other
+mechanisms like <strong>Cynara</strong> are required to check application's permissions at
+runtime. Applicative permissions (also called "<em>privileges</em>") may vary depending
+on the user and the application being run: an application should have access to
+a given service only if it is run by the proper user and if the appropriate
+permissions are granted.</p>
+<h2 id="discretionary-access-control">Discretionary Access Control</h2>
+<p><strong>D</strong>iscretionary <strong>A</strong>ccess <strong>C</strong>ontrol (<strong>DAC</strong>) is the traditional Linux
+method of separating users and groups from one another. In a shared environment
+where multiple users have access to a computer or network, Unix IDs have offered
+a way to contain access within privilege areas for individuals, or shared among
+the group or system. The Android system took this one step further, assigning
+new user IDs for each App. This was never the original intention of Linux UIDs,
+but was able to provide Android’s initial security element: the ability to
+sandbox applications.</p>
+<p>Although AGL mentions use of <strong>DAC</strong> for security isolation, the weight of the
+security responsibility lies in the <strong>M</strong>andatory <strong>A</strong>ccess <strong>C</strong>ontrol
+(<strong>MAC</strong>) and <strong>Cynara</strong>. Furthermore, there are system services with unique
+UIDs. however,the system does not go to the extreme of Android, where every
+application has its own UID. All sandboxing (app isolation) in AGL is handled in
+the <strong>MAC</strong> contexts.</p>
+<h2 id="mandatory-access-control">Mandatory Access Control</h2>
+<p><strong>M</strong>andatory <strong>A</strong>ccess <strong>C</strong>ontrol (<strong>MAC</strong>) is an extension to <strong>DAC</strong>,
+whereby extended attributes (xattr) are associated with the filesystem. In the
+case of AGL, the smackfs filesystem allows files and directories to be
+associated with a SMACK label, providing the ability of further discrimination
+on access control. A SMACK label is a simple null terminated character string
+with a maximum of 255 bytes. While it doesn’t offer the richness of an SELinux
+label, which provides a user, role,type, and level, the simplicity of a single
+value makes the overall design far less complex. There is arguably less chance
+of the security author making mistakes in the policies set forth.</p>
+<hr />
+<h2 id="acronyms-and-abbreviations">Acronyms and Abbreviations</h2>
+<p>The following table lists the terms utilized within this part of the document.</p>
+<table>
+<thead>
+<tr>
+<th>Acronyms or Abbreviations</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>ACL</em></td>
+<td><strong>A</strong>ccess <strong>C</strong>ontrol <strong>L</strong>ists</td>
+</tr>
+<tr>
+<td><em>alsa</em></td>
+<td><strong>A</strong>dvanced <strong>L</strong>inux <strong>S</strong>ound <strong>A</strong>rchitecture</td>
+</tr>
+<tr>
+<td><em>API</em></td>
+<td><strong>A</strong>pplication <strong>P</strong>rogramming <strong>I</strong>nterface</td>
+</tr>
+<tr>
+<td><em>AppFw</em></td>
+<td><strong>App</strong>lication <strong>F</strong>rame<strong>w</strong>ork</td>
+</tr>
+<tr>
+<td><em>BSP</em></td>
+<td><strong>B</strong>oard <strong>S</strong>upport <strong>P</strong>ackage</td>
+</tr>
+<tr>
+<td><em>Cap</em></td>
+<td><strong>Cap</strong>abilities</td>
+</tr>
+<tr>
+<td><em>DAC</em></td>
+<td><strong>D</strong>iscretionary <strong>A</strong>ccess <strong>C</strong>ontrol</td>
+</tr>
+<tr>
+<td><em>DDOS</em></td>
+<td><strong>D</strong>istributed <strong>D</strong>enial <strong>O</strong>f <strong>S</strong>ervice</td>
+</tr>
+<tr>
+<td><em>DOS</em></td>
+<td><strong>D</strong>enial <strong>O</strong>f <strong>S</strong>ervice</td>
+</tr>
+<tr>
+<td><em>IPC</em></td>
+<td><strong>I</strong>nter-<strong>P</strong>rocess <strong>C</strong>ommunication</td>
+</tr>
+<tr>
+<td><em>MAC</em></td>
+<td><strong>M</strong>andatory <strong>A</strong>ccess <strong>C</strong>ontrol</td>
+</tr>
+<tr>
+<td><em>PAM</em></td>
+<td><strong>P</strong>luggable <strong>A</strong>uthentication <strong>M</strong>odules</td>
+</tr>
+<tr>
+<td><em>SMACK</em></td>
+<td><strong>S</strong>implified <strong>M</strong>andatory <strong>A</strong>ccess <strong>C</strong>ontrol <strong>K</strong>ernel</td>
+</tr>
+</tbody>
+</table>
+<h1 id="mandatory-access-control_1">Mandatory Access Control</h1>
+<p>We decided to put the <strong>MAC</strong> protection on the platform part despite the fact
+that it applies to the kernel too, since its use will be mainly at the platform
+level (except floor part).</p>
+<p><strong>M</strong>andatory <strong>A</strong>ccess <strong>C</strong>ontrol (<strong>MAC</strong>) is a protection provided by the
+Linux kernel that requires a <strong>L</strong>inux <strong>S</strong>ecurity <strong>M</strong>odule (<strong>LSM</strong>). AGL
+uses an <strong>LSM</strong> called <strong>S</strong>implified <strong>M</strong>andatory <strong>A</strong>ccess <strong>C</strong>ontrol
+<strong>K</strong>ernel (<strong>SMACK</strong>). This protection involves the creation of <strong>SMACK</strong>
+labels as part of the extended attributes <strong>SMACK</strong> labels to the file extended
+attributes. And a policy is also created to define the behaviour of each label.</p>
+<p>The kernel access controls is based on these labels and this policy. If there is
+no rule, no access will be granted and as a consequence, what is not explicitly
+authorized is forbidden.</p>
+<p>There are two types of <strong>SMACK</strong> labels:</p>
+<ul>
+<li><strong>Execution SMACK</strong> (Attached to the process): Defines how files are
+  <em>accessed</em> and <em>created</em> by that process.</li>
+<li><strong>File Access SMACK</strong> (Written to the extended attribute of the file): Defines
+  <em>which</em> process can access the file.</li>
+</ul>
+<p>By default a process executes with its File Access <strong>SMACK</strong> label unless an
+Execution <strong>SMACK</strong> label is defined.</p>
+<p>AGL's <strong>SMACK</strong> scheme is based on the <em>Tizen 3 Q2/2015</em>. It divides the System
+into the following domains:</p>
+<ul>
+<li>Floor.</li>
+<li>System.</li>
+<li>Applications, Services and User.</li>
+</ul>
+<p>See <a href="http://iot.bzh/download/public/2017/AMMQ1Tokyo/AGL-security-framework-review.pdf">AGL security framework
+review</a>
+and <a href="http://schaufler-ca.com/yahoo_site_admin/assets/docs/SmackWhitePaper.257153003.pdf">Smack White
+Paper</a>
+for more information.</p>
+<hr />
+<h2 id="floor">Floor</h2>
+<p>The <em>floor</em> domain includes the base system services and any associated data and
+libraries. This data remains unchanged at runtime. Writing to floor files or
+directories is allowed only in development mode or during software installation
+or upgrade.</p>
+<p>The following table details the <em>floor</em> domain:</p>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th>Name</th>
+<th>Execution <strong>SMACK</strong></th>
+<th>File Access <strong>SMACK</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-</code></td>
+<td>Floor</td>
+<td><code>r-x</code> for all</td>
+<td>Only kernel and internal kernel thread.</td>
+</tr>
+<tr>
+<td><code>^</code></td>
+<td>Hat</td>
+<td><code>---</code> for all</td>
+<td><code>rx</code> on all domains.</td>
+</tr>
+<tr>
+<td><code>*</code></td>
+<td>Star</td>
+<td><code>rwx</code> for all</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<p>The Hat label is Only for privileged system services (currently only
+  systemd-journal). Useful for backup or virus scans. No file with this label
+  should exist except in the debug log.</p>
+</li>
+<li>
+<p>The Star label is used for device files or <code>/tmp</code> Access restriction managed
+  via <strong>DAC</strong>. Individual files remain protected by their <strong>SMACK</strong> label.</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Label</code> name</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-MAC-Floor-1</td>
+<td><code>^</code></td>
+<td>Only for privileged system services.</td>
+</tr>
+<tr>
+<td>Kernel-MAC-Floor-2</td>
+<td><code>*</code></td>
+<td>Used for device files or <code>/tmp</code> Access restriction via DAC.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="system">System</h2>
+<p>The <em>system</em> domain includes a reduced set of core system services of the OS and
+any associated data. This data may change at runtime.</p>
+<p>The following table details the <em>system</em> domain:</p>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th>Name</th>
+<th>Execution <strong>SMACK</strong></th>
+<th>File Access <strong>SMACK</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>System</code></td>
+<td>System</td>
+<td>None</td>
+<td>Privileged processes</td>
+</tr>
+<tr>
+<td><code>System::Run</code></td>
+<td>Run</td>
+<td><code>rwxatl</code> for User and System label</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>System::Shared</code></td>
+<td>Shared</td>
+<td><code>rwxatl</code> for system domain <code>r-x</code> for User label</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>System::Log</code></td>
+<td>Log</td>
+<td><code>rwa</code> for System label <code>xa</code> for user label</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>System::Sub</code></td>
+<td>SubSystem</td>
+<td>Subsystem Config files</td>
+<td>SubSystem only</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Label</code> name</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-MAC-System-1</td>
+<td><code>System</code></td>
+<td>Process should write only to file with transmute attribute.</td>
+</tr>
+<tr>
+<td>Kernel-MAC-System-2</td>
+<td><code>System::run</code></td>
+<td>Files are created with the directory label from user and system domain (transmute) Lock is implicit with <code>w</code>.</td>
+</tr>
+<tr>
+<td>Kernel-MAC-System-3</td>
+<td><code>System::Shared</code></td>
+<td>Files are created with the directory label from system domain (transmute) User domain has locked privilege.</td>
+</tr>
+<tr>
+<td>Kernel-MAC-System-4</td>
+<td><code>System::Log</code></td>
+<td>Some limitation may impose to add <code>w</code> to enable append.</td>
+</tr>
+<tr>
+<td>Kernel-MAC-System-5</td>
+<td><code>System::Sub</code></td>
+<td>Isolation of risky Subsystem.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="applications-services-and-user">Applications, Services and User</h2>
+<p>The <em>application</em>, <em>services</em> and <em>user</em> domain includes code that provides
+services to the system and user, as well as any associated data. All code
+running on this domain is under <em>Cynara</em> control.</p>
+<p>The following table details the <em>application</em>, <em>services</em> and <em>user</em> domain:</p>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th>Name</th>
+<th>Execution <strong>SMACK</strong></th>
+<th>File Access <strong>SMACK</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>User::Pkg::$AppID</code></td>
+<td>AppID</td>
+<td><code>rwx</code> (for files created by the App). <code>rx</code> for files installed by <strong>AppFw</strong></td>
+<td>$App runtime executing $App</td>
+</tr>
+<tr>
+<td><code>User::Home</code></td>
+<td>Home</td>
+<td><code>rwx-t</code> from System label <code>r-x-l</code> from App</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>User::App-Shared</code></td>
+<td>Shared</td>
+<td><code>rwxat</code> from System and User domains label of $User</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Label</code> name</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-MAC-System-1</td>
+<td><code>User::Pkg::$AppID</code></td>
+<td>Only one Label is allowed per App. A data directory is created by the AppFw in <code>rwx</code> mode.</td>
+</tr>
+<tr>
+<td>Kernel-MAC-System-2</td>
+<td><code>User::Home</code></td>
+<td>AppFw needs to create a directory in <code>/home/$USER/App-Shared</code> at first launch if not present with label app-data access is <code>User::App-Shared</code> without transmute.</td>
+</tr>
+<tr>
+<td>Kernel-MAC-System-3</td>
+<td><code>User::App-Shared</code></td>
+<td>Shared space between all App running for a given user.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="attack-vectors">Attack Vectors</h2>
+<p>There are 4 major components to the system:</p>
+<ul>
+<li>The LSM kernel module.</li>
+<li>The <code>smackfs</code> filesystem.</li>
+<li>Basic utilities for policy management and checking.</li>
+<li>The policy/configuration data.</li>
+</ul>
+<p>As with any mandatory access system, the policy management needs to be carefully
+separated from the checking, as the management utilities can become a convenient
+point of attack. Dynamic additions to the policy system need to be carefully
+verified, as the ability to update the policies is often needed, but introduces
+a possible threat. Finally, even if the policy management is well secured, the
+policy checking and failure response to that checking is also of vital
+importance to the smooth operation of the system.</p>
+<p>While <strong>MAC</strong> is a certainly a step up in security when compared to DAC, there
+are still many ways to compromise a SMACK-enabled Linux system. Some of these
+ways are as follows:</p>
+<ul>
+<li>Disabling SMACK at invocation of the kernel (with command-line:
+  security=none).</li>
+<li>Disabling SMACK in the kernel build and redeploying the kernel.</li>
+<li>Changing a SMACK attribute of a file or directory at install time.</li>
+<li>Tampering with a process with the CAP_MAC_ADMIN privilege.</li>
+<li>Setting/Re-setting the SMACK label of a file.</li>
+<li>Tampering with the default domains (i.e.
+  /etc/smack/accesses.d/default-access-domains).</li>
+<li>Disabling or tampering with the SMACK filesystem (i.e. /smackfs).</li>
+<li>Adding policies with <code>smackload</code> (adding the utility if not present).</li>
+<li>Changing labels with <code>chsmack</code> (adding the utility if not present).</li>
+</ul>
+<h1 id="systemd">SystemD</h1>
+<p><code>afm-system-daemon</code> is used to:</p>
+<ul>
+<li>Manage users and user sessions.</li>
+<li>Setup applications and services (<em>CGroups</em>, <em>namespaces</em>, autostart,
+  permissions).</li>
+<li>Use of <code>libsystemd</code> for its programs (event management, <strong>D-Bus</strong> interface).</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-SystemD-1</td>
+<td>Security model</td>
+<td>Use Namespaces for containerization.</td>
+</tr>
+<tr>
+<td>Platform-SystemD-2</td>
+<td>Security model</td>
+<td>Use CGroups to organise processes.</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="http://iot.bzh/download/public/2017/AMM-Dresden/AGL-systemd.pdf">systemd integration and user
+management</a> for
+more information.</p>
+<h2 id="benefits">Benefits</h2>
+<ul>
+<li>Removal of one privileged process: <strong>afm-user-daemon</strong></li>
+<li>
+<p>Access and use of high level features:</p>
+</li>
+<li>
+<p>Socket activation.</p>
+</li>
+<li>Management of users and integration of <strong>PAM</strong>.</li>
+<li>Dependency resolution to services.</li>
+<li><code>Cgroups</code> and resource control.</li>
+<li><code>Namespaces</code> containerization.</li>
+<li>Autostart of required API.</li>
+<li>Permissions and security settings.</li>
+<li>Network management.</li>
+</ul>
+<h2 id="cgroups">CGroups</h2>
+<p>Control Groups offer a lot of features, with the most useful ones you can
+control: Memory usage, how much CPU time is allocated, how much device I/O is
+allowed or which devices can be accessed. <strong>SystemD</strong> uses <em>CGroups</em> to organise
+processes (each service is a <em>CGroups</em>, and all processes started by that
+service use that <em>CGroups</em>). By default, <strong>SystemD</strong> automatically creates a
+hierarchy of slice, scope and service units to provide a unified structure for
+the <em>CGroups</em> tree. With the <code>systemctl</code> command, you can further modify this
+structure by creating custom slices. Currently, in AGL, there are 2 slices
+(<strong>user.slice</strong> and <strong>system.slice</strong>).</p>
+<h2 id="namespaces">Namespaces</h2>
+<h3 id="user-side">User side</h3>
+<p>There are several ways of authenticating users (Key Radio Frequency, Phone,
+Gesture, ...). Each authentication provides dynamic allocation of <strong>uids</strong> to
+authenticated users. <strong>Uids</strong> is used to ensure privacy of users and <strong>SMACK</strong>
+for applications privacy.</p>
+<p>First, the user initiates authentication with <strong>PAM</strong> activation. <strong>PAM</strong>
+Standard offers highly configurable authentication with modular design like face
+recognition, Voice identification or with a password. Then users should access
+identity services with services and applications.</p>
+<h1 id="d-bus">D-Bus</h1>
+<p>D-Bus is a well-known <strong>IPC</strong> (Inter-Process Communication) protocol (and
+daemon) that helps applications to talk to each other. The use of D-Bus is great
+because it allows to implement discovery and signaling.</p>
+<p>The D-Bus session is by default addressed by environment variable
+<code>DBUS_SESSION_BUS_ADDRESS</code>. Using <strong>systemd</strong> variable
+<code>DBUS_SESSION_BUS_ADDRESS</code> is automatically set for user sessions. D-Bus usage
+is linked to permissions.</p>
+<p>D-Bus has already had several <a href="https://www.cvedetails.com/vulnerability-list/vendor_id-13442/D-bus-Project.html">security
+issues</a>
+(mostly <strong>DoS</strong> issues), to allow applications to keep talking to each other. It
+is important to protect against this type of attack to keep the system more
+stable.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-DBus-1</td>
+<td>Security model</td>
+<td>Use D-Bus as IPC.</td>
+</tr>
+<tr>
+<td>Platform-DBus-2</td>
+<td>Security model</td>
+<td>Apply D-BUS security patches: <a href="https://www.cvedetails.com/vulnerability-list/vendor_id-13442/D-bus-Project.html">D-Bus CVE</a></td>
+</tr>
+</tbody>
+</table>
+<h1 id="system-services-and-daemons">System services and daemons</h1>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-Services-1</td>
+<td>SystemD ?</td>
+</tr>
+<tr>
+<td>Platform-Services-2</td>
+<td>Secure daemon ?</td>
+</tr>
+</tbody>
+</table>
+<h2 id="tools">Tools</h2>
+<ul>
+<li><strong>connman</strong>: An internet connection manager designed to be slim and to use as
+  few resources as possible. It is a fully modular system that can be extended,
+  through plug-ins, to support all kinds of wired or wireless technologies.</li>
+<li><strong>bluez</strong> is a Bluetooth stack. Its goal is to program an implementation of
+  the Bluetooth wireless standards specifications. In addition to the basic
+  stack, the <code>bluez-utils</code> and <code>bluez-firmware</code> packages contain low level
+  utilities such as <code>dfutool</code> which can interrogate the Bluetooth adapter
+  chipset in order to determine whether its firmware can be upgraded.</li>
+<li><strong>gstreamer</strong> is a pipeline-based multimedia framework. It can be used to
+  build a system that reads files in one format, processes them, and exports
+  them in another format.</li>
+<li><strong>alsa</strong> is a software framework and part of the Linux kernel that provides an
+  <strong>API</strong> for sound card device drivers.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Tool</code> name</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-Utilities-1</td>
+<td><code>connman</code></td>
+<td><em>Used</em> as a connection manager.</td>
+</tr>
+<tr>
+<td>Platform-Utilities-2</td>
+<td><code>bluez</code></td>
+<td><em>Used</em> as a Bluetooth manager.</td>
+</tr>
+<tr>
+<td>Platform-Utilities-3</td>
+<td><code>gstreamer</code></td>
+<td><em>Used</em> to manage multimedia file format.</td>
+</tr>
+<tr>
+<td>Platform-Utilities-4</td>
+<td><code>alsa</code></td>
+<td><em>Used</em> to provides an API for sound card device drivers.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="application-frameworkmodel-appfw">Application framework/model (<strong>AppFw</strong>)</h1>
+<p>The AGL application framework consists of several inter-working parts:</p>
+<ul>
+<li><strong>SMACK</strong>: The kernel level <strong>LSM</strong> (<strong>L</strong>inux <strong>S</strong>ecurity <strong>M</strong>odule) that
+  performs extended access control of the system.</li>
+<li><strong>Cynara</strong>: the native gatekeeper daemon used for policy handling, updating to
+  the database and policy checking.</li>
+<li>Security Manager: a master service, through which all security events are
+  intended to take place.</li>
+<li>Several native application framework utilities: <code>afm-main-binding</code>,
+  <code>afm-user-daemon</code>, <code>afm-system-daemon</code>.</li>
+</ul>
+<p>The application framework manages:</p>
+<ul>
+<li>The applications and services management: Installing, Uninstalling, Listing,
+  ...</li>
+<li>The life cycle of applications: Start -&gt; (Pause, Resume) -&gt; Stop.</li>
+<li>Events and signals propagation.</li>
+<li>Privileges granting and checking.</li>
+<li>
+<p>API for interaction with applications.</p>
+</li>
+<li>
+<p>The <strong>security model</strong> refers to the security model used to ensure security
+  and to the tools that are provided for implementing that model. It's an
+  implementation detail that should not impact the layers above the application
+  framework.</p>
+</li>
+<li>
+<p>The <strong>security model</strong> refers to how <strong>DAC</strong> (<strong>D</strong>iscretionary <strong>A</strong>ccess
+  <strong>C</strong>ontrol), <strong>MAC</strong> (Mandatory Access Control) and <code>Capabilities</code> are used
+  by the system to ensure security and privacy. It also includes features of
+  reporting using audit features and by managing logs and alerts.</p>
+</li>
+</ul>
+<p>The <strong>AppFw</strong> uses the security model to ensure the security and the privacy of
+the applications that it manages. It must be compliant with the underlying
+security model. But it should hide it to the applications.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-AGLFw-AppFw-1</td>
+<td>Security model</td>
+<td>Use the AppFw as Security model.</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="http://docs.automotivelinux.org/docs/devguides/en/dev/reference/iotbzh2016/appfw/03-AGL-AppFW-Privileges-Management.pdf">AGL AppFw Privileges
+Management</a>
+and <a href="http://iot.bzh/download/public/2017/SDK/AppFw-Documentation-v3.1.pdf">AGL - Application Framework
+Documentation</a>
+for more information.</p>
+<p>The Security Manager communicates policy information to <strong>Cynara</strong>, which
+retains information in its own database in the format of a text file with
+comma-separated values (CSV). There are provisions to retain a copy of the CSV
+text file when the file is being updated.</p>
+<p>Runtime checking occurs through <strong>Cynara</strong>. Each application that is added to
+the framework has its own instantiation of a SMACK context and D-bus bindings.
+The afb_daemon and Binder form a web-service that is communicated to through
+http or a websocket from the application-proper. This http or websocket
+interface uses a standard unique web token for API communication.</p>
+<p><img alt="Application Framework Flow" src="../images/App-flow.png" /></p>
+<h2 id="cynara">Cynara</h2>
+<p>There's a need for another mechanism responsible for checking applicative
+permissions: Currently in AGL, this task depends on a policy-checker service
+(<strong>Cynara</strong>).</p>
+<ul>
+<li>Stores complex policies in databases.</li>
+<li>"Soft" security (access is checked by the framework).</li>
+</ul>
+<p>Cynara interact with <strong>D-Bus</strong> in order to deliver this information.</p>
+<p>Cynara consists of several parts:</p>
+<ul>
+<li>Cynara: a daemon for controlling policies and responding to access control
+  requests.</li>
+<li>Database: a spot to hold policies.</li>
+<li>Libraries: several static and dynamic libraries for communicating with Cynara.</li>
+</ul>
+<p>The daemon communicates to the libraries over Unix domain sockets. The database
+storage format is a series of CSV-like files with an index file.</p>
+<p>There are several ways that an attacker can manipulate policies of the Cynara
+system:</p>
+<ul>
+<li>Disable Cynara by killing the process.</li>
+<li>Tamper with the Cynara binary on-disk or in-memory.</li>
+<li>Corrupt the database controlled by Cynara.</li>
+<li>Tamper with the database controlled by Cynara.</li>
+<li>Highjack the communication between Cynara and the database.</li>
+</ul>
+<p>The text-based database is the weakest part of the system and although there are
+some consistency mechanisms in place (i.e. the backup guard), these mechanisms
+are weak at best and can be countered by an attacker very easily.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-AGLFw-Cynara-1</td>
+<td>Permissions</td>
+<td>Use Cynara as policy-checker service.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policies">Policies</h3>
+<ul>
+<li>
+<p>Policy rules:</p>
+</li>
+<li>
+<p>Are simple - for pair [application context, privilege] there is straight
+    answer (single Policy Type): [ALLOW / DENY / ...].</p>
+</li>
+<li>No code is executed (no script).</li>
+<li>
+<p>Can be easily cached and managed.</p>
+</li>
+<li>
+<p>Application context (describes id of the user and the application credentials)
+  It is build of:</p>
+</li>
+<li>
+<p>UID of the user that runs the application.</p>
+</li>
+<li><strong>SMACK</strong> label of application.</li>
+</ul>
+<h2 id="holding-policies">Holding policies</h2>
+<p>Policies are kept in buckets. Buckets are set of policies which have additional
+a property of default answer, the default answer is yielded if no policy matches
+searched key. Buckets have names which might be used in policies (for
+directions).</p>
+<h2 id="attack-vectors_1">Attack Vectors</h2>
+<p>The following attack vectors are not completely independent. While attackers may
+have varying levels of access to an AGL system, experience has shown that a
+typical attack can start with direct access to a system, find the
+vulnerabilities, then proceed to automate the attack such that it can be invoked
+from less accessible standpoint (e.g. remotely). Therefore, it is important to
+assess all threat levels, and protect the system appropriately understanding
+that direct access attacks are the door-way into remote attacks.</p>
+<h3 id="remote-attacks">Remote Attacks</h3>
+<p>The local web server interface used for applications is the first point of
+attack, as web service APIs are well understood and easily intercepted. The
+local web server could potentially be exploited by redirecting web requests
+through the local service and exploiting the APIs. While there is the use of a
+security token on the web service API, this is weak textual matching at best.
+This will not be difficult to spoof. It is well known that <a href="http://nordicapis.com/why-api-keys-are-not-enough/">API Keys do not
+provide any real security</a>.</p>
+<p>It is likely that the architectural inclusion of an http / web-service interface
+provided the most flexibility for applications to be written natively or in
+HTML5. However, this flexibility may trade-off with security concerns. For
+example, if a native application were linked directly to the underlying
+framework services, there would be fewer concerns over remote attacks coming
+through the web-service interface.</p>
+<p>Leaving the interface as designed, mitigations to attacks could include further
+securing the interface layer with cryptographic protocols: e.g. encrypted
+information passing, key exchange (e.g. Elliptic-Curve Diffie-Hellman).</p>
+<h3 id="user-level-native-attacks">User-level Native Attacks</h3>
+<ul>
+<li>Modifying the CSV data-base</li>
+<li>Modifying the SQLite DB</li>
+<li>Tampering with the user-level binaries</li>
+<li>Tampering with the user daemons</li>
+<li>Spoofing the D-bus Interface</li>
+<li>Adding executables/libraries</li>
+</ul>
+<p>With direct access to the device, there are many security concerns on the native
+level. For example, as <strong>Cynara</strong> uses a text file data-base with
+comma-separated values (CSV), an attacker could simply modify the data-base to
+escalate privileges of an application. Once a single application has all the
+privileges possible on the system, exploits can come through in this manner.
+Similarly the SQLite database used by the Security Manager is not much different
+than a simple text file. There are many tools available to add, remove, modify
+entries in an SQLite data-base.</p>
+<p>On the next level, a common point of attack is to modify binaries or daemons for
+exploiting functionality. There are many Linux tools available to aid in this
+regard, including: <a href="https://www.hex-rays.com/products/ida/index.shtml">IDA Pro</a>,
+and <a href="https://rada.re/r/">radare2</a>. With the ability to modify binaries, an
+attacker can do any number of activities including: removing calls to security
+checks, redirecting control to bypass verification functionality, ignoring
+security policy handling, escalating privileges, etc.</p>
+<p>Additionally, another attack vector would be to spoof the D-bus interface. D-bus
+is a message passing system built upon Inter-Process Communication (IPC), where
+structured messages are passed based upon a protocol. The interface is generic
+and well documented. Therefore, modifying or adding binaries/libraries to spoof
+this interface is a relatively straight-forward process. Once the interface has
+been spoofed, the attacker can issue any number of commands that lead into
+control of low-level functionality.</p>
+<p>Protecting a system from native attacks requires a methodical approach. First,
+the system should reject processes that are not sanctioned to run.
+Signature-level verification at installation time will help in this regard, but
+run-time integrity verification is much better. Signatures need to originate
+from authorized parties, which is discussed further in a later section on the
+Application Store.</p>
+<p>On the next level, executables should not be allowed to do things where they
+have not been granted permission. DAC and SMACK policies can help in this
+regard. On the other hand, there remain concerns with memory accesses, system
+calls, and other process activity that may go undetected. For this reason, a
+secure environment which monitors all activity can give indication of all
+unauthorized activity on the system.</p>
+<p>Finally, it is very difficult to catch attacks of direct tampering in a system.
+These types of attacks require a defense-in-depth approach, where complementary
+software protection and hardening techniques are needed. Tamper-resistance and
+anti-reverse-engineering technologies include program
+transformations/obfuscation, integrity verification, and white-box cryptography.
+If applied in a mutually-dependent fashion and considering performance/security
+tradeoffs, the approach can provide an effective barrier to direct attacks to
+the system. Furthermore, the use of threat monitoring provides a valuable
+telemetry/analytics capability and the ability to react and renew a system under
+attack.</p>
+<h3 id="root-level-native-attacks">Root-level Native Attacks</h3>
+<ul>
+<li>Tampering the system daemon</li>
+<li>Tampering Cynara</li>
+<li>Tampering the security manager</li>
+<li>Disabling SMACK</li>
+<li>Tampering the kernel</li>
+</ul>
+<p>Once root-level access (i.e. su) has been achieved on the device, there are many
+ways to compromise the system. The system daemon, <strong>Cynara</strong>, and the security
+manager are vulnerable to tampering attacks. For example, an executable can be
+modified in memory to jam a branch, jump to an address, or disregard a check.
+This can be as simple as replacing a branch instruction with a NOP, changing a
+memory value, or using a debugger (e.g. gdb, IDA) to change an instruction.
+Tampering these executables would mean that policies can be ignored and
+verification checks can be bypassed.</p>
+<p>Without going so far as to tamper an executable, the <strong>SMACK</strong> system is also
+vulnerable to attack. For example, if the kernel is stopped and restarted with
+the <em>security=none</em> flag, then SMACK is not enabled. Furthermore, <code>systemd</code>
+starts the loading of <strong>SMACK</strong> rules during start-up. If this start-up process
+is interfered with, then <strong>SMACK</strong> will not run. Alternatively, new policies can
+be added with <code>smackload</code> allowing unforeseen privileges to alternative
+applications/executables.</p>
+<p>Another intrusion on the kernel level is to rebuild the kernel (as it is
+open-source) and replace it with a copy that has <strong>SMACK</strong> disabled, or even
+just the <strong>SMACK</strong> filesystem (<code>smackfs</code>) disabled. Without the extended label
+attributes, the <strong>SMACK</strong> system is disabled.</p>
+<p>Root-level access to the device has ultimate power, where the entire system can
+be compromised. More so, a system with this level access allows an attacker to
+craft a simpler <em>point-attack</em> which can operate on a level requiring fewer
+privileges (e.g. remote access, user-level access).</p>
+<h2 id="vulnerable-resources">Vulnerable Resources</h2>
+<h3 id="resource-afm-user-daemon">Resource: <code>afm-user-daemon</code></h3>
+<p>The <code>afm-user-daemon</code> is in charge of handling applications on behalf of a user.
+Its main tasks are:</p>
+<ul>
+<li>Enumerate applications that the end user can run and keep this list available
+  on demand.</li>
+<li>Start applications on behalf of the end user, set user running environment,
+  set user security context.</li>
+<li>List current runnable or running applications.</li>
+<li>Stop (aka pause), continue (aka resume), terminate a running instance of a
+  given application.</li>
+<li>Transfer requests for installation/uninstallation of applications to the
+  corresponding system daemon afm-system-daemon.</li>
+</ul>
+<p>The <code>afm-user-daemon</code> launches applications. It builds a secure environment for
+the application before starting it within that environment. Different kinds of
+applications can be launched, based on a configuration file that describes how
+to launch an application of a given kind within a given launching mode: local or
+remote. Launching an application locally means that the application and its
+binder are launched together. Launching an application remotely translates in
+only launching the application binder.</p>
+<p>The UI by itself has to be activated remotely by a request (i.e. HTML5
+homescreen in a browser). Once launched, running instances of the application
+receive a <code>runid</code> that identifies them. <code>afm-user-daemon</code> manages the list of
+applications that it has launched. When owning the right permissions, a client
+can get the list of running instances and details about a specific running
+instance. It can also terminate, stop or continue a given application. If the
+client owns the right permissions, <code>afm-user-daemon</code> delegates the task of
+installing and uninstalling applications to <code>afm-system-daemon</code>.</p>
+<p><code>afm-user-daemon</code> is launched as a <code>systemd</code> service attached to a user session.
+Normally, the service file is located at
+/usr/lib/systemd/user/afm-user-daemon.service.</p>
+<p>Attacker goals:</p>
+<ul>
+<li>Disable <code>afm-user-daemon</code>.</li>
+<li>Tamper with the <code>afm-user-daemon</code> configuration.</li>
+<li>/usr/lib/systemd/user/afm-user-daemon.service.</li>
+<li>Application(widget) config.xml file.</li>
+<li>
+<p>/etc/afm/afm-launch.conf (launcher configuration).</p>
+</li>
+<li>
+<p>Escalate user privileges to gain more access with <code>afm-user-daemon</code>.</p>
+</li>
+<li>Install malicious application (widget).</li>
+<li>Tamper with <code>afm-user-daemon</code> on disk or in memory.</li>
+</ul>
+<h3 id="resource-afm-system-daemon">Resource: <code>afm-system-daemon</code></h3>
+<p>The <code>afm-system-daemon</code> is in charge of installing applications on the AGL
+system. Its main tasks are:</p>
+<ul>
+<li>Install applications and setup security framework for newly installed
+  applications.</li>
+<li>Uninstall applications.</li>
+</ul>
+<p><code>afm-system-daemon</code> is launched as a <code>systemd</code> service attached to system.
+Normally, the service file is located at
+/lib/systemd/system/afm-systemdaemon.service.</p>
+<p>Attacker goals:</p>
+<ul>
+<li>Disable <code>afm-system-daemon</code>.</li>
+<li>Tamper with the <code>afm-system-daemon</code> configuration.</li>
+<li>Tamper <code>afm-system-daemon</code> on disk or in memory.</li>
+</ul>
+<h3 id="resource-afb-daemon">Resource <code>afb-daemon</code></h3>
+<p><code>afb-binder</code> is in charge of serving resources and features through an HTTP
+interface. <code>afb-daemon</code> is in charge of binding one instance of an application
+to the AGL framework and AGL system. The application and its companion binder
+run in a secured and isolated environment set for them. Applications are
+intended to access to AGL system through the binder. <code>afb-daemon</code> binders serve
+files through HTTP protocol and offers developers the capability to expose
+application API methods through HTTP or WebSocket protocol.</p>
+<p>Binder bindings are used to add APIs to <code>afb-daemon</code>. The user can write a
+binding for <code>afb-daemon</code>. The binder <code>afb-daemon</code> serves multiple purposes:</p>
+<ol>
+<li>It acts as a gateway for the application to access the system.</li>
+<li>It acts as an HTTP server for serving files to HTML5 applications.</li>
+<li>It allows HTML5 applications to have native extensions subject to security
+   enforcement for accessing hardware resources or for speeding up parts of
+   algorithm.</li>
+</ol>
+<p>Attacker goals:</p>
+<ul>
+<li>Break from isolation.</li>
+<li>Disable <code>afb-daemon</code>.</li>
+<li>Tamper <code>afb-demon</code> on disk or in memory.</li>
+<li>Tamper <strong>capabilities</strong> by creating/installing custom bindings for
+  <code>afb-daemon</code>.</li>
+</ul>
+<h1 id="utilities">Utilities</h1>
+<ul>
+<li><strong>busybox</strong>: Software that provides several stripped-down Unix tools in a
+  single executable file. Of course, it will be necessary to use a "production"
+  version of <strong>busybox</strong> in order to avoid all the tools useful only in
+  development mode.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Tool</code> name</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-Utilities-1</td>
+<td><code>busybox</code></td>
+<td><em>Used</em> to provide a number of tools. Do not compile development tools.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="functionalities-to-exclude-in-production-mode">Functionalities to exclude in production mode</h2>
+<p>In production mode, a number of tools must be disabled to prevent an attacker
+from finding logs for example. This is useful to limit the visible surface and
+thus complicate the fault finding process. The tools used only in development
+mode are marked by an '<strong>agl-devel</strong>' feature. When building in production mode,
+these tools will not be compiled.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Utility</code> name and normal <code>path</code></th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-Utilities-1</td>
+<td><code>chgrp</code> in <code>/bin/chgrp</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-2</td>
+<td><code>chmod</code> in <code>/bin/chmod</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-3</td>
+<td><code>chown</code> in <code>/bin/chown</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-4</td>
+<td><code>dmesg</code> in <code>/bin/dmesg</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-5</td>
+<td><code>Dnsdomainname</code> in <code>/bin/dnsdomainname</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-6</td>
+<td><code>dropbear</code>, Remove "dropbear" from <code>/etc/init.d/rcs</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-7</td>
+<td><code>Editors</code> in (vi) <code>/bin/vi</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-8</td>
+<td><code>find</code> in <code>/bin/find</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-9</td>
+<td><code>gdbserver</code> in <code>/bin/gdbserver</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-10</td>
+<td><code>hexdump</code> in <code>/bin/hexdump</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-11</td>
+<td><code>hostname</code> in <code>/bin/hostname</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-12</td>
+<td><code>install</code> in <code>/bin/install</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-13</td>
+<td><code>iostat</code> in <code>/bin/iostat</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-14</td>
+<td><code>killall</code> in <code>/bin/killall</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-15</td>
+<td><code>klogd</code> in <code>/sbin/klogd</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-16</td>
+<td><code>logger</code> in <code>/bin/logger</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-17</td>
+<td><code>lsmod</code> in <code>/sbin/lsmod</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-18</td>
+<td><code>pmap</code> in <code>/bin/pmap</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-19</td>
+<td><code>ps</code> in <code>/bin/ps</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-20</td>
+<td><code>ps</code> in <code>/bin/ps</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-21</td>
+<td><code>rpm</code> in <code>/bin/rpm</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-22</td>
+<td><code>SSH</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-23</td>
+<td><code>stbhotplug</code> in <code>/sbin/stbhotplug</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-24</td>
+<td><code>strace</code> in <code>/bin/trace</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-25</td>
+<td><code>su</code> in <code>/bin/su</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-26</td>
+<td><code>syslogd</code> in (logger) <code>/bin/logger</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-27</td>
+<td><code>top</code> in <code>/bin/top</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-28</td>
+<td><code>UART</code> in <code>/proc/tty/driver/</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-29</td>
+<td><code>which</code> in <code>/bin/which</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-30</td>
+<td><code>who</code> and <code>whoami</code> in <code>/bin/whoami</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-31</td>
+<td><code>awk</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-32</td>
+<td><code>cut</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-33</td>
+<td><code>df</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-34</td>
+<td><code>echo</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-35</td>
+<td><code>fdisk</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-36</td>
+<td><code>grep</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-37</td>
+<td><code>mkdir</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-38</td>
+<td><code>mount</code> (vfat) (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-39</td>
+<td><code>printf</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-40</td>
+<td><code>sed</code> in <code>/bin/sed</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-41</td>
+<td><code>tail</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-42</td>
+<td><code>tee</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-43</td>
+<td><code>test</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+</tbody>
+</table>
+<p>The <em>Enabled</em> Unix/Linux utilities above shall be permitted as they are often
+used in the start-up scripts and for USB logging. If any of these utilities are
+not required by the device then those should be removed.</p>
+<h1 id="users">Users</h1>
+<p>The user policy can group users by function within the car. For example, we can
+consider a driver and his passengers. Each user is assigned to a single group to
+simplify the management of space security.</p>
+<h2 id="root-access">Root Access</h2>
+<p>The main applications, those that provide the principal functionality of the
+embedded device, should not execute with root identity or any capability.</p>
+<p>If the main application is allowed to execute at any capability, then the entire
+system is at the mercy of the said application's good behaviour. Problems arise
+when an application is compromised and able to execute commands which could
+consistently and persistently compromise the system by implanting rogue
+applications.</p>
+<p>It is suggested that the middleware and the UI should run in a context on a user
+with no capability and all persistent resources should be maintained without any
+capability.</p>
+<p>One way to ensure this is by implementing a server-client paradigm. Services
+provided by the system's drivers can be shared this way. The other advantage of
+this approach is that multiple applications can share the same resources at the
+same time.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-Users-root-1</td>
+<td>Main application</td>
+<td>Should not execute as root.</td>
+</tr>
+<tr>
+<td>Platform-Users-root-2</td>
+<td>UI</td>
+<td>Should run in a context on a user with no capability.</td>
+</tr>
+</tbody>
+</table>
+<p>Root access should not be allowed for the following utilities:</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Utility</code> name</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-Users-root-3</td>
+<td><code>login</code></td>
+<td><em>Not allowed</em></td>
+</tr>
+<tr>
+<td>Platform-Users-root-4</td>
+<td><code>su</code></td>
+<td><em>Not allowed</em></td>
+</tr>
+<tr>
+<td>Platform-Users-root-5</td>
+<td><code>ssh</code></td>
+<td><em>Not allowed</em></td>
+</tr>
+<tr>
+<td>Platform-Users-root-6</td>
+<td><code>scp</code></td>
+<td><em>Not allowed</em></td>
+</tr>
+<tr>
+<td>Platform-Users-root-7</td>
+<td><code>sftp</code></td>
+<td><em>Not allowed</em></td>
+</tr>
+</tbody>
+</table>
+<p>Root access should not be allowed for the console device. The development
+environment should allow users to login with pre-created user accounts.</p>
+<p>Switching to elevated privileges shall be allowed in the development environment
+via <code>sudo</code>.</p>
+<hr />
+<h2 id="capabilities">Capabilities</h2>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-Users-Capabilities-1</td>
+<td>Kernel or Platform-user?</td>
+</tr>
+<tr>
+<td>Platform-Users-Capabilities-2</td>
+<td>Add config note.</td>
+</tr>
+</tbody>
+</table>
+<p>The goal is to restrict functionality that will not be useful in <strong>AGL</strong>. They
+are integrated into the <strong>LSM</strong>. Each privileged transaction is associated with
+a capability. These capabilities are divided into three groups:</p>
+<ul>
+<li>e: Effective: This means the capability is “activated”.</li>
+<li>p: Permitted: This means the capability can be used/is allowed.</li>
+<li>i: Inherited: The capability is kept by child/subprocesses upon execve() for
+  example.</li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../6_Application/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../6_Application/" class="btn btn-xs btn-link">
+        Application
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../4_Kernel/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../4_Kernel/" class="btn btn-xs btn-link">
+        Kernel
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

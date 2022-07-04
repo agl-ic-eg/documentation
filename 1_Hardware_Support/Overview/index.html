@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/1_Hardware_Support/Overview/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Supported Boards - AGL Documentation</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "AGL Reference Machines", url: "#_top", children: [
+          ]},
+          {title: "Community supported Machines", url: "#community-supported-machines", children: [
+          ]},
+          {title: "Supported Images", url: "#supported-images", children: [
+              {title: "1. In-Vehicle Infotainment (IVI)", url: "#1-in-vehicle-infotainment-ivi" },
+              {title: "2. Instrument Cluster", url: "#2-instrument-cluster" },
+              {title: "3. Telematics", url: "#3-telematics" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../2_Architecture_Guides/1_Introduction/0_Overview/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../2_Architecture_Guides/1_Introduction/0_Overview/" class="btn btn-xs btn-link">
+        Overview
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../0_Getting_Started/3_AGL_Profile/Build%20and%20Boot%20AGL%20Instrument%20Cluster%20demo%20image%20%28IC-IVI%20with%20Container%20isolation%29/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../0_Getting_Started/3_AGL_Profile/Build%20and%20Boot%20AGL%20Instrument%20Cluster%20demo%20image%20%28IC-IVI%20with%20Container%20isolation%29/" class="btn btn-xs btn-link">
+        Build and Boot AGL Instrument Cluster demo image (IC-IVI with Container isolation)
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p>The following table briefs about the various hardware platforms, supported by AGL :</p>
+<p><strong>NOTE:</strong> Further information about AGL Distribution available at <a href="https://wiki.automotivelinux.org/agl-distro">AGL wiki</a>.</p>
+<h3 id="agl-reference-machines">AGL Reference Machines</h3>
+<table>
+<thead>
+<tr>
+<th align="center">BOARD</th>
+<th align="center">$MACHINE</th>
+<th align="center">ARCHITECHTURE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">QEMU</td>
+<td align="center">qemu-x86-64</td>
+<td align="center">x86</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">qemu-arm</td>
+<td align="center">arm32</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">qemu-arm64</td>
+<td align="center">arm64</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">RCar Gen 3</td>
+<td align="center">h3ulcb</td>
+<td align="center">arm64</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">h3-salvator-x</td>
+<td align="center">arm64</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">h3-kf</td>
+<td align="center">arm64</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">m3ulcb</td>
+<td align="center">arm64</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">m3-salvator-x</td>
+<td align="center">arm64</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">m3-kf</td>
+<td align="center">arm64</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">agl-refhw</td>
+<td align="center">arm64</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Raspberry Pi</td>
+<td align="center">raspberrypi4</td>
+<td align="center">arm64</td>
+</tr>
+</tbody>
+</table>
+<h3 id="community-supported-machines">Community supported Machines</h3>
+<table>
+<thead>
+<tr>
+<th align="center">BOARD</th>
+<th align="center">$MACHINE</th>
+<th align="center">ARCHITECHTURE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">BeagleBone</td>
+<td align="center">bbe</td>
+<td align="center">arm32</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">beaglebone</td>
+<td align="center">arm32</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">i.MX 6</td>
+<td align="center">cubox-i</td>
+<td align="center">arm32</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">imx6qdlsabreauto</td>
+<td align="center">arm32</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">nitrogen6x</td>
+<td align="center">arm32</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">i.MX 8</td>
+<td align="center">imx8mqevk</td>
+<td align="center">arm64</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">imx8mqevk-viv</td>
+<td align="center">arm64</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Snapdragon</td>
+<td align="center">dragonboard-410c</td>
+<td align="center">arm64</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">dragonboard-820c</td>
+<td align="center">arm64</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">ARC HS</td>
+<td align="center">hsdk</td>
+<td align="center">ARC</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">virtio</td>
+<td align="center">virtio-aarch64</td>
+<td align="center">arm64</td>
+</tr>
+</tbody>
+</table>
+<h3 id="supported-images">Supported Images</h3>
+<p>AGL supports a variety of interfaces, each requiring unique setup configuration.</p>
+<h4 id="1-in-vehicle-infotainment-ivi">1. In-Vehicle Infotainment (IVI)</h4>
+<p><strong>Supported boards</strong> :</p>
+<p>AGL Reference Boards (QEMU, RCar Gen 3, agl-refhw &amp; Raspberry Pi 4)</p>
+<p>Community supported Machines (i. MX 6, i. MX 8, Snapdragon &amp; ARC HS)</p>
+<ul>
+<li>
+<p>Qt Based :</p>
+<ul>
+<li>
+<p>Setting up flags at <code>aglsetup</code> script :</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">source</span> meta-agl/scripts/aglsetup.sh -f -m <span class="nv">$MACHINE</span> -b build-<span class="nv">$MACHINE</span> agl-demo
+
+<span class="c1">#To enable Developer Options</span>
+$ <span class="nb">source</span> meta-agl/scripts/aglsetup.sh -f -m <span class="nv">$MACHINE</span> -b build-<span class="nv">$MACHINE</span> agl-demo agl-devel
+</code></pre></div>
+</li>
+<li>
+<p>Building target image :</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">time</span> bitbake agl-demo-platform
+</code></pre></div>
+</li>
+</ul>
+</li>
+<li>
+<p>HTML5 Based :</p>
+<ul>
+<li>
+<p>Setting up flags at <code>aglsetup</code> script :</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">source</span> meta-agl/scripts/aglsetup.sh -f -m <span class="nv">$MACHINE</span> -b build-<span class="nv">$MACHINE</span> agl-demo
+
+<span class="c1"># To enable Developer Options</span>
+$ <span class="nb">source</span> meta-agl/scripts/aglsetup.sh -f -m <span class="nv">$MACHINE</span> -b build-<span class="nv">$MACHINE</span> agl-demo agl-devel
+</code></pre></div>
+</li>
+<li>
+<p>Building target image :</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">time</span> bitbake agl-demo-platform-html5
+</code></pre></div>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-instrument-cluster">2. Instrument Cluster</h4>
+<p><strong>Supported boards</strong> :</p>
+<p>AGL Reference Boards (QEMU, RCar Gen 3 &amp; Raspberry Pi 4)</p>
+<ul>
+<li>
+<p>Setting up flags at <code>aglsetup</code> script :</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">source</span> meta-agl/scripts/aglsetup.sh -f -m <span class="nv">$MACHINE</span> -b build-<span class="nv">$MACHINE</span> agl-demo
+
+<span class="c1"># To enable Developer Options</span>
+$ <span class="nb">source</span> meta-agl/scripts/aglsetup.sh -f -m <span class="nv">$MACHINE</span> -b build-<span class="nv">$MACHINE</span> agl-demo agl-devel
+</code></pre></div>
+</li>
+<li>
+<p>Building target image :</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">time</span> bitbake agl-cluster-demo
+</code></pre></div>
+</li>
+</ul>
+<h4 id="3-telematics">3. Telematics</h4>
+<p>Headless demo platform for low-spec boards.</p>
+<p><strong>Supported boards</strong> :</p>
+<p>Community supported Machines (BeagleBone)</p>
+<ul>
+<li>
+<p>Setting up flags at <code>aglsetup</code> script :</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">source</span> meta-agl/scripts/aglsetup.sh -f -m <span class="nv">$MACHINE</span> -b build-<span class="nv">$MACHINE</span> agl-demo
+
+<span class="c1"># To enable Developer Options</span>
+$ <span class="nb">source</span> meta-agl/scripts/aglsetup.sh -f -m <span class="nv">$MACHINE</span> -b build-<span class="nv">$MACHINE</span> agl-demo agl-devel
+</code></pre></div>
+</li>
+<li>
+<p>Building target image :</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">time</span> bitbake agl-telematics-demo
+</code></pre></div>
+</li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../2_Architecture_Guides/1_Introduction/0_Overview/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../2_Architecture_Guides/1_Introduction/0_Overview/" class="btn btn-xs btn-link">
+        Overview
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../0_Getting_Started/3_AGL_Profile/Build%20and%20Boot%20AGL%20Instrument%20Cluster%20demo%20image%20%28IC-IVI%20with%20Container%20isolation%29/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../0_Getting_Started/3_AGL_Profile/Build%20and%20Boot%20AGL%20Instrument%20Cluster%20demo%20image%20%28IC-IVI%20with%20Container%20isolation%29/" class="btn btn-xs btn-link">
+        Build and Boot AGL Instrument Cluster demo image (IC-IVI with Container isolation)
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

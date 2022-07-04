@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/2_Architecture_Guides/2_Security_Blueprint/0_Overview/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Overview - AGL Documentation</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Adversaries", url: "#_top", children: [
+          ]},
+          {title: "Attack Goals", url: "#attack-goals", children: [
+          ]},
+          {title: "Assets and Security Categorization", url: "#assets-and-security-categorization", children: [
+          ]},
+          {title: "Hardening term", url: "#hardening-term", children: [
+          ]},
+          {title: "AGL security overview", url: "#agl-security-overview", children: [
+          ]},
+          {title: "Acronyms and Abbreviations", url: "#acronyms-and-abbreviations", children: [
+          ]},
+          {title: "References", url: "#references", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../1_Hardware/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../1_Hardware/" class="btn btn-xs btn-link">
+        Hardware
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../1_Introduction/1_AGL_Requirements_Specifications/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../1_Introduction/1_AGL_Requirements_Specifications/" class="btn btn-xs btn-link">
+        AGL Requirements Specifications
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p>Modern cars have become a lot more technologically sophisticated and different
+than those of the past. We are seeing a wider range of new features and
+functionality, with a lot more complex software. It is fair to say that the cars
+being introduced to the market today have much more in common with computing
+devices like cell phones, than their predecessors did. Modern car manufacturers
+are also integrating support for a broad range of communication technologies for
+these “connected” cars. With the advent of such vehicles, Linux has become a
+natural choice for the software platform, with Automotive Grade Linux as a
+promising example.</p>
+<p>From a security point of view, the remote capabilities of a connected car
+results in a much larger attack surface. This opens a whole new world of
+security vulnerabilities that need to be considered during the architectural
+design. History shows that physical access to a device is sufficient for a
+hacker to gain root privileges. This makes the car a hostile environment.</p>
+<p>The Security Blueprint documents the security features that are included as part
+of Automotive Grade Linux (AGL) and identifies areas that need to be addressed
+from a security perspective as part of AGL. It also gives guidance around
+existing technologies and solutions.</p>
+<p>Security domains will allow us to create a set of tests verifying the security
+of Automotive Grade Linux.</p>
+<p>This document is firstly based on an existing AGL security-blueprint.</p>
+<p><strong>For security to be effective, the concepts must be simple. And by default,
+anything that is not allowed is forbidden.</strong></p>
+<p>We will cover topics starting from the lowest level (<em>Hardware</em>) up to the
+highest levels (<em>Connectivity</em> and <em>Application</em>). We will move quickly on
+<em>Hardware</em> and <em>Connectivity</em> because this is not supported at our level.
+Solutions of connectivity problems concern updates and secured settings while
+hardware securing is related to the manufacturers.</p>
+<h2 id="adversaries">Adversaries</h2>
+<p>Adversaries and attackers within the Automotive space.</p>
+<ul>
+<li>Enthusiast Attackers</li>
+</ul>
+<p>Enthusiast attackers have physical access to the Engine Control Units (ECUs) at
+the circuit board level. They can solder ‘mod chips’ onto the board and have
+access to probing tools. They also have information on ECUs that have been
+previously compromised and have access to softwares and instructions developed
+by other members of car modification forums. The goal of the enthusiast hacker
+could be, but is not limited to, adding extra horse power to the car or hacking
+it just for fun.</p>
+<ul>
+<li>Corrupt Automotive Dealers</li>
+</ul>
+<p>Corrupt automotive dealers are attackers that have access to the same
+capabilities as enthusiasts, but also have access to the car manufacturer’s
+(OEM) dealer network. They may also have access to standard debugging tools
+provided by the car manufacturer. Their goal may be to support local car theft
+gangs or organized criminals.</p>
+<ul>
+<li>Organized Criminals</li>
+</ul>
+<p>Organized criminals have access to all of the above tools but may also have some
+level of control over the internal network at many dealerships. They may have
+hacked and gained temporary control of the Over-The-Air (OTA) servers or the
+In-Vehicle Infotainment (IVI) systems. This is very much like the role of
+organized criminals in other industries such as paid media today. Their goal is
+to extort money from OEMs and/or governments by threatening to disable multiple
+vehicles.</p>
+<ul>
+<li>Malware Developers</li>
+</ul>
+<p>Malware developers have developed malicious software to attack and compromise a
+large number of vehicles. The malicious software is usually designed to spread
+from one vehicle to another. Usually, the goal is to take control of multiple
+machines and then sell access to them for malicious purposes like
+denial-of-service (DoS) attacks or theft of private information and data.</p>
+<ul>
+<li>Security Researchers</li>
+</ul>
+<p>Security researchers are ‘self-publicized’ security consultants trying to make a
+name for themselves. They have access to standard tools for software security
+analysis. They also have physical access to the vehicle and standard hardware
+debugging tools (Logic Analyzers, Oscilloscopes, etc). Their goal is to
+publicize attacks for personal gain or just to gain personal understanding with
+a sense of helping make things more secure.</p>
+<h2 id="attack-goals">Attack Goals</h2>
+<p>In today’s connected vehicle, more and more functionality is moving to software
+control, meaning that the threat of attack becomes greater and greater. We see
+car features like navigation and summoning, car access/engine start, and
+motor/ECU upgrades all controlled through software and connections to the cloud.
+The risk of attack is high because there are high value targets in play.</p>
+<p>Here, we outline some of the major threats categories along with some sample
+attackers, example attacks, and a relative importance. These threat categories
+are intended to be general examples. There can be many nuances to threat types.
+Additionally, there can be many sub-attacks that eventually lead to these higher
+level attack goals.</p>
+<table>
+<thead>
+<tr>
+<th>Threat Category</th>
+<th>Sample Attacker</th>
+<th>Example Attacks</th>
+<th>Relative Importance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vehicle theft</td>
+<td>Individual, organized criminals</td>
+<td>Send the car to an unplanned destination, get a key for the car, gain control of the unlock mechanism</td>
+<td>Reduced likelihood of future vehicle purchases (Profit Later), bad press (Brand Integrity)</td>
+</tr>
+<tr>
+<td>Reduced vehicle functionality</td>
+<td>Terrorist groups, disgruntled employees</td>
+<td>Lock the driver out of the car, cause the car to crash, block access to infotainment system</td>
+<td>Inability sell paid-for apps and content (Profit Now), bad press (Brand Integrity), possible loss of life (Physical Injury)</td>
+</tr>
+<tr>
+<td>Vehicle hacking</td>
+<td>Vehicle owner, competitor</td>
+<td>Get content without paying, modify DRM licenses, unlock of after-market features, theft of IP</td>
+<td>Loss of sales for content and features (Profit Now), lawsuits from content owners (Profit Later), loss of competitive advantage (Profit Later)</td>
+</tr>
+<tr>
+<td>Sensitive asset theft</td>
+<td>Organized criminals, blackmailers</td>
+<td>Steal credit card numbers, health information, camera data, steal bandwidth</td>
+<td>Bad press (Brand Integrity), lawsuits from vehicle owners (Profit Later)</td>
+</tr>
+</tbody>
+</table>
+<p>The Automotive Grade Linux (AGL) initiative builds upon open-source software
+including Linux and Tizen to offer a flexible application framework. However,
+the security provisions of the app framework, Cynara, and the security manager
+only go so far in keeping the biggest threats at bay. As experience has shown,
+providing a constrained app (like that in the Android Open Source Platform) and
+store development flow, signature verification, DAC sandboxing, and MAC (SMACK)
+controls over the platform can have a certain amount of success with the
+security of the system. However, the openness of the system invites many
+researchers, hobbyists and hackers and financially motivated attackers to
+compromise the system for their own gains.</p>
+<p>As AGL arrives on modern automobiles, this is inevitably inviting many capable
+actors to modify, attack, and compromise these well thought-out systems and
+their applications. With concerns like safety and security, the auto industry
+cannot afford to go the way of consumer devices like phones and tablets where
+security problems are encountered on a frequent basis. It is imperative to use a
+layered approach and defense-in-depth to protect the system from inevitable
+attack.</p>
+<h2 id="assets-and-security-categorization">Assets and Security Categorization</h2>
+<p>This section outlines some of the assets that are likely to be found in the
+vehicle and their relative sensitivity from an attack point of view.
+Additionally, the final column on the right lists some of the recommended
+protection types that can be applied to these types of assets (Note that the
+empty cells refer to the cells above them). A good protection approach will give
+priority to the most sensitive assets, using a defense-in-depth approach to
+cover these assets. Less sensitive assets are treated at a lower priority,
+typically protected with fewer protection techniques. A more fine-grained
+prioritization of the the assets in a concrete vehicle network can be achieved
+with detailed threat analysis which considers the topology of the vehicle
+network and access-controls that are in-place. e.g. the EVITA framework for
+attack trees.</p>
+<table>
+<thead>
+<tr>
+<th>Asset Category</th>
+<th>Examples</th>
+<th>Sensitivity</th>
+<th>Recommended Protection Types</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Software</td>
+<td>ECU software, infotainment software, OS images</td>
+<td>Critical</td>
+<td>Key Management, Mutual Asymmetric Authentication, HSM and WhiteBox Encryption, Message Integrity Checks, Hardening/SW Protection, Program Transforms/ Obfuscation, Integrity Verification, Secure OS</td>
+</tr>
+<tr>
+<td>Car Access</td>
+<td>Biometric data, car keys</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Payment Data</td>
+<td>Credit cards, User profile critical data</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Recordings</td>
+<td>Internal camera recording, internal audio recording, external camera recording</td>
+<td>High</td>
+<td>Encryption, Message Integrity Checks, Hardening/SW Protection, Program Transforms / Obfuscation</td>
+</tr>
+<tr>
+<td>User Profile</td>
+<td>Usernames and passwords, customization, calendar, contacts</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Location</td>
+<td>GPS coordinates, vehicle usage data</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Purchased Content</td>
+<td>Video, audio, licenses</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Teleconference</td>
+<td>Chat, audio, video</td>
+<td>Medium</td>
+<td>SW Protection, Program Transforms / Obfuscation, Authenticated encryption for transmission</td>
+</tr>
+<tr>
+<td>Vehicle data</td>
+<td>Vehicle info, sensor data</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Navigation data</td>
+<td>Static and dynamic maps</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>3rd party data</td>
+<td>Home automation commands, cloud game data</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="hardening-term">Hardening term</h2>
+<p>The term Hardening refers to the tools, techniques and processes required in
+order to reduce the attack surface on an embedded system, such as an embedded
+control unit (<strong>ECU</strong>) or other managed devices. The target for all hardening
+activities is to prevent the execution of invalid binaries on the device, and to
+prevent copying of security related data from the device.</p>
+<h2 id="agl-security-overview">AGL security overview</h2>
+<p>AGL roots are based on security concepts. Those concepts are implemented by the
+security framework as shown in this picture:</p>
+<p><img alt="AGL architecture" src="../images/WhiteBoxArchi.png" /></p>
+<hr />
+<h1 id="acronyms-and-abbreviations">Acronyms and Abbreviations</h1>
+<p>The following table lists the strongest terms utilized within all this document.</p>
+<table>
+<thead>
+<tr>
+<th>Acronyms or Abbreviations</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>AGL</em></td>
+<td><strong>A</strong>utomotive <strong>G</strong>rade <strong>L</strong>inux</td>
+</tr>
+<tr>
+<td><em>ECU</em></td>
+<td><strong>E</strong>lectronic <strong>C</strong>ontrol <strong>U</strong>nit</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="references">References</h1>
+<ul>
+<li><a href="http://docs.automotivelinux.org/docs/architecture/en/dev/reference/security/01-overview.html">security-blueprint</a>.</li>
+<li><em>http://
+    docs.automotivelinux.org/docs/architecture/en/dev/reference/security/01-overview.html</em></li>
+<li><strong>[2017]</strong> - <a href="https://www.kernel.org/doc/Documentation/security/">kernel
+  security</a>.</li>
+<li><em>https:// www.kernel.org/doc/Documentation/security/</em></li>
+<li><strong>[2017]</strong> - <a href="http://iot.bzh/download/public/2017/AMM-Dresden/AGL-systemd.pdf">Systemd integration and user
+  management</a>.</li>
+<li><em>http:// iot.bzh/download/public/2017/AMM-Dresden/AGL-systemd.pdf</em></li>
+<li><strong>[2017]</strong> - <a href="http://iot.bzh/download/public/2017/SDK/AppFw-Documentation-v3.1.pdf">AGL - Application Framework
+  Documentation</a>.</li>
+<li><em>http:// iot.bzh/download/public/2017/SDK/AppFw-Documentation-v3.1.pdf</em></li>
+<li><strong>[2017]</strong> - <a href="https://access.atis.org/apps/group_public/download.php/35648/ATIS-I-0000059.pdf">Improving Vehicle
+  Cybersecurity</a>.</li>
+<li><em>https://
+    access.atis.org/apps/group_public/download.php/35648/ATIS-I-0000059.pdf</em></li>
+<li><strong>[2016]</strong> - <a href="http://docs.automotivelinux.org/docs/apis_services/en/dev/reference/af-main/0-introduction.html">AGL framework
+  overview</a>.</li>
+<li><em>http://
+    docs.automotivelinux.org/docs/apis_services/en/dev/reference/af-main/0-introduction.html</em></li>
+<li><strong>[2016]</strong> -
+  <a href="http://iot.bzh/download/public/2016/publications/SecureBoot-SecureSoftwareUpdates.pdf">SecureBoot-SecureSoftwareUpdates</a>.</li>
+<li><em>http://
+    iot.bzh/download/public/2016/publications/SecureBoot-SecureSoftwareUpdates.pdf</em></li>
+<li><strong>[2016]</strong> - <a href="http://iot.bzh/download/public/2016/security/Linux-Automotive-Security-v10.pdf">Linux Automotive
+  Security</a>.</li>
+<li><em>http://
+    iot.bzh/download/public/2016/security/Linux-Automotive-Security-v10.pdf</em></li>
+<li><strong>[2016]</strong> - <a href="https://www.mcafee.com/it/resources/white-papers/wp-automotive-security.pdf">Automotive Security Best
+  Practices</a>.</li>
+<li><em>https://
+    www.mcafee.com/it/resources/white-papers/wp-automotive-security.pdf</em></li>
+<li><strong>[2016]</strong> - <a href="http://gattack.io/whitepaper.pdf">Gattacking Bluetooth Smart
+  Devices</a>.</li>
+<li><em>http:// gattack.io/whitepaper.pdf</em></li>
+<li><strong>[2015]</strong> - <a href="http://www.cs.wayne.edu/fengwei/15fa-csc6991/slides/8-CarHackingUsenixSecurity.pdf">Comprehensive Experimental Analysis of Automotive Attack
+  Surfaces</a>.</li>
+<li><em>http://
+    www.cs.wayne.edu/fengwei/15fa-csc6991/slides/8-CarHackingUsenixSecurity.pdf</em></li>
+<li><strong>[2015]</strong> - <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.92.728&amp;rep=rep1&amp;type=pdf">Security in Automotive Bus
+  Systems</a>.</li>
+<li><em>http://
+    citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.92.728&amp;rep=rep1&amp;type=pdf</em></li>
+<li><strong>[2014]</strong> - <a href="https://www.ioactive.com/pdfs/IOActive_Remote_Attack_Surfaces.pdf">IOActive Remote Attack
+  Surface</a>.</li>
+<li><em>https:// www.ioactive.com/pdfs/IOActive_Remote_Attack_Surfaces.pdf</em></li>
+<li><strong>[2011]</strong> - <a href="https://media.blackhat.com/bh-dc-11/Perez-Pico/BlackHat_DC_2011_Perez-Pico_Mobile_Attacks-wp.pdf">A practical attack against GPRS/EDGE/UMTS/HSPA mobile data
+  communications</a>.</li>
+<li><em>https://
+    media.blackhat.com/bh-dc-11/Perez-Pico/BlackHat_DC_2011_Perez-Pico_Mobile_Attacks-wp.pdf</em></li>
+<li><strong>[2011]</strong> - <a href="http://www.autosec.org/pubs/cars-usenixsec2011.pdf">Comprehensive Experimental Analyses of Automotive Attack
+  Surfaces</a>.</li>
+<li><em>http:// www.autosec.org/pubs/cars-usenixsec2011.pdf</em></li>
+<li><strong>[2010]</strong> - <a href="https://eprint.iacr.org/2010/332.pdf">Relay Attacks on Passive Keyless Entry and Start Systems in
+  Modern Cars</a>.</li>
+<li><em>https:// eprint.iacr.org/2010/332.pdf</em></li>
+<li><strong>[2010]</strong> - <a href="https://matthieu.io/dl/wifi-attacks-wep-wpa.pdf">Wifi attacks wep
+  wpa</a>.</li>
+<li><em>https:// matthieu.io/dl/wifi-attacks-wep-wpa.pdf</em></li>
+<li><strong>[2008]</strong> -
+  <a href="http://schaufler-ca.com/yahoo_site_admin/assets/docs/SmackWhitePaper.257153003.pdf">SMACK</a>.</li>
+<li><em>http://
+    schaufler-ca.com/yahoo_site_admin/assets/docs/SmackWhitePaper.257153003.pdf</em></li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../1_Hardware/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../1_Hardware/" class="btn btn-xs btn-link">
+        Hardware
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../1_Introduction/1_AGL_Requirements_Specifications/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../1_Introduction/1_AGL_Requirements_Specifications/" class="btn btn-xs btn-link">
+        AGL Requirements Specifications
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/0_Getting_Started/3_AGL_Profile/Build%20and%20Boot%20AGL%20Instrument%20Cluster%20demo%20image%20%28IC-IVI%20with%20Container%20isolation%29/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Build and Boot AGL Instrument Cluster demo image (IC-IVI with Container isolation) - AGL Documentation</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Build and Boot AGL Instrument Cluster demo image (IC-IVI with Container isolation)", url: "#_top", children: [
+              {title: "Required Equipments", url: "#required-equipments" },
+              {title: "0. Host PC environemnt", url: "#0-host-pc-environemnt" },
+              {title: "1. Define Your Top-Level Directory", url: "#1-define-your-top-level-directory" },
+              {title: "2. Download the repo Tool and Set Permissions", url: "#2-download-the-repo-tool-and-set-permissions" },
+              {title: "3. Download the AGL Source Files", url: "#3-download-the-agl-source-files" },
+              {title: "4. Downloading Proprietary Drivers", url: "#4-downloading-proprietary-drivers" },
+              {title: "5. Define Your Board", url: "#5-define-your-board" },
+              {title: "6. Run the aglsetup.sh Script", url: "#6-run-the-aglsetupsh-script" },
+              {title: "7. Using BitBake", url: "#7-using-bitbake" },
+              {title: "8.Boot the Board (Deploying the AGL Demo Image)", url: "#8boot-the-board-deploying-the-agl-demo-image" },
+          ]},
+          {title: "Run SoC board Screen", url: "#run-soc-board-screen", children: [
+          ]},
+          {title: "Reference webpages", url: "#reference-webpages", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../../1_Hardware_Support/Overview/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../../1_Hardware_Support/Overview/" class="btn btn-xs btn-link">
+        Supported Boards
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../2_Building_AGL_Image/5_4_Virtio/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../2_Building_AGL_Image/5_4_Virtio/" class="btn btn-xs btn-link">
+        Building for virtio
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="build-and-boot-agl-instrument-cluster-demo-image-ic-ivi-with-container-isolation">Build and Boot AGL Instrument Cluster demo image (IC-IVI with Container isolation)</h1>
+<h2 id="required-equipments">Required Equipments</h2>
+<p><strong>1) Tested board:</strong> <strong><a href="https://elinux.org/R-Car/Boards/M3SK#Flashing_firmware">Starter Kit Pro/M3</a> + <a href="https://elinux.org/R-Car/Boards/Kingfisher">kingfisher support</a></strong></p>
+<p><strong>2) MicroUSB</strong></p>
+<p><strong>3) MicroSD card</strong></p>
+<h2 id="0-host-pc-environemnt">0. Host PC environemnt</h2>
+<p><strong>Build PC</strong>
+Ubuntu OS (Tested version 18.04.6 LTS)</p>
+<h2 id="1-define-your-top-level-directory">1. Define Your Top-Level Directory</h2>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">AGL_TOP</span><span class="o">=</span><span class="nv">$HOME</span>/AGL
+mkdir -p <span class="nv">$AGL_TOP</span>
+</code></pre></div>
+<h2 id="2-download-the-repo-tool-and-set-permissions">2. Download the repo Tool and Set Permissions</h2>
+<div class="highlight"><pre><span></span><code>mkdir -p <span class="nv">$HOME</span>/bin
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$HOME</span>/bin:<span class="nv">$PATH</span>
+curl https://storage.googleapis.com/git-repo-downloads/repo &gt; <span class="nv">$HOME</span>/bin/repo
+chmod a+x <span class="nv">$HOME</span>/bin/repo
+</code></pre></div>
+<h2 id="3-download-the-agl-source-files">3. Download the AGL Source Files</h2>
+<ul>
+<li><strong>AGL Version:</strong> Magic Marlin
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> <span class="nv">$AGL_TOP</span>
+mkdir marlin
+<span class="nb">export</span> <span class="nv">AGL_TOP</span><span class="o">=</span><span class="nv">$HOME</span>/AGL/marlin
+<span class="nb">cd</span> <span class="nv">$AGL_TOP</span>
+git config --global user.email <span class="s2">&quot;you@example.com&quot;</span>
+git config --global user.name <span class="s2">&quot;Your Name&quot;</span>
+repo init -b marlin -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo
+repo sync
+</code></pre></div></li>
+<li>Optional: Specify the manifest file(marlin_13.0.0.xml) using -m option</li>
+</ul>
+<p><div class="highlight"><pre><span></span><code>repo init -b marlin -m marlin_13.0.0.xml -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo
+</code></pre></div>
+- Optional: Specify the master branch
+<div class="highlight"><pre><span></span><code>repo init -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo
+</code></pre></div></p>
+<h2 id="4-downloading-proprietary-drivers">4. Downloading Proprietary Drivers</h2>
+<p>Downloading Proprietary Drivers from <a href="https://www.renesas.com/us/en/products/automotive-products/automotive-system-chips-socs/r-car-h3-m3-documents-software">Renesas-automotive-products</a>
+- To check the files to download
+<div class="highlight"><pre><span></span><code>grep -rn ZIP_.<span class="o">=</span> <span class="nv">$AGL_TOP</span>/meta-agl/meta-agl-bsp/meta-rcar-gen3/scripts/setup_mm_packages.sh
+<span class="nb">export</span> <span class="nv">XDG_DOWNLOAD_DIR</span><span class="o">=</span><span class="nv">$HOME</span>/Downloads
+</code></pre></div>
+- Download and copy Proprietary Drivers files (Run commands at downloaded files directory)
+<div class="highlight"><pre><span></span><code>cp R-Car_Gen3_Series_Evaluation_Software_Package_* <span class="nv">$XDG_DOWNLOAD_DIR</span>/
+chmod a+rw <span class="nv">$XDG_DOWNLOAD_DIR</span>/*.zip
+</code></pre></div></p>
+<h2 id="5-define-your-board">5. Define Your Board</h2>
+<ul>
+<li>Supporting Starter Kit Pro/M3 + kingfisher Board (For other supported boards, check <a href="https://docs.automotivelinux.org/en/master/#0_Getting_Started/2_Building_AGL_Image/5_3_RCar_Gen_3/">Define Your Board</a>)
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">MACHINE</span><span class="o">=</span>m3ulcb-kf
+</code></pre></div></li>
+</ul>
+<h2 id="6-run-the-aglsetupsh-script">6. Run the aglsetup.sh Script</h2>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> <span class="nv">$AGL_TOP</span>
+<span class="nb">source</span> meta-agl/scripts/aglsetup.sh -f -m <span class="nv">$MACHINE</span> -b <span class="nv">$MACHINE</span> agl-lxc
+</code></pre></div>
+<h2 id="7-using-bitbake">7. Using BitBake</h2>
+<p><div class="highlight"><pre><span></span><code>bitbake lxc-host-image-demo
+</code></pre></div>
+- The build process puts the resulting image in the Build Directory
+($AGL_TOP/m3ulcb-kf/tmp/deploy/images/m3ulcb)</p>
+<h2 id="8boot-the-board-deploying-the-agl-demo-image">8.Boot the Board (Deploying the AGL Demo Image)</h2>
+<ul>
+<li>To boot your image on the Renesas board, you need to do three things:</li>
+</ul>
+<p>a) Update all <a href="https://docs.automotivelinux.org/en/marlin/#0_Getting_Started/2_Building_AGL_Image/5_3_RCar_Gen_3/#4-troubleshooting">firmware</a> on R-Car M3 Starter Kit board (Flashing firmware).</p>
+<p>b) Prepare the MicroSD card and Flash image to the MicroSD card using <a href="https://www.balena.io/etcher/">Etcher</a>
+ (<strong>image file name:</strong> lxc-host-image-demo-m3ulcb-kf.wic.xz), then insert MicroSD card in the R-Car M3SK.<br />
+c) Boot the board.</p>
+<p>1) Use a MicroUSB cable to connect the PC to R-Car Starter Kit Pro (M3ULCB) board CN12 "CPLD/DEBUG"
+- Serial settings are 115200 8N1.
+- Run any standard terminal emulator program (e.g. minicom).
+[Replace <strong>"Device"</strong> with USB tty device name, for example <strong><code>/dev/ttyUSB0</code></strong>]
+<div class="highlight"><pre><span></span><code>sudo minicom -b <span class="m">115200</span> -D <span class="s2">&quot;DEVICE&quot;</span>
+</code></pre></div></p>
+<ul>
+<li>Power on the board</li>
+<li>Quickly hit any key to get into the U-boot command prompt; you should see the following:
+ ```bash
+Hit any key to stop autoboot:  0                                                                =&gt;
+<div class="highlight"><pre><span></span><code>- Booting image command (for details check [How to boot](https://elinux.org/R-Car/AGL#Instrument_Cluster_with_Container_isolation_demo_image))
+ ```bash
+ext4load 0x48080000 Image
+ext4load 0x48000000 /boot/r8a77961-ulcb-kf.dtb 
+booti 0x48080000 - 0x48000000 
+</code></pre></div></li>
+</ul>
+<h1 id="run-soc-board-screen">Run SoC board Screen</h1>
+<p>A) Connect HDMI panel to M3SK(CN4) for <strong>IVI Container</strong>
+<img alt="IVI" src="https://elinux.org/images/9/91/Marlin-lxc-Ivi.JPG" />
+B) Connect HDMI panel to Kingfisher(CN49)for <strong>Cluster Container</strong>
+<img alt="IC" src="https://elinux.org/images/thumb/7/76/Marlin-lxc-Cluster.JPG/1200px-Marlin-lxc-Cluster.JPG" /></p>
+<h1 id="reference-webpages">Reference webpages</h1>
+<p>1) <a href="https://elinux.org/R-Car/AGL">eLinux</a>
+2) <a href="https://elinux.org/R-Car/Boards/Kingfisher">Kingfisher Board</a>
+3) <a href="https://elinux.org/R-Car/Boards/M3SK#Flashing_firmware">R-Car M3SK</a>
+4) <a href="https://docs.automotivelinux.org/en/master/#1_Hardware_Support/Overview/">AGL Reference Machines</a>
+5) <a href="https://static.sched.com/hosted_files/agltechday2022/3b/agl-techday-202204.pdf">AGL Tech Day Presenation</a>
+6)<a href="https://docs.automotivelinux.org/en/master/#0_Getting_Started/2_Building_AGL_Image/0_Build_Process/">Build AGL Image</a>
+7)<a href="https://docs.automotivelinux.org/en/master/#0_Getting_Started/2_Building_AGL_Image/5_3_RCar_Gen_3/">Building for Supported Renesas Boards</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../../1_Hardware_Support/Overview/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../../1_Hardware_Support/Overview/" class="btn btn-xs btn-link">
+        Supported Boards
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../2_Building_AGL_Image/5_4_Virtio/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../2_Building_AGL_Image/5_4_Virtio/" class="btn btn-xs btn-link">
+        Building for virtio
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/3_Developer_Guides/1_Application_Framework/1_Introduction/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Introduction - AGL Documentation</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Foreword", url: "#_top", children: [
+          ]},
+          {title: "Introduction", url: "#introduction", children: [
+          ]},
+          {title: "Services management", url: "#services-management", children: [
+          ]},
+          {title: "User session management", url: "#user-session-management", children: [
+          ]},
+          {title: "Inter-process communication", url: "#inter-process-communication", children: [
+          ]},
+          {title: "Application launcher service", url: "#application-launcher-service", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../2_Application_Startup/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../2_Application_Startup/" class="btn btn-xs btn-link">
+        Application Startup
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../5_General_setup/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../5_General_setup/" class="btn btn-xs btn-link">
+        Generic devices setup
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="foreword">Foreword</h1>
+<p>The AGL Application Framework is nothing new. However, the implementation used up until
+the <code>lamprey</code> release has been retired starting with the <code>marlin</code> release and replaced
+by a redesigned Application Framework one. However, this new implementation isn't a 1:1
+replacement, and as such it doesn't provide all of the features of the previous
+Application Framework. Some of those will be added back over time, others have been
+discarded in favor of more modern and/or widely-used alternatives.</p>
+<h1 id="introduction">Introduction</h1>
+<p>As a provider of an integrated solution to build up on, AGL needs to define a reliable
+and well-specified method for managing the deployment and integration of applications
+and services, as well as the way they can interact with the rest of the system.</p>
+<p>This is achieved by providing a common set of rules and components, known as the
+Application Framework. By ensuring conformity to those rules, application developers
+can have a good understanding of the requirements for creating and packaging
+applications targeting AGL-based systems. Likewise, system developers and integrators
+have a clear path for including such applications in AGL-based products.</p>
+<p>The Application Framework's scope extends to the following areas:
+- system services integration and lifecycle management
+- user session management, including user-level applications and services lifecycle
+  management
+- inter-process communication</p>
+<p>In order to be as simple as possible and avoid any unneded custom implementation, the
+Application Framework relies mainly on third-party technologies and/or software
+components, most of those being maintained under the
+<a href="https://www.freedesktop.org">freedesktop.org</a> umbrella. Those include:
+- <a href="https://www.freedesktop.org/wiki/Software/systemd/">systemd</a>: system and services
+  management
+- <a href="https://www.freedesktop.org/wiki/Software/dbus/">D-Bus</a>: inter-process communication
+- <a href="https://www.freedesktop.org/wiki/Specifications/desktop-entry-spec/">Desktop Entry specification</a>:
+  application enumeration and startup</p>
+<p>AGL also provides reference implementations whenever possible and relevant, located in
+the <a href="../6_AGL_Layers/2_meta-agl/">meta-agl</a> layer under <code>meta-app-framework</code>. At the
+moment, the Application Framework contains 2 such components:
+- <code>agl-session</code>: <code>systemd</code> unit files for user sessions management
+- <code>applaunchd</code>: application launcher service</p>
+<h1 id="services-management">Services management</h1>
+<p>Both system and user services are managed by <code>systemd</code>, which provides a number of
+important features, such as dependency management or service monitoring: when starting
+a service, <code>systemd</code> will ensure any other units this service depends on are available,
+and otherwise start those dependencies. Similarly, <code>systemd</code> can automatically restart
+a crashed service, ensuring minimal downtime.</p>
+<p><code>systemd</code> also provides an efficient first layer of security through its
+<a href="https://www.freedesktop.org/software/systemd/man/systemd.exec.html#Sandboxing">sandboxing</a>
+and other security-related options.</p>
+<p>It is also well integrated with D-Bus and can be used for a more fine-grained control
+over D-Bus activated services: by delegating the actual service startup to <code>systemd</code>,
+developers can take advantage of some of its advanced features, allowing for improved
+reliability and security.</p>
+<p>Each service should be represented by a <code>systemd</code> unit file installed to the appropriate
+location. More details can be obtained from the <a href="../2_Creating_a_New_Service/">Creating a New Service</a>
+document.</p>
+<h1 id="user-session-management">User session management</h1>
+<p>Similarly, user sessions and the services they rely on are also managed by <code>systemd</code>.</p>
+<p>AGL provides 2 <code>systemd</code> units:</p>
+<ol>
+<li><code>agl-session@.service</code> is a template system service for managing user sessions; it
+takes a username or UID as a parameter, creating a session for the desired user.
+Instanciating this service can be achieved by enabling <code>agl-session@USER.service</code>, for
+example by executing the following command on a running system:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>$ systemctl enable agl-session@USER.service
+</code></pre></div>
+<p>By default, AGL enables this service as <code>agl-session@agl-driver.service</code>, running as
+user <code>agl-driver</code>.</p>
+<p><em>Note: while you can create sessions for as many users as needed, only one instance of
+<code>agl-session@.service</code> is allowed per user.</em></p>
+<ol>
+<li><code>agl-session.target</code> is a user target for managing user services and their
+dependencies. It is started by <code>agl-session@.service</code>.</li>
+</ol>
+<p>By default, <code>agl-compositor</code> is part of this target. It is therefore automatically
+started for user <code>agl-driver</code>.</p>
+<p>Any other service needed as part of the user session should similarly depend on this
+target by appending the following lines to their unit file:</p>
+<div class="highlight"><pre><span></span><code>[Install]
+WantedBy=agl-session.target
+</code></pre></div>
+<h1 id="inter-process-communication">Inter-process communication</h1>
+<p>In order to provide a "standard", language-independent IPC mechanism and avoid the need
+for maintaining custom bindings for each programming language to be used on top of AGL,
+the Application Framework promotes the use of <a href="https://www.freedesktop.org/wiki/Software/dbus/">D-Bus</a>
+as the preferred way for applications to interact with services.</p>
+<p>Most services already included in AGL provide one or several D-Bus interfaces, and can
+therefore interact with D-Bus capable applications and services without requiring any
+additional component. Those services include, among others:
+- <a href="https://git.kernel.org/pub/scm/network/connman/connman.git/">ConnMan</a>: network connectivity
+- <a href="http://www.bluez.org/">BlueZ</a>: Bluetooth connectivity
+- <a href="https://git.kernel.org/pub/scm/network/ofono/ofono.git">oFono</a>: telephony and modem
+  management
+- <a href="https://gitlab.freedesktop.org/geoclue/geoclue/-/wikis/home">GeoClue</a>: geolocation</p>
+<h1 id="application-launcher-service">Application launcher service</h1>
+<p>As mentioned above, the Application Framework follows the guidelines of the
+<a href="https://www.freedesktop.org/wiki/Specifications/desktop-entry-spec/">Desktop Entry specification</a>
+for application enumeration and startup.</p>
+<p>As no simple reference implementation exists for this part of the specification, AGL
+provides an application launcher service named <code>applaunchd</code>. This service is part of the
+default user session, and as such is automatically started on session startup. It can
+therefore be considered always available.</p>
+<p><code>applaunchd</code> enumerates applications installed on the system and provides a D-bus
+interface for services and applications to:
+- query the list of available applications
+- request the startup and/or activation of a specific application
+- be notified when applications are started or terminated</p>
+<p><code>applaunchd</code> is described with more details in <a href="2_Application_Startup/">the following document</a>.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../2_Application_Startup/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../2_Application_Startup/" class="btn btn-xs btn-link">
+        Application Startup
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../5_General_setup/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../5_General_setup/" class="btn btn-xs btn-link">
+        Generic devices setup
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

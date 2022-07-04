@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/5_Component_Documentation/4_drm-leasemanager/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>DRM lease manager - AGL Documentation</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "DRM Lease Manager", url: "#_top", children: [
+              {title: "Overview", url: "#overview" },
+              {title: "Usage", url: "#usage" },
+              {title: "Adding support to your application", url: "#adding-support-to-your-application" },
+              {title: "Runtime directory", url: "#runtime-directory" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../5_application_framework/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../5_application_framework/" class="btn btn-xs btn-link">
+        Application Framework
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../3_rba/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../3_rba/" class="btn btn-xs btn-link">
+        Rule Based Arbitrator (RBA)
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="drm-lease-manager">DRM Lease Manager</h1>
+<h2 id="overview">Overview</h2>
+<p>The DRM Lease Manager is used in AGL to allocate display controller outputs to different processes. Each process has direct access to its allocated output via the kernel DRM interface, and is prevented from accessing any other outputs managed by the display controller.</p>
+<p>The display controller partitioning is made possible by using the kernel DRM Lease feature.  For more information on the DRM lease functionality, please see the Linux kernel <a href="https://www.kernel.org/doc/html/latest/gpu/drm-uapi.html">DRM userspace API documentation</a>.</p>
+<h2 id="usage">Usage</h2>
+<h3 id="building-drm-lease-manager-and-sample-clients">Building DRM Lease manager and sample clients</h3>
+<p>Enable the  <code>agl-drm-lease</code> AGL feature when setting up your build environment
+with aglsetup.sh.</p>
+<p>This will add the drm-lease-manager package to the image, and will add DRM
+lease support to the following packages:</p>
+<ul>
+<li>weston</li>
+<li>kmscube</li>
+</ul>
+<p>kmscube is not included in the image by default. To add the package to the
+image, add the following to your local.conf</p>
+<div class="highlight"><pre><span></span><code>IMAGE_INSTALL_append = &quot; kmscube&quot;
+</code></pre></div>
+<h3 id="starting-the-drm-lease-manager">Starting the DRM lease manager</h3>
+<p>The drm-lease-manager must be the only process to directly open the DRM device.
+Shut down any running window systems (eg. weston or agl-compositor) and run:</p>
+<div class="highlight"><pre><span></span><code>  systemctl start drm-lease-manager
+</code></pre></div>
+<p>This will create a lease for each output connection on the platform.
+The name of each lease will be in the form of <code>card0-&lt;output name&gt;</code>
+ (eg. <code>card0-LVDS-1</code> or <code>card0-HDMI-A-1</code>)</p>
+<p><strong>Note</strong>: <code>drm-lease-manager</code> can be started on a different display controller (i.e. not <code>card0</code>) by modifying the command line in the systemd unit file.</p>
+<p>Run the help command for details.</p>
+<div class="highlight"><pre><span></span><code>  drm-lease-manager --help
+</code></pre></div>
+<h3 id="running-weston">Running weston</h3>
+<p>weston can be started on any available DRM lease by running with the
+<code>--drm-lease=&lt;lease name&gt;</code> option.</p>
+<div class="highlight"><pre><span></span><code>  weston --drm-lease<span class="o">=</span>card0-HDMI-A-1
+</code></pre></div>
+<h3 id="running-kmscube-sample">Running kmscube sample</h3>
+<p>With the <code>drm-lease-manager</code> running, <code>kmscube</code> can display on any available
+lease by launching it with the <code>-L -D&lt;lease name&gt;</code> options.</p>
+<div class="highlight"><pre><span></span><code>  kmscube -L -Dcard0-HDMI-A-1
+</code></pre></div>
+<p>Multiple weston or kmscube instances (one per DRM lease) can be started at the same time.</p>
+<h2 id="adding-support-to-your-application">Adding support to your application</h2>
+<p>The DRM Lease Manager packages includes a client library (libdlmclient) to request access to the DRM leases it creates.  The client library provides file descriptors that can be used as if they were created by directly opening the underlying DRM device.</p>
+<p>Clients that want <em>direct access</em> to the DRM device can use this library to do so.  Compositor (agl-compositor or weston) client applications do not need to use this interface.  </p>
+<p>To use the DRM leases, clients only need to replace their calls to
+<code>drmOpen()</code> and <code>drmClose()</code> with the appropriate libdlmclient API calls.</p>
+<h3 id="libdlmclient-api-usage">libdlmclient API usage</h3>
+<p><em>Error handling has been omitted for brevity and clarity of examples.</em></p>
+<h4 id="requesting-a-lease-from-the-drm-lease-manager">Requesting a lease from the DRM Lease Manager</h4>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">dlm_lease</span><span class="w"> </span><span class="o">*</span><span class="n">lease</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dlm_get_lease</span><span class="p">(</span><span class="s">&quot;card0-HDMI-A-1&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">drm_device_fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dlm_lease_fd</span><span class="p">(</span><span class="n">lease</span><span class="p">);</span><span class="w"></span>
+</code></pre></div>
+<p><code>drm_device_fd</code> can now be used to access the DRM device</p>
+<h4 id="releasing-a-lease">Releasing a lease</h4>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="n">dlm_release_lease</span><span class="p">(</span><span class="n">lease</span><span class="p">);</span><span class="w"></span>
+</code></pre></div>
+<p><strong>Note: <code>drm_device_fd</code> is not usable after calling <code>dlm_release_lease()</code></strong></p>
+<h2 id="runtime-directory">Runtime directory</h2>
+<p>A runtime directory under <code>/var</code> is used to keep the Unix Domain sockets that the drm-lease-manager and clients to communicate with each other.</p>
+<p>The default path is <code>/var/run/drm-lease-manager</code>, but can be changed by setting the <code>DLM_RUNTIME_PATH</code> environment variable.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../5_application_framework/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../5_application_framework/" class="btn btn-xs btn-link">
+        Application Framework
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../3_rba/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../3_rba/" class="btn btn-xs btn-link">
+        Rule Based Arbitrator (RBA)
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/3_Developer_Guides/1_Application_Framework/2_Application_Startup/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Application Startup - AGL Documentation</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Introduction", url: "#_top", children: [
+          ]},
+          {title: "Application launcher service", url: "#application-launcher-service", children: [
+              {title: "Application discovery", url: "#application-discovery" },
+              {title: "Application identifiers", url: "#application-identifiers" },
+              {title: "D-Bus interface", url: "#d-bus-interface" },
+              {title: "Testing", url: "#testing" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../6_AGL_Layers/1_Overview/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../6_AGL_Layers/1_Overview/" class="btn btn-xs btn-link">
+        Overview
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../1_Introduction/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../1_Introduction/" class="btn btn-xs btn-link">
+        Introduction
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="introduction">Introduction</h1>
+<p>At system runtime, it may be necessary for applications to start other applications
+on demand. Such actions can be executed in reaction to a user request, or they may
+be needed to perform a specific task.</p>
+<p>In order to do so, running applications and services need an established way of
+discovering installed applications and executing those. The
+<a href="https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html">Desktop Entry specification</a>
+defines how applications can be discovered by using <code>.desktop</code> files, but there's no
+simple reference implementation for this function.</p>
+<p>In order to provide a language-independent interface for applications and service to
+use, AGL includes <code>applaunchd</code>, a user service part of the default session.</p>
+<p><em>Note: as mentioned <a href="1_Introduction/">previously</a>, services are managed using <code>systemd</code>
+and are therefore not in the scope of this document.</em></p>
+<h1 id="application-launcher-service">Application launcher service</h1>
+<p>The purpose of <code>applaunchd</code> is to enumerate applications available on the system and
+provide a way for other applications to query this list and start those on demand.
+It is also able to notify clients of the startup and termination of applications it
+manages.</p>
+<p>To that effect, <code>applaunchd</code> provides a D-Bus interface other applications can use
+in order to execute those actions.</p>
+<p><em>Note: <code>applaunchd</code> will only send notifications for applications it started; it isn't
+aware of applications started by other means (<code>systemd</code>, direct executable call...),
+and therefore can't send notifications for those.</em></p>
+<h2 id="application-discovery">Application discovery</h2>
+<p>On startup, <code>applaunchd</code> inspects all <code>.desktop</code> files present under the <code>applications/</code>
+subfolder of any element of the <code>XDG_DATA_DIRS</code> environment variable, ignoring all entries
+containing either the <code>NoDisplay=true</code> or <code>Hidden=true</code> lines.</p>
+<p>It then looks for the following keys:
+- <code>Terminal</code>
+- <code>DBusActivatable</code></p>
+<p>If the desktop entry file contains the <code>Terminal</code> key set to <code>true</code>, then the application
+is marked as a non-graphical one. As such, it won't be included in the applications list
+if the client requests only graphical applications.</p>
+<p>If <code>DBusActivatable</code> is set to <code>true</code>, then the application is marked as D-Bus activated.
+Additionally, <code>applaunchd</code> will search for a corresponding D-Bus service file in case this
+line is missing. This is a workaround allowing D-Bus activated applications providing
+an incomplete desktop entry file (i.e missing the <code>DBusActivatable</code> key) to be
+identified as such.</p>
+<h3 id="requirements-for-d-bus-activation">Requirements for D-Bus activation</h3>
+<p><code>applaunchd</code> will always start D-Bus activatable applications using D-Bus activation
+instead of executing the command line stated in the desktop entry file.</p>
+<p>This is handled by calling the <code>Activate</code> method of the
+<a href="https://specifications.freedesktop.org/desktop-entry-spec/1.1/ar01s07.html">org.freedesktop.Application</a>
+interface with an empty argument.</p>
+<p>As a consequence, all D-Bus activatable applications <strong>must</strong> implement this D-Bus
+interface.</p>
+<h2 id="application-identifiers">Application identifiers</h2>
+<p>Each application is identified by a unique Application ID. Although this ID can be
+any valid string, it is highly recommended to use the "reverse DNS" convention in order
+to avoid potential name collisions and ease D-Bus integration.</p>
+<p>The application ID is set in the desktop entry file itself for
+<a href="../3_Creating_a_New_Application/#graphical-applications">graphical applications</a>:
+it is the value of the <code>StartupWMClass</code> field, which must be identical to the <code>app-id</code>
+advertised through the Wayland XDG toplevel protocol. In case this field is missing
+(as is usually the case for non-graphical application), the application ID will be the
+desktop entry file name, stripped from its <code>.desktop</code> extension.</p>
+<h2 id="d-bus-interface">D-Bus interface</h2>
+<p>The <code>applaunchd</code> D-Bus interface is named <code>org.automotivelinux.AppLaunch</code>. The object
+path for <code>applaunchd</code> is <code>/org/automotivelinux/AppLaunch</code>. The interface provides methods
+for the following actions:
+- retrieve the list of available applications; the client can choose to retrieve all
+  available applications, or only those suitable for a graphical environment
+- request an application to be started</p>
+<p>Moreover, signals are available for clients to be notified when an application has
+successfully started or its execution terminated.</p>
+<h3 id="applications-list">Applications list</h3>
+<p>The <code>listApplications</code> method allows clients to retrieve the list of available applications.
+It takes one boolean argument named <code>graphical</code>:
+- if set to <code>true</code>, only applications suitable for graphical environments are returned
+- otherwise, the list contains all applications</p>
+<p>This method returns an array of variants (type <code>av</code>), each element being a structure made up
+of 3 strings (type <code>(sss)</code>):
+- the application ID
+- the application's displayed name
+- the full path to the application icon file (or an empty string if no icon was specified in
+  the application's desktop entry file)</p>
+<h3 id="application-startup-request">Application startup request</h3>
+<p>Applications can be started by using the <code>start</code> method, passing the corresponding application
+ID as the only argument. This method doesn't return any data.</p>
+<p>If the application is already running, <code>applaunchd</code> won't start another instance, but instead
+emit a <code>started</code> signal to notify clients the application is ready.</p>
+<h3 id="status-notifications">Status notifications</h3>
+<p>The <code>org.automotivelinux.AppLaunch</code> interface provides 2 signals clients can connect to:
+- <code>started</code> indicates an application has started
+    - for D-Bus activated applications, it is emitted upon successful completion of the
+      call to the <code>Activate</code> method of the <code>org.freedesktop.Application</code> interface
+    - for other applications, this signal is emitted as soon as the child process has been
+      successfully created
+- <code>terminated</code> is emitted when an application quits</p>
+<p>Both signals have an additional argument named <code>appid</code>, containing the ID of the application
+affected by the event.</p>
+<p>As mentioned above, the <code>started</code> signal is also emitted if <code>applaunchd</code> receives a request to
+start an already running application. This can be useful, for example, when switching between
+graphical applications:
+- the application switcher doesn't need to track the state of each application; instead, it can
+  simply send a <code>start</code> request to <code>applaunchd</code> every time the user requests to switch to another
+  application
+- the desktop environment then receives the <code>started</code> signal, indicating it should activate the
+  window with the corresponding <code>app-id</code></p>
+<h2 id="testing">Testing</h2>
+<p><code>applaunchd</code> can be manually tested using the <code>gdbus</code> command-line tool:</p>
+<ol>
+<li>Query the application list (graphical applications only):</li>
+</ol>
+<div class="highlight"><pre><span></span><code>$ gdbus call --session --dest &quot;org.automotivelinux.AppLaunch&quot; \
+                       --object-path &quot;/org/automotivelinux/AppLaunch&quot; \
+                       --method &quot;org.automotivelinux.AppLaunch.listApplications&quot; \
+                       true
+</code></pre></div>
+<p>This command will output something similar to what follows:</p>
+<div class="highlight"><pre><span></span><code>([&lt;(&#39;navigation&#39;, &#39;Navigation&#39;, &#39;/usr/share/icons/hicolor/scalable/navigation.svg&#39;)&gt;,
+ &lt;(&#39;settings&#39;, &#39;Settings&#39;, &#39;/usr/share/icons/hicolor/scalable/settings.svg&#39;)&gt;,
+ &lt;(&#39;dashboard&#39;, &#39;Dashboard&#39;, &#39;/usr/share/icons/hicolor/scalable/dashboard.svg&#39;)&gt;,
+ &lt;(&#39;hvac&#39;, &#39;HVAC&#39;, &#39;/usr/share/icons/hicolor/scalable/hvac.svg&#39;)&gt;,
+ &lt;(&#39;org.freedesktop.weston.wayland-terminal&#39;, &#39;Weston Terminal&#39;, &#39;/usr/share/icons/Adwaita/scalable/apps/utilities-terminal-symbolic.svg&#39;)&gt;],)
+</code></pre></div>
+<ol>
+<li>Request startup of the <code>org.freedesktop.weston.wayland-terminal</code> application:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>$ gdbus call --session --dest &quot;org.automotivelinux.AppLaunch&quot; \
+                       --object-path &quot;/org/automotivelinux/AppLaunch&quot; \
+                       --method &quot;org.automotivelinux.AppLaunch.start&quot; \
+                       &quot;org.freedesktop.weston.wayland-terminal&quot;
+</code></pre></div>
+<ol>
+<li>Monitor signals emitted by <code>applaunchd</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>$ gdbus monitor --session --dest &quot;org.automotivelinux.AppLaunch&quot;
+</code></pre></div>
+<p>This results in the following output when starting, then exiting, the
+<code>org.freedesktop.weston.wayland-terminal</code> application:</p>
+<div class="highlight"><pre><span></span><code>Monitoring signals from all objects owned by org.automotivelinux.AppLaunch
+The name org.automotivelinux.AppLaunch is owned by :1.4
+/org/automotivelinux/AppLaunch: org.automotivelinux.AppLaunch.started (&#39;org.freedesktop.weston.wayland-terminal&#39;,)
+/org/automotivelinux/AppLaunch: org.automotivelinux.AppLaunch.terminated (&#39;org.freedesktop.weston.wayland-terminal&#39;,)
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../6_AGL_Layers/1_Overview/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../6_AGL_Layers/1_Overview/" class="btn btn-xs btn-link">
+        Overview
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../1_Introduction/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../1_Introduction/" class="btn btn-xs btn-link">
+        Introduction
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

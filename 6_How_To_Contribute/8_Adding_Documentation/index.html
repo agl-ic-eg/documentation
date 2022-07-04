@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/6_How_To_Contribute/8_Adding_Documentation/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Adding Documentation - AGL Documentation</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Download Repository", url: "#_top", children: [
+          ]},
+          {title: "Building a local site", url: "#building-a-local-site", children: [
+          ]},
+          {title: "Directory Structure", url: "#directory-structure", children: [
+          ]},
+          {title: "Markdown Formatting", url: "#markdown-formatting", children: [
+          ]},
+          {title: "Test Hyperlinks", url: "#test-hyperlinks", children: [
+          ]},
+          {title: "Submitting changes", url: "#submitting-changes", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../9_Contribution_Checklist/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../9_Contribution_Checklist/" class="btn btn-xs btn-link">
+        Contribution Checklist
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../7_General_Guidelines/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../7_General_Guidelines/" class="btn btn-xs btn-link">
+        General Guidelines
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p>The <a href="https://gerrit.automotivelinux.org/gerrit/admin/repos/AGL/documentation">documentation gerrit
+repository</a>
+contains AGL documentation website template and content, rendering is visible at
+<a href="https://automotivegradelinux.readthedocs.io/en/latest/">https://automotivegradelinux.readthedocs.io/en/latest/</a>.
+The documentation site is hosted on
+<a href="https://readthedocs.org/projects/automotivegradelinux/">readthedocs</a> and
+corresponding builds are mentioned
+<a href="https://readthedocs.org/projects/automotivegradelinux/builds/">here</a>.</p>
+<h2 id="download-repository">Download Repository</h2>
+<p>Clone with commit-msg hook :</p>
+<div class="highlight"><pre><span></span><code>$ git clone <span class="s2">&quot;ssh://&lt;LFID&gt;@gerrit.automotivelinux.org:29418/AGL/documentation&quot;</span> <span class="o">&amp;&amp;</span> scp -p -P <span class="m">29418</span> &lt;LFID&gt;@gerrit.automotivelinux.org:hooks/commit-msg <span class="s2">&quot;documentation/.git/hooks/&quot;</span>
+</code></pre></div>
+<h2 id="building-a-local-site">Building a local site</h2>
+<ol>
+<li>
+<p>Change into the directory</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">cd</span> documentation
+</code></pre></div>
+</li>
+<li>
+<p>Install MkDocs and rtd-dropdown theme</p>
+<div class="highlight"><pre><span></span><code>$ sudo pip install -r requirements.txt
+</code></pre></div>
+</li>
+<li>
+<p>Serve locally (defaultly rendered at <a href="127.0.0.1:8000/">127.0.0.1:8000/</a>):</p>
+<div class="highlight"><pre><span></span><code>$ sudo mkdocs serve
+</code></pre></div>
+</li>
+</ol>
+<p>Process to <strong>add new or edit existing</strong> markdown files to AGL documentation:</p>
+<h2 id="directory-structure">Directory Structure</h2>
+<p>Find existing or add new markdowns in the following directory structure.</p>
+<div class="highlight"><pre><span></span><code>documentation
+├── docs
+│   ├── 0_Getting_Started
+│   │   ├── 1_Quickstart
+│   │   └── 2_Building_AGL_Image
+<span class="p">|</span>   ├── .....
+<span class="p">|</span>   <span class="p">|</span>
+<span class="p">|</span>   ├──&lt;Chapter-Number&gt;_&lt;Chapter-Name&gt;
+<span class="p">|</span>   <span class="p">|</span>   ├──&lt;Subchapter-Number&gt;_&lt;Subchapter-Name&gt;
+<span class="p">|</span>   <span class="p">|</span>   <span class="p">|</span>   ├──&lt;Index-Number&gt;_&lt;Markdown-Title&gt;.md
+<span class="p">|</span>   <span class="p">|</span>   <span class="p">|</span>   ├── .....
+</code></pre></div>
+<h2 id="markdown-formatting">Markdown Formatting</h2>
+<ol>
+<li>
+<p>Add following at the start of each markdown :</p>
+<div class="highlight"><pre><span></span><code>---
+title: &lt;enter-title&gt;
+---
+</code></pre></div>
+</li>
+<li>
+<p>Internal Linking :</p>
+<div class="highlight"><pre><span></span><code><span class="o">[</span>&lt;enter-title&gt;<span class="o">](</span>../&lt;Chapter-Number&gt;_&lt;Chapter-Name&gt;/&lt;Subchapter-Number&gt;_&lt;Subchapter-Name&gt;/&lt;Index-Number&gt;_&lt;Markdown-Title&gt;.md<span class="o">)</span>
+</code></pre></div>
+</li>
+</ol>
+<h2 id="test-hyperlinks">Test Hyperlinks</h2>
+<p><a href="https://wummel.github.io/linkchecker/">LinkChecker</a> is a tool that allows to
+check all the hyperlinks in the site.</p>
+<p>For testing hyperlinks as soon as the local site is running, do:</p>
+<div class="highlight"><pre><span></span><code>$ linkchecker http://localhost:8000
+</code></pre></div>
+<p>The <code>linkchecker</code> output will display the broken link and there location in
+the site.</p>
+<h2 id="submitting-changes">Submitting changes</h2>
+<ol>
+<li>
+<p>Install Git Review</p>
+<div class="highlight"><pre><span></span><code><span class="c1">#recent version of git-review  (&gt;=1.28.0 is required)</span>
+$ sudo pip3 install git-review 
+</code></pre></div>
+</li>
+<li>
+<p>Write commit message</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># track all the new changes</span>
+$ git add .
+
+<span class="c1"># Write the commit message</span>
+$ git commit --signoff
+</code></pre></div>
+</li>
+<li>
+<p>Push changes for review to Gerrit</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># first time only</span>
+$ git review -s
+
+<span class="c1"># then to push use</span>
+$ git review
+</code></pre></div>
+</li>
+</ol>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../9_Contribution_Checklist/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../9_Contribution_Checklist/" class="btn btn-xs btn-link">
+        Contribution Checklist
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../7_General_Guidelines/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../7_General_Guidelines/" class="btn btn-xs btn-link">
+        General Guidelines
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

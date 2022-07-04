@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/0_Getting_Started/2_Building_AGL_Image/3_Initializing_Your_Build_Environment/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Initializing Your Build Environment - AGL Documentation</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "aglsetup.sh Script", url: "#_top", children: [
+          ]},
+          {title: "AGL Machines (board support)", url: "#agl-machines-board-support", children: [
+          ]},
+          {title: "AGL Features", url: "#agl-features", children: [
+          ]},
+          {title: "Example", url: "#example", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../4_Customizing_Your_Build/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../4_Customizing_Your_Build/" class="btn btn-xs btn-link">
+        Customizing Your Build
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../2_Downloading_AGL_Software/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../2_Downloading_AGL_Software/" class="btn btn-xs btn-link">
+        Downloading AGL Software
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p>Part of the downloaded AGL software is a setup script that you must
+run to initialize the build environment.</p>
+<h2 id="aglsetupsh-script"><code>aglsetup.sh</code> Script</h2>
+<p>You can find this script here:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$AGL_TOP</span>/master/meta-agl/scripts/aglsetup.sh
+</code></pre></div>
+<p>The script accepts many options that allow you to define build parameters such
+as the target hardware (i.e. the machine), build directory, and so forth.
+Use the following commands to see the available options and script syntax:</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">cd</span> <span class="nv">$AGL_TOP</span>/master
+$ <span class="nb">source</span> meta-agl/scripts/aglsetup.sh -h
+</code></pre></div>
+<h2 id="agl-machines-board-support">AGL Machines (board support)</h2>
+<p>Your target platform will be selected with the <code>-m</code> flag.
+The MACHINE can be selected from the templates in <code>meta-agl/templates/machine/*</code>.
+Note: This is also the place where you can add new boards.</p>
+<p>Following is a list of the available machines (level of support varies!):</p>
+<div class="highlight"><pre><span></span><code>Available machines:
+   <span class="o">[</span>meta-agl<span class="o">]</span>
+       bbe                        <span class="c1"># BeagleBoneEnhanced</span>
+       beaglebone                 <span class="c1"># BeagleBone</span>
+       cubox-i                    <span class="c1"># multiple i.MX6 boards</span>
+       dragonboard-410c           <span class="c1"># Qualcomm Dragonboard 410c</span>
+       dragonboard-820c           <span class="c1"># Qualcomm Dragonboard 820c</span>
+       ebisu                      <span class="c1"># Renesas RCar Ebisu</span>
+       h3-salvator-x              <span class="c1"># Renesas RCar Salvator/H3</span>
+       h3ulcb                     <span class="c1"># Renesas RCar H3</span>
+       h3ulcb-kf                  <span class="c1"># Renesas RCar H3 w Kingfisher Board</span>
+       h3ulcb-nogfx               <span class="c1"># Renesas RCar H3 w/o gfx blobs</span>
+       hsdk                       <span class="c1"># ARC HS</span>
+       imx6qdlsabreauto           <span class="c1"># i.MX6 sabreauto</span>
+       imx8mqevk                  <span class="c1"># i.MX8 w etnaviv</span>
+       imx8mqevk-viv              <span class="c1"># i.MX8 w vivante</span>
+       intel-corei7-64            <span class="c1"># x86-64 (Intel flavour)</span>
+       j7-evm                     <span class="c1"># TI Jacinto 7 EVM</span>
+       m3-salvator-x              <span class="c1"># Renesas RCar Salvator/M3</span>
+       m3ulcb                     <span class="c1"># Renesas RCar M3</span>
+       m3ulcb-kf                  <span class="c1"># Renesas RCar M3 w Kingfisher Board</span>
+       m3ulcb-nogfx               <span class="c1"># Renesas RCAR M3 w/o gfx blobs</span>
+       nitrogen6x                 <span class="c1"># i.MX6 nitrogen board</span>
+       qemuarm                    <span class="c1"># Qemu ARM</span>
+       qemuarm64                  <span class="c1"># Qemu AArch 64 (ARM 64bit)</span>
+     * qemux86-64                 <span class="c1"># Qemu x86-64</span>
+       raspberrypi4               <span class="c1"># Raspberry Pi 4</span>
+       virtio-aarch64             <span class="c1"># Virtio Guest</span>
+</code></pre></div>
+<h2 id="agl-features">AGL Features</h2>
+<p>Before running the <code>aglsetup.sh</code>, you should understand what AGL features you
+want to include as part of your image.
+The script's help output lists available features and shows you the layers in
+which they reside.</p>
+<p>Following is a list of the available features:</p>
+<div class="highlight"><pre><span></span><code>Available features:
+
+   <span class="o">[</span>meta-agl<span class="o">]</span>                                    <span class="c1"># CORE layer</span>
+       agl-all-features :<span class="o">(</span> agl-demo  agl-pipewire  agl-app-framework  agl-netboot <span class="o">)</span>
+                                                 <span class="c1"># For the usual demo image</span>
+       agl-app-framework                         <span class="c1"># Application Framework</span>
+       agl-archiver                              <span class="c1"># Source Archiver</span>
+       agl-buildstats                            <span class="c1"># Build Statistics</span>
+       agl-devel :<span class="o">(</span> agl-package-management <span class="o">)</span>     <span class="c1"># Developer Env (root login)</span>
+       agl-fossdriver                            <span class="c1"># Fossology integration</span>
+       agl-gplv2                                 <span class="c1"># GPLv2-only packages</span>
+       agl-localdev                              <span class="c1"># inclusion of local development folder</span>
+       agl-netboot                               <span class="c1"># network boot (e.g. CI)</span>
+       agl-package-management                    <span class="c1"># include package management (e.g. rpm)</span>
+       agl-pipewire                              <span class="c1"># include pipewire</span>
+       agl-ptest                                 <span class="c1"># enable ptest pckages</span>
+       agl-refhw-h3                              <span class="c1"># enable reference hardware</span>
+       agl-virt                                  <span class="c1"># EG-Virt features</span>
+       agl-virt-guest-xen                        <span class="c1"># EG-Virt features</span>
+       agl-virt-xen :<span class="o">(</span> agl-virt <span class="o">)</span>                <span class="c1"># EG-Virt features</span>
+       agl-weston-remoting :<span class="o">(</span> agl-demo  agl-pipewire  agl-app-framework <span class="o">)</span>
+       agl-weston-waltham-remoting :<span class="o">(</span> agl-demo  agl-pipewire  agl-app-framework <span class="o">)</span>
+
+   <span class="o">[</span>meta-agl-demo<span class="o">]</span>                                    <span class="c1"># DEMO layer</span>
+       agl-cluster-demo-support :<span class="o">(</span> agl-weston-remoting  agl-demo  agl-pipewire  agl-app-framework <span class="o">)</span>
+                                                      <span class="c1"># sample IVI demo</span>
+       agl-demo :<span class="o">(</span> agl-pipewire  agl-app-framework <span class="o">)</span>  <span class="c1"># default IVI demo</span>
+       agl-demo-preload                               <span class="c1"># Add Tokens and sample files</span>
+
+   <span class="o">[</span>meta-agl-devel<span class="o">]</span>                                   <span class="c1"># Development layer</span>
+       agl-basesystem                                 <span class="c1"># Toyota basesystem</span>
+       agl-drm-lease                                  <span class="c1"># DRM lease support</span>
+       agl-egvirt                                     <span class="c1"># EG-Virt feature</span>
+       agl-flutter                                    <span class="c1"># Flutter support</span>
+       agl-jailhouse                                  <span class="c1"># GSoC: jailhouse enablement</span>
+       agl-lxc :<span class="o">(</span> agl-drm-lease  agl-pipewire <span class="o">)</span>       <span class="c1"># IC-EG container support</span>
+       agl-ros2                                       <span class="c1"># GSoC: ros2 enablement</span>
+
+Specialized features <span class="o">(</span>e.g. CI<span class="o">)</span>:
+       agl-ci                                                                         <span class="c1"># Tweaks for CI</span>
+       agl-ci-change-features :<span class="o">(</span> agl-demo  agl-pipewire  agl-app-framework  agl-devel  agl-package-management  agl-netboot  agl-pipewire  agl-buildstats  agl-ptest <span class="o">)</span>
+       agl-ci-change-features-nogfx :<span class="o">(</span> agl-demo  agl-pipewire  agl-app-framework  agl-devel  agl-package-management  agl-netboot  agl-pipewire  agl-buildstats  agl-ptest <span class="o">)</span>
+       agl-ci-snapshot-features :<span class="o">(</span> agl-demo  agl-pipewire  agl-app-framework  agl-devel  agl-package-management  agl-netboot  agl-archiver  agl-pipewire  agl-buildstats  agl-ptest <span class="o">)</span>
+       agl-ci-snapshot-features-nogfx :<span class="o">(</span> agl-demo  agl-pipewire  agl-app-framework  agl-devel  agl-package-management  agl-netboot  agl-archiver  agl-pipewire  agl-buildstats  agl-ptest <span class="o">)</span>
+</code></pre></div>
+<p>To find out exactly what a feature provides, check out the respective layer and its README.</p>
+<p>An AGL feature is a configuration that accounts for specific settings
+and dependencies needed for a particular build.
+For example, specifying the "agl-demo" feature makes sure that the
+<code>aglsetup.sh</code> script creates configuration files needed to build the
+image for the AGL demo.</p>
+<p>Following are brief descriptions of the AGL features you can specify on the
+<code>aglsetup.sh</code> command line:</p>
+<ul>
+<li>
+<p><strong>agl-all-features</strong>: A set of AGL default features.
+  Do not think of this set of features as all the AGL features.</p>
+</li>
+<li>
+<p><strong>agl-app-framework</strong>: Application Framework</p>
+</li>
+<li>
+<p><strong>agl-archiver</strong>: Enables the archiver class for releases.</p>
+</li>
+<li>
+<p><strong>agl-ci</strong>: Flags used for Continuous Integration (CI).
+  Using this feature changes the value of the
+  <a href="https://yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#var-IMAGE_FSTYPES"><code>IMAGE_FSTYPES</code></a>
+  variable.</p>
+</li>
+<li>
+<p><strong>agl-ci-change-features</strong>: Enables features for CI builds for Gerrit changes.</p>
+</li>
+<li>
+<p><strong>agl-ci-change-features-nogfx</strong>: Enables features for CI builds for Gerrit changes
+  for targets that use binary graphics drivers (i.e. builds without graphics).</p>
+</li>
+<li>
+<p><strong>agl-ci-snapshot-features</strong>: Enables features for CI daily snapshot builds.</p>
+</li>
+<li>
+<p><strong>agl-ci-snapshot-features-nogfx</strong>: Enables features for CI daily snapshot builds for
+  targets that use binary graphics drivers (i.e. builds without graphics).</p>
+</li>
+<li>
+<p><strong>agl-devel</strong>: Activates development options such as an empty root password,
+  debuggers, strace, valgrind, and so forth.</p>
+</li>
+<li>
+<p><strong>agl-netboot</strong>: Enables network boot support through Trivial File Transfer Protocol (TFTP) and Network Block Device (NBD) protocol.
+  Netboot is needed for CI and useful for development to avoid writing
+  sdcards. Needs additional setup.</p>
+</li>
+<li>
+<p><strong>agl-ptest</strong>: Enables
+  <a href="https://yoctoproject.org/docs/3.1.4/dev-manual/dev-manual.html#testing-packages-with-ptest">Ptest</a>
+  as part of the build.</p>
+</li>
+<li>
+<p><strong>agl-demo</strong>: Enables the layers meta-agl-demo and meta-qt5.
+  You need agl-demo if you are going to build the agl-demo-platform.</p>
+</li>
+<li>
+<p><strong>agl-pipewire</strong>: Enables AGLs pipewire support.</p>
+</li>
+<li>
+<p><strong>agl-localdev</strong>: Adds a local layer named "meta-localdev" in the
+  meta directory and a local.dev.inc configuration file when that file
+  is present.</p>
+</li>
+</ul>
+<p>This feature provides a shortcut for using the layer meta-localdev
+  in the top-level folder for easy modifications to your own recipes.</p>
+<h2 id="example">Example</h2>
+<p>Following is an example that initializes the build environment, selects "beaglebone"
+for the machine, and chooses the "agl-demo" feature, which also includes the
+"agl-appfw-smack", "agl-devel", and "agl-hmi-framework" features:</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">source</span> meta-agl/scripts/aglsetup.sh -m qemux86-64 -b qemux86-64 agl-demo agl-devel
+aglsetup.sh: Starting
+Generating configuration files:
+   Build dir: /home/scottrif/workspace_agl/build
+   Machine: qemux86-64
+   Features: agl-appfw-smack agl-demo agl-devel
+   Running /home/scottrif/workspace_agl/poky/oe-init-build-env
+   Templates dir: /home/scottrif/workspace_agl/meta-agl/templates/base
+   Config: /home/scottrif/workspace_agl/build/conf/bblayers.conf
+   Config: /home/scottrif/workspace_agl/build/conf/local.conf
+   Setup script: /home/scottrif/workspace_agl/build/conf/setup.sh
+   Executing setup script ... --- beginning of setup script
+ fragment /home/scottrif/workspace_agl/meta-agl/templates/base/01_setup_EULAfunc.sh
+ fragment /home/scottrif/workspace_agl/meta-agl/templates/base/99_setup_EULAconf.sh
+ end of setup script
+OK
+Generating setup file: /home/scottrif/workspace_agl/build/agl-init-build-env ... OK
+aglsetup.sh: Done
+ Shell environment <span class="nb">set</span> up <span class="k">for</span> builds.
+You can now run <span class="s1">&#39;bitbake target&#39;</span>
+Common targets are:
+  - meta-agl:          <span class="o">(</span>core system<span class="o">)</span>
+    agl-image-minimal
+    agl-image-minimal-qa
+
+    agl-image-ivi
+    agl-image-ivi-qa
+    agl-image-ivi-crosssdk
+
+    agl-image-weston
+
+  - meta-agl-demo:     <span class="o">(</span>demo with UI<span class="o">)</span>
+    agl-demo-platform  <span class="o">(</span>* default demo target<span class="o">)</span>
+    agl-demo-platform-qa
+    agl-demo-platform-crosssdk
+    agl-demo-platform-html5
+</code></pre></div>
+<p>Running the script creates the Build Directory if it does not already exist.
+The default Build Directory is <code>$AGL_TOP/&lt;release-branch-name&gt;/build</code>, and the nomenclature to be used throughout this doc is going to be <code>$AGL_TOP/&lt;release-branch-name&gt;/&lt;build-dir&gt;</code>
+For this example, the Build Directory is <code>$AGL_TOP/master/qemux86-64</code>.</p>
+<p>The script's output also indicates the machine and AGL features selected for the build.</p>
+<p>The script creates two primary configuration files used for the build: <code>local.conf</code> and <code>bblayers.conf</code>.
+Both these configuration files are located in the Build Directory in the <code>conf</code> folder.
+If you were to examine these files, you would find standard Yocto Project
+configurations along with AGL configuration fragments, which are driven by the
+machine (i.e. beaglebone) and the AGL features specified as part of the
+script's command line.</p>
+<p>The end result is configuration files specific for your build in the AGL development environment.</p>
+<p>Finally, part of the <code>aglsetup.sh</code> script makes sure that any End User License Agreements (EULA)
+are considered.
+You can see that processing in the script's output as well.</p>
+<p><strong>NOTE:</strong> Use of the <code>local.conf</code> and <code>bblayers.conf</code> configuration files is fundamental
+in the Yocto Project build environment.
+Consequently, it is fundamental in the AGL build environment.
+You can find lots of information on configuring builds in the Yocto Project
+documentation set.
+Here are some references if you want to dig into configuration further:</p>
+<ul>
+<li><a href="https://yoctoproject.org/docs/3.1.4/dev-manual/dev-manual.html#usingpoky-extend-customimage-localconf">Customizing Images Using local.conf</a></li>
+<li><a href="https://yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#ref-varlocality-config-local">Local</a></li>
+<li><a href="https://yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#structure-build-conf-local.conf">build/conf/local.conf</a></li>
+<li><a href="https://yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#structure-build-conf-bblayers.conf">build/conf/bblayers.conf</a></li>
+<li><a href="https://yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#var-BBLAYERS">BBLAYERS</a></li>
+<li><a href="https://yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#user-configuration">User Configuration</a></li>
+<li><a href="https://yoctoproject.org/docs/3.1.4/dev-manual/dev-manual.html#enabling-your-layer">Enabling Your Layer</a></li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../4_Customizing_Your_Build/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../4_Customizing_Your_Build/" class="btn btn-xs btn-link">
+        Customizing Your Build
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../2_Downloading_AGL_Software/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../2_Downloading_AGL_Software/" class="btn btn-xs btn-link">
+        Downloading AGL Software
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

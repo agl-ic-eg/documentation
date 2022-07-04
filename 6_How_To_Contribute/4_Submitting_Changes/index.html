@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/6_How_To_Contribute/4_Submitting_Changes/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Submitting Changes - AGL Documentation</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Change Requirements", url: "#_top", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../5_Reviewing_Changes/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../5_Reviewing_Changes/" class="btn btn-xs btn-link">
+        Reviewing Changes
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../3_Working_with_Gerrit/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../3_Working_with_Gerrit/" class="btn btn-xs btn-link">
+        Working with Gerrit
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p>Carefully review the following before submitting a change. These guidelines
+apply to developers that are new to open source, as well as to experienced open
+source developers.</p>
+<h2 id="change-requirements">Change Requirements</h2>
+<p>This section contains guidelines for submitting code changes for review. For
+more information on how to submit a change using Gerrit, please see <a href="../3_Working_with_Gerrit/">Working
+with Gerrit</a>.</p>
+<p>Changes are submitted as Git commits. Each commit must contain:</p>
+<ul>
+<li>a short and descriptive subject line that is 72 characters or fewer, followed
+   by a blank line.</li>
+<li>a change description with your logic or reasoning for the changes, followed
+   by a blank line</li>
+<li>a Signed-off-by line, followed by a colon (Signed-off-by:)</li>
+<li>a Change-Id identifier line, followed by a colon (Change-Id:). Gerrit won't
+   accept patches without this identifier.</li>
+</ul>
+<p>A commit with the above details is considered well-formed. <a href="https://chris.beams.io/posts/git-commit/">This
+page</a> is a very useful for the same.</p>
+<p>All changes and topics sent to Gerrit must be well-formed. Informationally,
+<code>commit messages</code> must include:</p>
+<ul>
+<li><strong>what</strong> the change does,</li>
+<li><strong>why</strong> you chose that approach, and</li>
+<li><strong>how</strong> you know it works -- for example, which tests you ran.</li>
+</ul>
+<p>For example: One commit fixes whitespace issues, another renames a function and
+a third one changes the code's functionality. An example commit file is
+illustrated below in detail:</p>
+<div class="highlight"><pre><span></span><code>A short description of your change with no period at the end
+
+You can add more details here <span class="k">in</span> several paragraphs, but please keep each line
+width less than <span class="m">80</span> characters. A bug fix should include the issue number.
+
+Bug-AGL: <span class="o">[</span>SPEC-&lt;JIRA-ID&gt;<span class="o">]</span>
+Change-Id: IF7b6ac513b2eca5f2bab9728ebd8b7e504d3cebe1
+Signed-off-by: Your Name &lt;commit-sender@email.address&gt;
+</code></pre></div>
+<p>Include the issue ID in the one line description of your commit message for
+readability. Gerrit will link issue IDs automatically to the corresponding entry
+in Jira.</p>
+<p>Each commit must also contain the following line at the bottom of the commit
+message:</p>
+<div class="highlight"><pre><span></span><code>Signed-off-by: Your Name &lt;your@email.address&gt;
+</code></pre></div>
+<p>The name in the Signed-off-by line and your email must match the change
+authorship information. Make sure your :file:<code>.git/config</code> is set up
+correctly. Always submit the full set of changes via Gerrit.</p>
+<p>When a change is included in the set to enable other changes, but it will not be
+part of the final set, please let the reviewers know this.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../5_Reviewing_Changes/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../5_Reviewing_Changes/" class="btn btn-xs btn-link">
+        Reviewing Changes
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../3_Working_with_Gerrit/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../3_Working_with_Gerrit/" class="btn btn-xs btn-link">
+        Working with Gerrit
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

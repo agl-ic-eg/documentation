@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/3_Developer_Guides/2_Creating_a_New_Service/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Creating a New Service - AGL Documentation</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Basic requirements", url: "#_top", children: [
+          ]},
+          {title: "D-Bus activation", url: "#d-bus-activation", children: [
+          ]},
+          {title: "Services startup", url: "#services-startup", children: [
+              {title: "System services", url: "#system-services" },
+              {title: "User services", url: "#user-services" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../3_Creating_a_New_Application/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../3_Creating_a_New_Application/" class="btn btn-xs btn-link">
+        Creating a New Application
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../1_Setting_Up_AGL_SDK/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../1_Setting_Up_AGL_SDK/" class="btn btn-xs btn-link">
+        Setting Up AGL SDK
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p>Services are software running in the background and providing, as their name suggests,
+various services to other software: access to specific system hardware, connectivity
+management, network servers... They can be split into 2 categories:
+- system services: those usually run as a privileged user and make use of shared system
+  resources which they should have exclusive access to
+- user services: such services run as part of an unprivileged user's session and can
+  only be called by said user</p>
+<h1 id="basic-requirements">Basic requirements</h1>
+<p>The only mandatory requirement is that service packages provide a <code>.service</code> file
+so they can be properly managed by <code>systemd</code>. This file must be installed to a specific
+location, determined by the service type (system or user):
+- <code>/usr/lib/systemd/system/</code> for system services
+- <code>/usr/lib/systemd/user/</code> for user services</p>
+<p>Below is an example of a simple user service, running in a graphical session and
+therefore requiring a compositor to be already running before the service starts:</p>
+<div class="highlight"><pre><span></span><code>[Unit]
+Requires=agl-compositor.service
+After=agl-compositor.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/homescreen
+Restart=on-failure
+
+[Install]
+WantedBy=agl-session.target
+</code></pre></div>
+<p>The <code>WantedBy=agl-session.target</code> indicates the service is part of the default AGL
+user session, as mentioned in the <a href="1_Application_Framework/1_Introduction/#user-session-management">Application Framework</a>
+documentation.</p>
+<p>The <code>Restart=on-failure</code> directive ensures the service will be automatically
+restarted by <code>systemd</code> in case it crashes.</p>
+<p>More details about <code>systemd</code> service files can be found in the
+<a href="https://www.freedesktop.org/software/systemd/man/systemd.service.html">systemd documentation</a>.</p>
+<h1 id="d-bus-activation">D-Bus activation</h1>
+<p>Services can also provide a D-Bus interface. In this case, they need not be started
+on system boot (or user session startup in the case of user services) but can be
+automatically started only when a client sends a request to the D-Bus name the service
+registers.</p>
+<p>D-Bus activated services must name their <code>systemd</code> service file <code>dbus-NAME.service</code>
+where <code>NAME</code> is the D-Bus name registered by the service. This file must include the
+following lines:</p>
+<div class="highlight"><pre><span></span><code>[Service]
+Type=dbus
+BusName=NAME
+ExecStart=/path/to/executable
+</code></pre></div>
+<p>In addition, they must provide a D-Bus service file named <code>NAME.service</code> and installed
+to one of the following locations:
+- <code>/usr/share/dbus-1/system-services</code> for system services
+- <code>/usr/share/dbus-1/services</code> for user services</p>
+<p>The contents of the D-Bus service file must be the following:</p>
+<div class="highlight"><pre><span></span><code>[D-BUS Service]
+Name=NAME
+Exec=/path/to/executable
+SystemdService=dbus-NAME.service
+</code></pre></div>
+<p>This ensures the service can be safely activated through D-Bus and no conflict will occur
+between <code>systemd</code> and the D-Bus daemon.</p>
+<p>More details about D-Bus activation can be found in the
+<a href="https://dbus.freedesktop.org/doc/dbus-specification.html#message-bus-starting-services">D-Bus specification</a>,
+under the "Message Bus Starting Services (Activation)" section.</p>
+<h1 id="services-startup">Services startup</h1>
+<p>For D-Bus activated services, no additional action is required as those will be automatically
+started whenever needed. Other services, however, need a few more steps in order to be
+executed on system or session startup.</p>
+<h2 id="system-services">System services</h2>
+<p>System services can take advantage of the Yocto <code>systemd</code> class which automates the process of
+enabling such services.</p>
+<ol>
+<li>Ensure the recipe inherits from the <code>systemd</code> class:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>inherit systemd
+</code></pre></div>
+<ol>
+<li>Declare the system services that needs to be enabled on boot:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>SYSTEMD_SERVICE:${PN} = &quot;NAME.service&quot;
+</code></pre></div>
+<ol>
+<li>Ensure the <code>FILES</code> variable includes the systemd service directory the corresponding
+file will be installed to:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>FILES:${PN} = &quot;\
+    ...
+    ${systemd_system_unitdir}/* \
+&quot;
+</code></pre></div>
+<h2 id="user-services">User services</h2>
+<p>The <code>systemd</code> class doesn't provide an equivalent mechanism for user services. This must
+therefore be done manually as part of the package's install process.</p>
+<ol>
+<li>Make the service a part of the user session:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>do_install:append() {
+    install -d ${D}${systemd_user_unitdir}/agl-session.target.wants
+    ln -s ../NAME.service ${D}${systemd_user_unitdir}/agl-session.target.wants/NAME.service
+}
+</code></pre></div>
+<p>This ensures <code>agl-session.target</code> depends on <code>NAME.service</code>, the latter being therefore
+automatically started on session creation.</p>
+<ol>
+<li>Ensure the <code>FILES</code> variable includes the systemd service directory the corresponding
+file will be installed to:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>FILES:${PN} = &quot;\
+    ...
+    ${systemd_user_unitdir}/* \
+&quot;
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../3_Creating_a_New_Application/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../3_Creating_a_New_Application/" class="btn btn-xs btn-link">
+        Creating a New Application
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../1_Setting_Up_AGL_SDK/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../1_Setting_Up_AGL_SDK/" class="btn btn-xs btn-link">
+        Setting Up AGL SDK
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

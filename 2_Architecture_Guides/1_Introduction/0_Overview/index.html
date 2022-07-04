@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/2_Architecture_Guides/1_Introduction/0_Overview/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Overview - AGL Documentation</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../1_AGL_Requirements_Specifications/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../1_AGL_Requirements_Specifications/" class="btn btn-xs btn-link">
+        AGL Requirements Specifications
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../../1_Hardware_Support/Overview/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../../1_Hardware_Support/Overview/" class="btn btn-xs btn-link">
+        Supported Boards
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p>The AGL Unified Code Base (UCB) is a Linux distribution built from the ground up
+through a joint effort by automakers and suppliers to deliver a modern
+in-vehicle infotainment and connected car experience for consumers. Further
+helping reduce fragmentation and facilitate innovation in the development
+process. The following use cases are in development or planned to be developed :</p>
+<ul>
+<li>In Vehicle Infotainment (IVI)</li>
+<li>Instrument Cluster (IC)</li>
+<li>Telematics</li>
+<li>and more :<ul>
+<li>Heads-up Display (HUD)</li>
+<li>Advanced Driver Assistance Systems (ADAS)</li>
+<li>Autonomous Driving (AD)</li>
+</ul>
+</li>
+</ul>
+<p>The goal of the UCB platform is to provide 70-80% of the starting
+point for a production project. This enables automakers and suppliers to focus
+their resources on customizing the other 20-30% to meet their unique product needs.</p>
+<p>The <a href="https://wiki.automotivelinux.org/agl-sat">System Architecture Team</a> defines the overall architecture of the AGL
+software according to the business requirements established by the <a href="https://www.automotivelinux.org/about/steering-committee/">Steering Committee</a>.</p>
+<p>There are multiple parallel efforts in the areas of the following, with most having specialized <a href="https://wiki.automotivelinux.org/#active_expert_groups">Expert Groups
+(EG)</a> :</p>
+<ul>
+<li><a href="https://wiki.automotivelinux.org/eg-app-fw">App Framework and Security</a></li>
+<li><a href="https://wiki.automotivelinux.org/eg-navi">Navigation</a></li>
+<li><a href="https://wiki.automotivelinux.org/eg-speech">Speech</a></li>
+<li><a href="https://wiki.automotivelinux.org/eg-ui-graphics">UI and Graphics</a></li>
+<li><a href="https://wiki.automotivelinux.org/eg-connectivity">Connectivity</a></li>
+<li><a href="https://wiki.automotivelinux.org/eg-ciat">Continuous Integration and Test</a></li>
+<li><a href="https://wiki.automotivelinux.org/eg-ic">Instrument Cluster</a></li>
+<li>In Vehicle Infotainment (IVI)</li>
+<li><a href="https://wiki.automotivelinux.org/eg-rhsa">Reference Hardware System Architecture</a></li>
+<li>Telematics</li>
+<li><a href="https://wiki.automotivelinux.org/eg-requirements-specification">Requirements Specification</a></li>
+<li><a href="https://wiki.automotivelinux.org/eg-v2c">Vehicle to Cloud</a></li>
+<li><a href="https://wiki.automotivelinux.org/eg-virt">Virtualization</a></li>
+</ul>
+<p>The Automotive Grade Linux Software Architecture diagram is below. The architecture consists
+of five layers. The App/HMI layer contains applications with their associated business logic and
+HMI.</p>
+<p><img alt="Architecture Diagram" src="../images/architecture.jpg" /></p>
+<p>The Application Framework layer provides the APIs for creating both managing and running
+applications on an AGL system. The Services layer contains user space services that all
+applications can access. The Operating System (OS) layer provides the Linux kernel and device
+drivers along with standard OS utilities. For IVI (In Vehicle Infotainment)
+system a full fledged demo is <a href="../../../0_Getting_Started/1_Quickstart/Using_Ready_Made_Images/">available</a>.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../1_AGL_Requirements_Specifications/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../1_AGL_Requirements_Specifications/" class="btn btn-xs btn-link">
+        AGL Requirements Specifications
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../../1_Hardware_Support/Overview/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../../1_Hardware_Support/Overview/" class="btn btn-xs btn-link">
+        Supported Boards
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

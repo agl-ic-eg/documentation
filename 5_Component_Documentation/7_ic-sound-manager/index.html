@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/5_Component_Documentation/7_ic-sound-manager/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Instrument Cluster Sound Management - AGL Documentation</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Instrument Cluster Sound Management", url: "#_top", children: [
+              {title: "Introduction", url: "#introduction" },
+              {title: "Requirements", url: "#requirements" },
+              {title: "Architectural design", url: "#architectural-design" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../6_How_To_Contribute/1_Getting_Linux_Foundation_account/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../6_How_To_Contribute/1_Getting_Linux_Foundation_account/" class="btn btn-xs btn-link">
+        Getting Linux Foundation account
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../6_pipewire_wireplumber/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../6_pipewire_wireplumber/" class="btn btn-xs btn-link">
+        PipeWire / WirePlumber
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="instrument-cluster-sound-management">Instrument Cluster Sound Management</h1>
+<h2 id="introduction">Introduction</h2>
+<p>This document describes the design of the software setup which enables the integration
+of AGL’s sound system with applications running in the Instrument Cluster domain.
+This software setup is specific to the case where a single system is used to implement
+both the Instrument Cluster and some other domain of the vehicle, typically the
+In-Vehicle-Infotainment domain, using container technology to separate them.</p>
+<p>Applications running in the Instrument Cluster need a way to safely play important
+sounds to alert the driver of conditions that need the driver’s attention. At the same
+time, in a containerized environment that serves multiple vehicle domains, applications
+running in other containers may be using the sound hardware to play less important sounds,
+such as music, which conflicts with the IC’s need to play sound on the same hardware.</p>
+<p>The solution developed here, for safety reasons, relies on the operating system and the
+hardware itself to allow the IC applications to stream sounds to the speakers using a
+dedicated device handle, while applications from other domains are all routed through a
+sound server that runs on the host container and operates on a different sound device handle.</p>
+<p>However, to achieve good inter-operation, there is need for additional software mechanisms
+that will work in combination with this hardware-based solution. First of all, it is necessary
+to have a mechanism that allows IC applications to pause all sounds that are being routed via
+the sound server while there is an important IC sound playing and resume them afterwards.
+This is so that other domain applications can be informed of this temporary pause and offer
+the appropriate user experience. Secondly, it is desirable to have separation of duties
+between the host and the other domain’s (non-IC) container. It should be the responsibility
+of the other domain’s container to implement the sound system policy, so that the host does
+not need to be aware of the exact applications that are running on this container.</p>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li>
+<p>Single system shared between IC and at least one secondary domain (IVI, other ...)</p>
+</li>
+<li>
+<p>The domains are separated using containers</p>
+</li>
+<li>
+<p>All the containers, including the host, are running a variant of AGL</p>
+</li>
+<li>
+<p>The host OS and the secondary domain container use PipeWire and WirePlumber 
+  to implement the sound system</p>
+</li>
+<li>
+<p>The sound hardware offers, on the Linux kernel driver side, a separate ALSA 
+  device for sounds that belong to the IC and a separate ALSA device for other sounds</p>
+</li>
+</ul>
+<h2 id="architectural-design">Architectural design</h2>
+<p><img alt="Architecture overview" src="../images/ic-sound-manager/architecture.png" /></p>
+<p>The core of the sound system consists of the PipeWire daemon, which is responsible for routing
+audio between the kernel and applications running in the “Other Container”.</p>
+<p>The PipeWire session is orchestrated by a secondary daemon, WirePlumber. WirePlumber is
+designed in such a way so that it can have multiple instances, for task separation.
+One instance shall be running in the host container and it shall be responsible for
+managing the devices that PipeWire handles as well as the security isolation between
+different applications and different containers. At least one more instance shall be
+running in the “Other Container” and be responsible for implementing policy mechanisms
+related to the applications that are running in that container.</p>
+<p>Further WirePlumber instances are possible to run as well. For instance, it may be desirable
+to have another “policy” instance in a third container that implements another vehicle system
+and shares the main PipeWire daemon from the host. Additionally, the “Other Container” may
+be running a separate WirePlumber instance to manage bluetooth audio devices, which shall be
+the responsibility of that container instead of the host.</p>
+<p>To implement communication between the IC and the host, a third daemon is used: pipewire-ic-ipc.
+This daemon listens on a UNIX domain socket for messages from the IC applications and offers
+them the ability to pause or resume sounds that are being routed via PipeWire.</p>
+<p>Finally, IC applications are given a library (icipc library) that allows them to send messages
+to pipewire-ic-ipc on the host. This library is minimal and has no external dependencies,
+for safety reasons. </p>
+<p>For sound playback, IC applications are expected to use the ALSA API directly and communicate
+with the dedicated ALSA device that is meant for IC sounds. Arbitration of this device between
+different IC applications is out of scope for this document and it is assumed to be a solved
+problem.</p>
+<h3 id="pipewire-ic-ipc">PipeWire-IC-IPC</h3>
+<p>This component acts as the server-side component for the UNIX socket that is used for
+communication between the IC applications and the host. It is implemented as a pipewire module,
+therefore it needs the <code>/usr/bin/pipewire</code> process in order to be launched. Launching happens
+with a special configuration file (<code>pipewire-ic-ipc.conf</code>) which instructs this PipeWire process
+to be launched as a client (<code>core.daemon = false</code>) and to load only <code>module-ic-ipc</code> together
+with <code>module-protocol-native</code>. The latter enables communication with the daemon instance of
+PipeWire (<code>core.daemon = true</code>), which implements the sound server.</p>
+<p><img alt="PipeWire-IC-IPC Processes" src="../images/ic-sound-manager/pipewire-ic-ipc-processes.png" /></p>
+<h3 id="icipc-library">icipc library</h3>
+<p>The IC Application is given a library (‘libicipc’) that implements the client side of
+pipewire-ic-ipc. This library allows sending two commands:</p>
+<ul>
+<li>SUSPEND</li>
+<li>Asks WirePlumber (via PipeWire) to cork applications and mute the ALSA device used by PipeWire</li>
+<li>RESUME</li>
+<li>Reverts the effects of SUSPEND</li>
+</ul>
+<p>IC Applications are expected to send the SUSPEND command before starting playback of a sound
+to their dedicated ALSA device. The RESUME command should be sent after playback of this IC
+sound has finished. </p>
+<p>It should be noted that the RESUME command is also issued automatically when the IC application
+disconnects from the pipewire-ic-ipc UNIX socket.</p>
+<p>If multiple IC application issue SUSPEND to the pipewire-ic-ipc server, then only the first
+SUSPEND generates actions for WirePlumber. The rest are counted and the pipewire-ic-ipc
+server expects an equal number of RESUME commands before generating resume actions for
+WirePlumber.</p>
+<p>The implementation of the SUSPEND/RESUME mechanism uses PipeWire’s metadata to signal
+WirePlumber. PipeWire-IC-IPC will look for the “default” metadata object in PipeWire’s list
+of objects and will write the “suspend.playback” key with a value of “true” on id 0.
+The metadata change is then notified to all clients. WirePlumber, being a client, gets
+notified of this change and takes actions. All actions are defined in Lua scripts.</p>
+<p><img alt="PipeWire-IC-IPC Calls" src="../images/ic-sound-manager/pipewire-ic-ipc-calls.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../6_How_To_Contribute/1_Getting_Linux_Foundation_account/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../6_How_To_Contribute/1_Getting_Linux_Foundation_account/" class="btn btn-xs btn-link">
+        Getting Linux Foundation account
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../6_pipewire_wireplumber/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../6_pipewire_wireplumber/" class="btn btn-xs btn-link">
+        PipeWire / WirePlumber
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/2_Architecture_Guides/2_Security_Blueprint/6_Application/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Application - AGL Documentation</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Application Types", url: "#_top", children: [
+          ]},
+          {title: "Application Store", url: "#application-store", children: [
+          ]},
+          {title: "Acronyms and Abbreviations", url: "#acronyms-and-abbreviations", children: [
+          ]},
+          {title: "Local", url: "#local", children: [
+              {title: "Installation", url: "#installation" },
+          ]},
+          {title: "Local", url: "#local_1", children: [
+              {title: "Privilege Management", url: "#privilege-management" },
+          ]},
+          {title: "App Signature", url: "#app-signature", children: [
+          ]},
+          {title: "Services", url: "#services", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../7_Connectivity/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../7_Connectivity/" class="btn btn-xs btn-link">
+        Connectivity
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../5_Platform/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../5_Platform/" class="btn btn-xs btn-link">
+        Platform
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p><strong>Application Hardening</strong>: Best practices to apply to the build and release of
+user space applications, in order to reduce the number of attack surfaces used
+by potential attackers.</p>
+<p>The term of Application (App) has a very wide definition in <strong>AGL</strong>. Almost
+anything which is not in the core Operating System (OS) is an Application.
+Applications can be included in the base software package (image) or can be
+added at run-time.</p>
+<p>Application containment is achieved using the following protections:</p>
+<ul>
+<li>Linux Native protection</li>
+<li>Mandatory Access Control (<strong>MAC</strong>)</li>
+<li>AGL Platform protections</li>
+<li>Origin Tracking and Validation</li>
+<li>Application Privilege Management and Enforcement via Cynara</li>
+<li>Authenticated Transport via D-Bus</li>
+</ul>
+<h2 id="application-types">Application Types</h2>
+<p>AGL provides a framework for applications to be written in different forms:</p>
+<ul>
+<li>Web application: HTML5 + JavaScript</li>
+<li>Qt application: in a QML file</li>
+<li>Native application: in C</li>
+</ul>
+<p>While there is no harm in providing multiple types of applications, from a
+security perspective this does increase the attack surface for an intruder. The
+application framework (<strong>AppFw</strong>) consists of a number of utilities and daemons
+which provide context for the applications. Isolation is provided through
+<strong>SMACK</strong> labels.</p>
+<h2 id="application-store">Application Store</h2>
+<p>Although the Tizen system has defined a <a href="https://wiki.tizen.org/Security/Tizen_3.X_Overview#Application_Singing_and_Certificates">system of App signing and signing
+flow</a>
+to avoid the spread of unauthorized Apps that might contain malware. At this
+point, it is unclear how much of this flow AGL will adopt. However, judging from
+the experience, it is an essential topic. For example, the Google Play Store
+controls the authorization of Apps through signing, and still, there are <a href="http://www.eweek.com/mobile/researchers-find-132-malware-infected-android-apps-on-google-play">many
+accounts of Apps containing malware on the
+store</a>.</p>
+<p>Tizen defines 5 levels of certificates and signing at each level, including an
+author, testing distributor, public level store distributor, partner level store
+distributor, and platform level store distributor. AGL may define a different
+number of third parties, but at a minimum an author and store distributor should
+be defined.</p>
+<p><img alt="App Signing Flow" src="../images/App_signing_flow.png" /></p>
+<p>Once the number of signatures has been established, verification of those
+signatures needs to be done at a minimum at installation time on the AGL device.
+It is important to ensure the robustness/integrity of the public key used for
+signature verification. If the public key is modified, then this compromised key
+can be used to verify an attacker's private key signature.</p>
+<p>Further to this, installation-time verification is limited. Attacks can happen
+to apps in-memory at runtime. Any modifications made after installation will be
+missed by installation-time verification. Integrity verification that runs
+during execution makes for a more complete security story.</p>
+<hr />
+<h2 id="acronyms-and-abbreviations">Acronyms and Abbreviations</h2>
+<p>The following table lists the terms utilized within this part of the document.</p>
+<table>
+<thead>
+<tr>
+<th>Acronyms or Abbreviations</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>3GPP</em></td>
+<td><strong>3</strong>rd <strong>G</strong>eneration <strong>P</strong>artnership <strong>P</strong>roject</td>
+</tr>
+<tr>
+<td><em>CASB</em></td>
+<td><strong>C</strong>loud <strong>A</strong>ccess <strong>S</strong>ecurity <strong>B</strong>roker</td>
+</tr>
+<tr>
+<td><em>DAST</em></td>
+<td><strong>D</strong>ynamic <strong>A</strong>pplication <strong>S</strong>ecurity <strong>T</strong>esting</td>
+</tr>
+<tr>
+<td><em>DPI</em></td>
+<td><strong>D</strong>eep <strong>P</strong>acket <strong>I</strong>nspection</td>
+</tr>
+<tr>
+<td><em>IDS</em></td>
+<td><strong>I</strong>ntrusion <strong>D</strong>etection <strong>S</strong>ystems</td>
+</tr>
+<tr>
+<td><em>IPS</em></td>
+<td><strong>I</strong>ntrusion <strong>P</strong>revention <strong>S</strong>ystems</td>
+</tr>
+<tr>
+<td><em>IPSec</em></td>
+<td><strong>I</strong>nternet <strong>P</strong>rotocol <strong>Sec</strong>urity</td>
+</tr>
+<tr>
+<td><em>LSM</em></td>
+<td><strong>L</strong>inux <strong>S</strong>ecurity <strong>M</strong>odule</td>
+</tr>
+<tr>
+<td><em>MITM</em></td>
+<td><strong>M</strong>an <strong>I</strong>n <strong>T</strong>he <strong>M</strong>iddle</td>
+</tr>
+<tr>
+<td><em>OSI</em></td>
+<td><strong>O</strong>pen <strong>S</strong>ystems <strong>I</strong>nterconnection</td>
+</tr>
+<tr>
+<td><em>SATS</em></td>
+<td><strong>S</strong>tatic <strong>A</strong>pplication <strong>S</strong>ecurity <strong>T</strong>esting</td>
+</tr>
+</tbody>
+</table>
+<h1 id="local">Local</h1>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application-Installation-1</td>
+<td>Talk about AppFw offline mode.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="installation">Installation</h2>
+<p>Applications can be delivered and installed with the base image using a special
+offline-mode provided by the <strong>AppFw</strong>. Apps can also be installed at run time.</p>
+<p>During early release, default Apps are installed on the image at first boot.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application-Installation-1</td>
+<td>AppFw</td>
+<td>Provide offline-mode in order to install app with the base image.</td>
+</tr>
+<tr>
+<td>Application-Installation-2</td>
+<td>Integrity</td>
+<td>Allow the installation of applications only if their integrity is good.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="local_1">Local</h1>
+<h2 id="privilege-management">Privilege Management</h2>
+<p>Application privileges are managed by <strong>Cynara</strong> and the security manager in the
+<strong>AppFw</strong>. For more details, please refer to the <strong>AppFw</strong> documentation in
+Platform part.</p>
+<h1 id="app-signature">App Signature</h1>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application-Signature-1</td>
+<td>Add content (see secure build in Secure development part).</td>
+</tr>
+</tbody>
+</table>
+<h1 id="services">Services</h1>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application-Services-1</td>
+<td>Add content (Which services?).</td>
+</tr>
+<tr>
+<td>Application-Services-2</td>
+<td>Add Binder.</td>
+</tr>
+</tbody>
+</table>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../7_Connectivity/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../7_Connectivity/" class="btn btn-xs btn-link">
+        Connectivity
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../5_Platform/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../5_Platform/" class="btn btn-xs btn-link">
+        Platform
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

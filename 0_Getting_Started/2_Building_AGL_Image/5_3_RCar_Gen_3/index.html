@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/0_Getting_Started/2_Building_AGL_Image/5_3_RCar_Gen_3/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Building for Supported Renesas Boards - AGL Documentation</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "1. Prepare your build", url: "#_top", children: [
+              {title: "1.1 Downloading Proprietary Drivers", url: "#11-downloading-proprietary-drivers" },
+              {title: "1.2. Getting More Software", url: "#12-getting-more-software" },
+              {title: "1.3. Getting Your Hardware Together", url: "#13-getting-your-hardware-together" },
+              {title: "1.4. Making Sure Your Build Environment is Correct", url: "#14-making-sure-your-build-environment-is-correct" },
+              {title: "1.5. Run the aglsetup.sh Script:", url: "#15-run-the-aglsetupsh-script" },
+          ]},
+          {title: "2. Using BitBake", url: "#2-using-bitbake", children: [
+          ]},
+          {title: "3. Deploying the AGL Demo Image", url: "#3-deploying-the-agl-demo-image", children: [
+              {title: "3.1. Booting the Image Using a MicroSD Card", url: "#31-booting-the-image-using-a-microsd-card" },
+              {title: "3.2. Setting Up the Serial Console", url: "#32-setting-up-the-serial-console" },
+              {title: "3.3. Setting-up U-boot", url: "#33-setting-up-u-boot" },
+          ]},
+          {title: "4. Troubleshooting", url: "#4-troubleshooting", children: [
+              {title: "4.1. Checking Your Configuration", url: "#41-checking-your-configuration" },
+              {title: "4.2. Check the Script\u0027s Log:", url: "#42-check-the-scripts-log" },
+              {title: "4.3. Updating the Board\u0027s Firmware", url: "#43-updating-the-boards-firmware" },
+              {title: "4.4. Logging Into the Console", url: "#44-logging-into-the-console" },
+              {title: "4.5. Determining the Board\u0027s IP Address", url: "#45-determining-the-boards-ip-address" },
+          ]},
+          {title: "5. Supplementary Information", url: "#5-supplementary-information", children: [
+              {title: "5.1. R-Car Generation 3 Information", url: "#51-r-car-generation-3-information" },
+              {title: "5.2. Proprietary libraries for meta-rcar-gen3", url: "#52-proprietary-libraries-for-meta-rcar-gen3" },
+              {title: "5.3. Build with Renesas multimedia libraries", url: "#53-build-with-renesas-multimedia-libraries" },
+              {title: "5.4. Enable Linux ICCOM driver and Linux ICCOM library", url: "#54-enable-linux-iccom-driver-and-linux-iccom-library" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../5_4_Virtio/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../5_4_Virtio/" class="btn btn-xs btn-link">
+        Building for virtio
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../5_2_Raspberry_Pi_4/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../5_2_Raspberry_Pi_4/" class="btn btn-xs btn-link">
+        Building for Raspberry Pi 4
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p>AGL supports building for several automotive
+<a href="https://www.renesas.com/us/en/solutions/automotive.html">Renesas</a> board kits.
+Renesas is the number one supplier of vehicle control microcontrollers and
+System on a Chip (SoC) products for the automotive industry.</p>
+<p>This section provides the build and deploy steps you need to create an
+image for the following Renesas platforms:</p>
+<ul>
+<li><a href="https://www.elinux.org/R-Car/Boards/M3SK">Renesas R-Car Starter Kit Pro Board</a></li>
+<li><a href="https://www.elinux.org/R-Car/Boards/H3SK">Renesas R-Car Starter Kit Premier Board</a></li>
+<li><a href="https://www.elinux.org/R-Car/Boards/Salvator-X">Renesas Salvator-X Board</a></li>
+<li><a href="https://elinux.org/R-Car/Boards/Kingfisher">Renesas Kingfisher Infotainment Board</a></li>
+</ul>
+<p><strong>NOTE:</strong> You can find similar information for the Pro and Premier board kits on the
+<a href="https://elinux.org/R-Car/Boards/Yocto-Gen3">R-Car/Boards/Yocto-Gen3</a> page on <a href="https://elinux.org">elinux.org</a>.
+The information on this page describes setup and build procedures for both of these
+Renesas development kits.</p>
+<p>Additionally, the AGL Reference Hardware platform is based on the same Renesas
+H3 processor used on the Renesas R-Car Starter Kit Premier and Salvator-X boards,
+so support for it leverages the Starter Kit Premier (also known as "h3ulcb")
+build.
+For more information on the AGL reference hardware platform, please refer to its
+<a href="https://wiki.automotivelinux.org/_media/eg-rhsa/rh_manual_ver.1.0.pdf">manual</a>,
+or the Reference Hardware System Architecture Expert Group
+<a href="https://wiki.automotivelinux.org/eg-rhsa">wiki page</a>.</p>
+<h2 id="1-prepare-your-build">1. Prepare your build</h2>
+<h3 id="11-downloading-proprietary-drivers">1.1 Downloading Proprietary Drivers</h3>
+<p>Before setting up the build environment, you need to download proprietary drivers from the
+<a href="https://www.renesas.com/us/en/application/automotive/r-car-h3-m3-documents-software">R-Car H3/M3 Software library and Technical document</a>
+site.</p>
+<p>Follow these steps to download the drivers you need:</p>
+<ol>
+<li>
+<p><strong>Determine the Files You Need:</strong></p>
+<p>Run the <code>setup_mm_packages.sh</code> script as follows to
+display the list of ZIP files containing the drivers you need.
+Following is an example:</p>
+<div class="highlight"><pre><span></span><code>grep -rn ZIP_.<span class="o">=</span> <span class="nv">$AGL_TOP</span>/meta-agl/meta-agl-bsp/meta-rcar-gen3/scripts/setup_mm_packages.sh
+</code></pre></div>
+<p>The script's output identifies the files you need to download from the page.</p>
+</li>
+<li>
+<p><strong>Get Your Board Support Package (BSP) Version:</strong></p>
+<p>Be sure to have the correct BSP version of the R-Car Starter Kit
+based on the version of the AGL software you are using.
+Find the appropriate download links on the
+<a href="https://www.renesas.com/us/en/application/automotive/r-car-h3-m3-documents-software">R-Car H3/M3 Software library and Technical document</a>
+site.
+The file pairs are grouped according to the Yocto Project version you are
+using with the AGL software.</p>
+<p>Use the following table to map the Renesas version to your AGL software:</p>
+<table>
+<thead>
+<tr>
+<th align="center">AGL Version</th>
+<th align="center">Renesas version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">AGL master</td>
+<td align="center">5.9.0</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><strong>Download the Files:</strong></p>
+<p>Start the download process by clicking the download link.
+If you do not have an account with Renesas, you will be asked to register a free account.
+You must register and follow the "Click Through" licensing process
+in order to download these proprietary files.</p>
+<p>If needed, follow the instructions to create the free account by providing the required
+account information.
+Once the account is registered and you are logged in, you can download the files.</p>
+<p><strong>NOTE:</strong> You might have to re-access the
+<a href="https://www.renesas.com/us/en/application/automotive/r-car-h3-m3-documents-software">original page</a>
+that contains the download links you need after creating the account and logging in.</p>
+</li>
+<li>
+<p><strong>Create an Environment Variable to Point to Your Download Area:</strong></p>
+<p>Create and export an environment variable named <code>XDG_DOWNLOAD_DIR</code> that points to
+your download directory.
+Here is an example:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">XDG_DOWNLOAD_DIR</span><span class="o">=</span><span class="nv">$HOME</span>/Downloads
+</code></pre></div>
+</li>
+<li>
+<p><strong>Be Sure the Files Have Rights:</strong></p>
+<p>Be sure you have the necessary rights for the files you downloaded.
+You can use the following command:</p>
+<div class="highlight"><pre><span></span><code>chmod a+rw <span class="nv">$XDG_DOWNLOAD_DIR</span>/*.zip
+</code></pre></div>
+</li>
+<li>
+<p><strong>Check to be Sure the Files are Downloaded and Have the Correct Rights:</strong></p>
+<p>Do a quick listing of the files to ensure they are in the download directory and
+they have the correct access rights.
+Here is an example:</p>
+<div class="highlight"><pre><span></span><code>$ ls -l <span class="nv">$XDG_DOWNLOAD_DIR</span>/*.zip
+-rw-rw-r-- <span class="m">1</span> scottrif scottrif <span class="m">4662080</span> Nov <span class="m">19</span> <span class="m">14</span>:48 /home/scottrif/Downloads/R-Car_Gen3_Series_Evaluation_Software_Package_for_Linux-weston8-20200923.zip
+-rw-rw-r-- <span class="m">1</span> scottrif scottrif <span class="m">3137626</span> Nov <span class="m">19</span> <span class="m">14</span>:49 /home/scottrif/Downloads/R-Car_Gen3_Series_Evaluation_Software_Package_of_Linux_Drivers-weston8-20200923.zip
+</code></pre></div>
+</li>
+</ol>
+<h3 id="12-getting-more-software">1.2. Getting More Software</h3>
+<ol>
+<li>
+<p><strong>Get the <code>bmaptool</code>:</strong></p>
+<p>Download this tool from the
+<a href="https://build.opensuse.org/package/show/isv:LinuxAutomotive:AGL_Master/bmap-tools">bmap-tools</a>
+repository.
+The site has pre-built packages (DEB or RPM) for the supported host
+operating systems.</p>
+</li>
+</ol>
+<h3 id="13-getting-your-hardware-together">1.3. Getting Your Hardware Together</h3>
+<p>Gather together this list of hardware items, which is not exhaustive.
+Having these items ahead of time saves you from having to try and
+collect hardware during development:</p>
+<ul>
+<li>Supported Starter Kit Gen3 board with its 5V power supply.</li>
+<li>Micro USB-A cable for serial console.
+    This cable is optional if you are using Ethernet and an SSH connection.</li>
+<li>USB 2.0 Hub.  The hub is optional but makes it easy to connect multiple USB devices.</li>
+<li>Ethernet cable.  The cable is optional if you are using a serial console.</li>
+<li>HDMI type D (Micro connector) cable and an associated display.</li>
+<li>4 Gbyte minimum MicroSD Card.  It is recommended that you use a class 10 type.</li>
+<li>USB touch screen device such as the GeChic 1502i/1503i.  A touch screen device is optional.</li>
+</ul>
+<p><strong>NOTE:</strong> The Salvator-X Board has NDA restrictions.
+Consequently, less documentation is available for this board both here and across the
+Internet.</p>
+<h3 id="14-making-sure-your-build-environment-is-correct">1.4. Making Sure Your Build Environment is Correct</h3>
+<p>The
+"<a href="../3_Initializing_Your_Build_Environment/">Initializing Your Build Environment</a>"
+section presented generic information for setting up your build environment
+using the <code>aglsetup.sh</code> script.
+If you are building an image for a supported Renesas board,
+you need to take steps to make sure your build host is set up correctly.</p>
+<ol>
+<li>
+<p><strong>Define Your Board:</strong></p>
+<p>Depending on your Renesas board, define and export a <code>MACHINE</code> variable as follows:</p>
+<table>
+<thead>
+<tr>
+<th align="center">Board</th>
+<th align="center"><code>MACHINE</code> Setting</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">Starter Kit Pro/M3</td>
+<td align="center"><code>MACHINE</code>=m3ulcb</td>
+</tr>
+<tr>
+<td align="center">Starter Kit Pro/M3 + kingfisher support</td>
+<td align="center"><code>MACHINE</code>=m3ulcb-kf</td>
+</tr>
+<tr>
+<td align="center">Starter Kit Pro/M3 without graphic driver (using pixman)</td>
+<td align="center"><code>MACHINE</code>=m3ulcb-nogfx</td>
+</tr>
+<tr>
+<td align="center">Starter Kit Premier/H3</td>
+<td align="center"><code>MACHINE</code>=h3ulcb</td>
+</tr>
+<tr>
+<td align="center">Starter Kit Premier/H3  + kingfisher support</td>
+<td align="center"><code>MACHINE</code>=h3ulcb-kf</td>
+</tr>
+<tr>
+<td align="center">Starter Kit Premier/H3  without graphic driver (using pixman)</td>
+<td align="center"><code>MACHINE</code>=h3ulcb-nogfx</td>
+</tr>
+<tr>
+<td align="center">Salvator-X</td>
+<td align="center"><code>MACHINE</code>=h3-salvator-x</td>
+</tr>
+<tr>
+<td align="center">AGL Reference Hardware</td>
+<td align="center"><code>MACHINE</code>=h3ulcb</td>
+</tr>
+<tr>
+<td align="center">AGL Reference Hardware  without graphic driver (using pixman)</td>
+<td align="center"><code>MACHINE</code>=h3ulcb-nogfx</td>
+</tr>
+</tbody>
+</table>
+<p>For example, the following command defines and exports the <code>MACHINE</code> variable
+for the Starter Kit Premier/H3 Board:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">MACHINE</span><span class="o">=</span>h3ulcb
+</code></pre></div>
+</li>
+</ol>
+<h3 id="15-run-the-aglsetupsh-script">1.5. <strong>Run the <code>aglsetup.sh</code> Script:</strong></h3>
+<p>Use the following commands to run the AGL Setup script:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> <span class="nv">$AGL_TOP</span>
+<span class="nb">source</span> meta-agl/scripts/aglsetup.sh -m <span class="nv">$MACHINE</span> -b build agl-devel agl-demo
+</code></pre></div>
+<p><strong>NOTE:</strong>
+To avoid useless download and rebuild, it's important to set the variable DL_DIR and SSTATE_DIR in your configuration.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span> <span class="s2">&quot;# reuse download directories&quot;</span> &gt;&gt; <span class="nv">$AGL_TOP</span>/site.conf
+<span class="nb">echo</span> <span class="s2">&quot;DL_DIR = \&quot;</span><span class="nv">$HOME</span><span class="s2">/downloads/\&quot;&quot;</span> &gt;&gt; <span class="nv">$AGL_TOP</span>/site.conf
+<span class="nb">echo</span> <span class="s2">&quot;SSTATE_DIR = \&quot;</span><span class="nv">$AGL_TOP</span><span class="s2">/sstate-cache/\&quot;&quot;</span> &gt;&gt; <span class="nv">$AGL_TOP</span>/site.conf
+ln -sf <span class="nv">$AGL_TOP</span>/site.conf conf/
+</code></pre></div>
+<p><strong>Reference Hardware :</strong></p>
+<p>If building for the AGL Reference Hardware (with <code>MACHINE</code> set to "h3ulcb" or
+"h3ulcb-nogfx"), add <code>agl-refhw-h3</code>, for example:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> <span class="nv">$AGL_TOP</span>
+<span class="nb">source</span> meta-agl/scripts/aglsetup.sh -m <span class="nv">$MACHINE</span> -b build agl-devel agl-demo agl-refhw-h3
+</code></pre></div>
+<p><strong>HTML5 based IVI demo :</strong></p>
+<p>For HTML5 based IVI demo the feature "agl-profile-graphical-html5" is needed.</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">source</span> meta-agl/scripts/aglsetup.sh -f -m <span class="nv">$MACHINE</span> -b <span class="nv">$MACHINE</span> agl-demo agl-devel agl-profile-graphical-html5
+</code></pre></div>
+<p><strong>Instrument Cluster with Container isolation demo :</strong></p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">source</span> meta-agl/scripts/aglsetup.sh -f -m <span class="nv">$MACHINE</span> -b <span class="nv">$MACHINE</span> agl-lxc
+</code></pre></div>
+<p><strong>NOTE:</strong>
+You can check if your logs match what is expected in the <a href="#4-troubleshooting">troubleshooting section</a>.</p>
+<p>Running the <code>aglsetup.sh</code> script automatically places you in the
+working directory (i.e. <code>$AGL_TOP/build</code>).
+You can change this default behavior by adding the "-f" option to the
+script's command line.</p>
+<p>In the previous command, the "-m" option sets your machine to the previously
+defined <code>MACHINE</code> variable.
+The "-b" option defines your Build Directory, which is the
+default <code>$AGL_TOP/build</code>.
+Finally, the AGL features are provided to support building the AGL Demo image
+for the Renesas board.</p>
+<p>You can learn more about the AGL Features in the
+"<a href="../3_Initializing_Your_Build_Environment/">Initializing Your Build Environment</a>"
+section.</p>
+<h2 id="2-using-bitbake">2. Using BitBake</h2>
+<p>This section shows the <code>bitbake</code> command used to build the AGL image.
+Before running BitBake to start your build, it is good to be reminded that AGL
+does provide pre-built images for developers that work with supported hardware.
+You can find these pre-built images on the
+<a href="https://download.automotivelinux.org/AGL/release">AGL Download web site</a>.</p>
+<p>Start the build using the <code>bitbake</code> command.</p>
+<p><strong>NOTE:</strong> An initial build can take many hours depending on your
+CPU and and Internet connection speeds.
+The build also takes approximately 100G-bytes of free disk space.</p>
+<p><strong>Qt based IVI demo :</strong>
+For this example, the target is "agl-demo-platform":</p>
+<div class="highlight"><pre><span></span><code>bitbake agl-demo-platform
+</code></pre></div>
+<p><strong>HTML5 based IVI demo :</strong>
+The target is <code>agl-demo-platform-html5</code>.</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">time</span> bitbake agl-demo-platform-html5
+</code></pre></div>
+<p><strong>Instrument Cluster with Container isolation demo :</strong>
+The target is <code>lxc-host-image-demo</code>.</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">time</span> bitbake lxc-host-image-demo
+</code></pre></div>
+<p>The build process puts the resulting image in the Build Directory:</p>
+<div class="highlight"><pre><span></span><code>&lt;build_directory&gt;/tmp/deploy/images/<span class="nv">$MACHINE</span>
+</code></pre></div>
+<h2 id="3-deploying-the-agl-demo-image">3. Deploying the AGL Demo Image</h2>
+<p>To boot your image on the Renesas board, you need to do three things:</p>
+<ol>
+<li><a href="#4-troubleshooting">Update all firmware on the board.</a></li>
+<li>Prepare the MicroSD card to you can boot from it.</li>
+<li>Boot the board.</li>
+</ol>
+<p><strong>NOTE:</strong> For subsequent builds, you only have to re-write the MicroSD
+card with a new image.</p>
+<h3 id="31-booting-the-image-using-a-microsd-card">3.1. Booting the Image Using a MicroSD Card</h3>
+<ol>
+<li>
+<p>Preparing the MicroSD Card</p>
+<p>Plug the MicroSD card into your Build Host.
+After plugging in the device, use the <code>dmesg</code> command as follows to
+discover the device name:</p>
+<div class="highlight"><pre><span></span><code>$ dmesg <span class="p">|</span> tail -4
+<span class="o">[</span> <span class="m">1971</span>.462160<span class="o">]</span> sd <span class="m">6</span>:0:0:0: <span class="o">[</span>sdc<span class="o">]</span> Mode Sense: <span class="m">03</span> <span class="m">00</span> <span class="m">00</span> <span class="m">00</span>
+<span class="o">[</span> <span class="m">1971</span>.462277<span class="o">]</span> sd <span class="m">6</span>:0:0:0: <span class="o">[</span>sdc<span class="o">]</span> No Caching mode page found
+<span class="o">[</span> <span class="m">1971</span>.462278<span class="o">]</span> sd <span class="m">6</span>:0:0:0: <span class="o">[</span>sdc<span class="o">]</span> Assuming drive cache: write through
+<span class="o">[</span> <span class="m">1971</span>.463870<span class="o">]</span>  sdc: sdc1 sdc2
+</code></pre></div>
+<p>In the previous example, the MicroSD card is attached to the device <code>/dev/sdc</code>.
+You can also use the <code>lsblk</code> command to show all your devices.
+Here is an example that shows the MicroSD card as <code>/dev/sdc</code>:</p>
+<div class="highlight"><pre><span></span><code>$ lsblk
+NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+sda      <span class="m">8</span>:0    <span class="m">0</span> <span class="m">167</span>,7G  <span class="m">0</span> disk
+├─sda1   <span class="m">8</span>:1    <span class="m">0</span>   512M  <span class="m">0</span> part /boot/efi
+├─sda2   <span class="m">8</span>:2    <span class="m">0</span> <span class="m">159</span>,3G  <span class="m">0</span> part /
+└─sda3   <span class="m">8</span>:3    <span class="m">0</span>   <span class="m">7</span>,9G  <span class="m">0</span> part <span class="o">[</span>SWAP<span class="o">]</span>
+sdb      <span class="m">8</span>:16   <span class="m">0</span> <span class="m">931</span>,5G  <span class="m">0</span> disk
+└─sdb1   <span class="m">8</span>:17   <span class="m">0</span> <span class="m">931</span>,5G  <span class="m">0</span> part /media/storage
+sdc      <span class="m">8</span>:32   <span class="m">1</span>  <span class="m">14</span>,9G  <span class="m">0</span> disk
+├─sdc1   <span class="m">8</span>:33   <span class="m">1</span>    40M  <span class="m">0</span> part
+└─sdc2   <span class="m">8</span>:34   <span class="m">1</span>   788M  <span class="m">0</span> part
+</code></pre></div>
+<p><strong>IMPORTANT NOTE:</strong> Before re-writing any device on your Build Host, you need to
+be sure you are actually writing to the removable MicroSD card and not some other
+device.
+Each computer is different and removable devices can change from time to time.
+Consequently, you should repeat the previous operation with the MicroSD card to
+confirm the device name every time you write to the card.</p>
+<p>To summarize this example so far, we have the following:</p>
+<ul>
+<li>
+<p>The first SATA drive is <code>/dev/sda</code>.</p>
+</li>
+<li>
+<p><code>/dev/sdc</code> corresponds to the MicroSD card, and is also marked as a removable device.
+You can see this in the output of the <code>lsblk</code> command where "1" appears in the "RM" column
+for that device.</p>
+</li>
+</ul>
+<p>Now that you have identified the device you are going to be writing the image on,
+you can use the <code>bmaptool</code> to copy the image to the MicroSD card.</p>
+<p>Your desktop system might offer a choice to mount the MicroSD automatically
+in some directory.
+For this example, assume that the MicroSD card mount directory is stored in the
+<code>$SDCARD</code> variable.</p>
+<p>Following are example commands that write the image to the MicroSD card:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> <span class="nv">$AGL_TOP</span>/build/tmp/deploy/images/<span class="nv">$MACHINE</span>
+bmaptool copy ./agl-demo-platform-<span class="nv">$MACHINE</span>.wic.xz &lt;boot_device_name&gt;
+</code></pre></div>
+<p>Alternatively, you can leave the image in an uncompressed state and write it
+to the MicroSD card:</p>
+<div class="highlight"><pre><span></span><code>sudo umount &lt;boot_device_name&gt;
+xzcat ./agl-demo-platform-<span class="nv">$MACHINE</span>.wic.xz <span class="p">|</span> sudo dd <span class="nv">of</span><span class="o">=</span>&lt;boot_device_name&gt; <span class="nv">bs</span><span class="o">=</span>4M
+sync
+</code></pre></div>
+</li>
+<li>
+<p>Booting the Board</p>
+<p>Follow these steps to boot the board:</p>
+<ol>
+<li>
+<p>Use the board's power switch to turn off the board.</p>
+</li>
+<li>
+<p>Insert the MicroSD card into the board.</p>
+</li>
+<li>
+<p>Verify that you have plugged in the following:</p>
+<ul>
+<li>
+<p>An external monitor into the board's HDMI port</p>
+</li>
+<li>
+<p>An input device (e.g. keyboard, mouse, touchscreen, and so forth) into the board's USB ports.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Use the board's power switch to turn on the board.</p>
+</li>
+</ol>
+<p>After a few seconds, you will see the AGL splash screen on the display and you
+will be able to log in at the console's terminal or using the graphic screen.</p>
+</li>
+</ol>
+<h3 id="32-setting-up-the-serial-console">3.2. Setting Up the Serial Console</h3>
+<p>Setting up the Serial Console involves the following:</p>
+<ul>
+<li>Installing a serial client on your build host</li>
+<li>Connecting your build host to your Renesas board's serial port</li>
+<li>Powering on the board to get a shell at the console</li>
+<li>Configuring U-Boot parameters</li>
+<li>Logging into the console</li>
+<li>
+<p>Determining the board's IP address</p>
+</li>
+<li>
+<p>Installing a Serial Client on Your Build Host</p>
+<p>You need to install a serial client on your build host.
+Some examples are:</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/GNU_Screen">GNU Screen</a></li>
+<li><a href="https://linux.die.net/man/8/picocom">picocom</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Minicom">Minicom</a></li>
+</ul>
+<p>Of these three, "picocom" has the least dependencies and is therefore
+considered the "lightest" solution.</p>
+</li>
+<li>
+<p>Connecting Your Build Host to Your Renesas Board's Serial Port</p>
+<p>You need to physically connect your build host to the Renesas board using
+a USB cable from the host to the serial CP2102 USP port (i.e. Micro USB-A port)
+on the Renesas board.</p>
+<p>Once you connect the board, determine the device created for the serial link.
+Use the <code>dmesg</code> command on your build host.
+Here is an example:</p>
+<div class="highlight"><pre><span></span><code>dmesg <span class="p">|</span> tail <span class="m">9</span>
+<span class="o">[</span><span class="m">2097783</span>.287091<span class="o">]</span> usb <span class="m">2</span>-1.5.3: new full-speed USB device number <span class="m">24</span> using ehci-pci
+<span class="o">[</span><span class="m">2097783</span>.385857<span class="o">]</span> usb <span class="m">2</span>-1.5.3: New USB device found, <span class="nv">idVendor</span><span class="o">=</span><span class="m">0403</span>, <span class="nv">idProduct</span><span class="o">=</span><span class="m">6001</span>
+<span class="o">[</span><span class="m">2097783</span>.385862<span class="o">]</span> usb <span class="m">2</span>-1.5.3: New USB device strings: <span class="nv">Mfr</span><span class="o">=</span><span class="m">1</span>, <span class="nv">Product</span><span class="o">=</span><span class="m">2</span>, <span class="nv">SerialNumber</span><span class="o">=</span><span class="m">3</span>
+<span class="o">[</span><span class="m">2097783</span>.385864<span class="o">]</span> usb <span class="m">2</span>-1.5.3: Product: FT232R USB UART
+<span class="o">[</span><span class="m">2097783</span>.385866<span class="o">]</span> usb <span class="m">2</span>-1.5.3: Manufacturer: FTDI
+<span class="o">[</span><span class="m">2097783</span>.385867<span class="o">]</span> usb <span class="m">2</span>-1.5.3: SerialNumber: AK04WWCE
+<span class="o">[</span><span class="m">2097783</span>.388288<span class="o">]</span> ftdi_sio <span class="m">2</span>-1.5.3:1.0: FTDI USB Serial Device converter detected
+<span class="o">[</span><span class="m">2097783</span>.388330<span class="o">]</span> usb <span class="m">2</span>-1.5.3: Detected FT232RL
+<span class="o">[</span><span class="m">2097783</span>.388658<span class="o">]</span> usb <span class="m">2</span>-1.5.3: FTDI USB Serial Device converter now attached to ttyUSB0
+</code></pre></div>
+<p>The device created is usually "/dev/ttyUSB0".
+However, the number might vary depending on other USB serial ports connected to the host.</p>
+<p>To use the link, you need to launch the client.
+Here are three commands, which vary based on the serial client, that show
+how to launch the client:</p>
+<div class="highlight"><pre><span></span><code>picocom -b <span class="m">115200</span> /dev/ttyUSB0
+</code></pre></div>
+<p>or</p>
+<div class="highlight"><pre><span></span><code>minicom -b <span class="m">115200</span> -D /dev/ttyUSB0
+</code></pre></div>
+<p>or</p>
+<div class="highlight"><pre><span></span><code>screen /dev/ttyUSB0 <span class="m">115200</span>
+</code></pre></div>
+</li>
+<li>
+<p>Powering on the Board to Get a Shell at the Console</p>
+<p>Both the Pro and Premier kits (e.g.
+<a href="https://elinux.org/R-Car/Boards/M3SK">m3ulcb</a> and
+<a href="https://elinux.org/R-Car/Boards/H3SK#Hardware">h3ulcb</a>) have nine
+switches (SW1 through SW9).
+To power on the board, "short-press" SW8, which is the power switch.</p>
+<p>Following, is console output for the power on process for each kit:</p>
+<p><strong>h3ulcb</strong>:</p>
+<div class="highlight"><pre><span></span><code>NOTICE:  BL2: R-Car Gen3 Initial Program Loader(CA57) Rev.1.0.7
+NOTICE:  BL2: PRR is R-Car H3 ES1.1
+NOTICE:  BL2: LCM state is CM
+NOTICE:  BL2: DDR1600(rev.0.15)
+NOTICE:  BL2: DRAM Split is 4ch
+NOTICE:  BL2: QoS is Gfx Oriented(rev.0.30)
+NOTICE:  BL2: AVS setting succeeded. DVFS_SetVID=0x52
+NOTICE:  BL2: Lossy Decomp areas
+NOTICE:       Entry 0: DCMPAREACRAx:0x80000540 DCMPAREACRBx:0x570
+NOTICE:       Entry 1: DCMPAREACRAx:0x40000000 DCMPAREACRBx:0x0
+NOTICE:       Entry 2: DCMPAREACRAx:0x20000000 DCMPAREACRBx:0x0
+NOTICE:  BL2: v1.1(release):41099f4
+NOTICE:  BL2: Built : 19:20:52, Jun  9 2016
+NOTICE:  BL2: Normal boot
+NOTICE:  BL2: dst=0xe63150c8 src=0x8180000 len=36(0x24)
+NOTICE:  BL2: dst=0x43f00000 src=0x8180400 len=3072(0xc00)
+NOTICE:  BL2: dst=0x44000000 src=0x81c0000 len=65536(0x10000)
+NOTICE:  BL2: dst=0x44100000 src=0x8200000 len=524288(0x80000)
+NOTICE:  BL2: dst=0x49000000 src=0x8640000 len=1048576(0x100000)
+
+
+U-Boot 2015.04 (Jun 09 2016 - 19:21:52)
+
+CPU: Renesas Electronics R8A7795 rev 1.1
+Board: H3ULCB
+I2C:   ready
+DRAM:  3.9 GiB
+MMC:   sh-sdhi: 0, sh-sdhi: 1
+In:    serial
+Out:   serial
+Err:   serial
+Net:   Board Net Initialization Failed
+No ethernet found.
+Hit any key to stop autoboot:  0
+=&gt;
+</code></pre></div>
+</li>
+</ul>
+<h3 id="33-setting-up-u-boot">3.3. Setting-up U-boot</h3>
+<p>Configuring U-Boot Parameters</p>
+<p>Follow these steps to configure the board to use the MicroSD card as the
+boot device and also to set the screen resolution:</p>
+<ol>
+<li>
+<p>As the board is powering up, press any key to stop the autoboot process.
+You need to press a key quickly as you have just a few seconds in which to
+press a key.</p>
+</li>
+<li>
+<p>Once the autoboot process is interrupted, use the board's serial console to
+enter <code>printenv</code> to check if you have correct parameters for booting your board:</p>
+<p>Here is an example using the <strong>h3ulcb</strong> board:</p>
+<div class="highlight"><pre><span></span><code><span class="o">=</span>&gt; printenv
+<span class="nv">baudrate</span><span class="o">=</span><span class="m">115200</span>
+<span class="nv">bootargs</span><span class="o">=</span><span class="nv">console</span><span class="o">=</span>ttySC0,115200 <span class="nv">root</span><span class="o">=</span>/dev/mmcblk1p1 rootwait ro <span class="nv">rootfstype</span><span class="o">=</span>ext4
+<span class="nv">bootcmd</span><span class="o">=</span>run load_ker<span class="p">;</span> run load_dtb<span class="p">;</span> booti 0x48080000 - 0x48000000
+<span class="nv">bootdelay</span><span class="o">=</span><span class="m">3</span>
+<span class="nv">fdt_high</span><span class="o">=</span>0xffffffffffffffff
+<span class="nv">initrd_high</span><span class="o">=</span>0xffffffffffffffff
+<span class="nv">load_dtb</span><span class="o">=</span>ext4load mmc <span class="m">0</span>:1 0x48000000 /boot/r8a7795-h3ulcb.dtb
+<span class="nv">load_ker</span><span class="o">=</span>ext4load mmc <span class="m">0</span>:1 0x48080000 /boot/Image
+<span class="nv">stderr</span><span class="o">=</span>serial
+<span class="nv">stdin</span><span class="o">=</span>serial
+<span class="nv">stdout</span><span class="o">=</span>serial
+<span class="nv">ver</span><span class="o">=</span>U-Boot <span class="m">2015</span>.04 <span class="o">(</span>Jun <span class="m">09</span> <span class="m">2016</span> - <span class="m">19</span>:21:52<span class="o">)</span>
+
+Environment size: <span class="m">648</span>/131068 bytes
+</code></pre></div>
+</li>
+<li>
+<p>To boot your board using the MicroSD card, be sure your environment is set up
+as follows:</p>
+<div class="highlight"><pre><span></span><code>setenv bootargs <span class="nv">console</span><span class="o">=</span>ttySC0,115200 ignore_loglevel <span class="nv">vmalloc</span><span class="o">=</span>384M <span class="nv">video</span><span class="o">=</span>HDMI-A-1:1920x1080-32@60 <span class="nv">root</span><span class="o">=</span>/dev/mmcblk1p1 rw <span class="nv">rootfstype</span><span class="o">=</span>ext4 rootwait <span class="nv">rootdelay</span><span class="o">=</span><span class="m">2</span>
+setenv bootcmd run load_ker<span class="se">\;</span> run load_dtb<span class="se">\;</span> booti 0x48080000 - 0x48000000
+setenv load_ker ext4load mmc <span class="m">0</span>:1 0x48080000 /boot/Image
+</code></pre></div>
+</li>
+<li>
+<p>Loading dtb :</p>
+<p><strong>NOTE</strong> : Refer <a href="https://elinux.org/R-Car/Boards/Yocto-Gen3-CommonFAQ/Which_dtb_file_is_required_to_boot_linux_on_the_R-Car_Starter_Kit_board_%3F">here</a> for more information.</p>
+<p>Make sure your <code>load_dtb</code> is set as follows :</p>
+<table>
+<thead>
+<tr>
+<th align="center">Renesas Boards</th>
+<th align="center">DTB Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><strong>H3SK v2.0(DDR 4GB)</strong></td>
+<td align="center">r8a7795-h3ulcb.dtb</td>
+</tr>
+<tr>
+<td align="center"><strong>H3SK v2.0(DDR 8GB)/v3.0(DDR 8GB)</strong></td>
+<td align="center">r8a7795-h3ulcb-4x2g.dtb</td>
+</tr>
+<tr>
+<td align="center"><strong>M3SK v1.0</strong></td>
+<td align="center">r8a7796-m3ulcb.dtb</td>
+</tr>
+<tr>
+<td align="center"><strong>M3SK v3.0</strong></td>
+<td align="center">r8a7796-m3ulcb-2x4g.dtb</td>
+</tr>
+<tr>
+<td align="center"><strong>H3SK with a Kingfisher board</strong></td>
+<td align="center">r8a7795-h3ulcb-kf.dtb</td>
+</tr>
+<tr>
+<td align="center"><strong>M3SK with a Kingfisher board</strong></td>
+<td align="center">r8a7796-m3ulcb-kf.dtb</td>
+</tr>
+<tr>
+<td align="center"><strong>AGL Reference Hardware board</strong></td>
+<td align="center">r8a7795-agl-refhw.dtb</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code>setenv load_dtb ext4load mmc <span class="m">0</span>:1 0x48000000 /boot/r8a7795-h3ulcb-kf.dtb
+</code></pre></div>
+</li>
+<li>
+<p>Save the boot environment:</p>
+<div class="highlight"><pre><span></span><code>saveenv
+</code></pre></div>
+</li>
+<li>
+<p>Boot the board:</p>
+<div class="highlight"><pre><span></span><code>run bootcmd
+</code></pre></div>
+</li>
+</ol>
+<h2 id="4-troubleshooting">4. Troubleshooting</h2>
+<h3 id="41-checking-your-configuration">4.1. Checking Your Configuration</h3>
+<p>Aside from environment variables and parameters you establish through
+running the <code>aglsetup.sh</code> script, you can ensure your build's configuration
+is just how you want it by examining the <code>local.conf</code> configuration file.</p>
+<p>You can find this configuration file in the Build Directory (e.g.
+<code>$TOP_DIR/build/conf/local.conf</code>).</p>
+<p>In general, the defaults along with the configuration fragments the
+<code>aglsetup.sh</code> script applies in the <code>local.conf</code> file are good enough.
+However, you can customize aspects by editing the <code>local.conf</code> file.
+See the
+"<a href="../4_Customizing_Your_Build/">Customizing Your Build</a>"
+section for common configurations you might want to consider.</p>
+<p><strong>NOTE:</strong> For detailed explanations of the configurations you can make
+in the <code>local.conf</code> file, consult the
+<a href="https://www.yoctoproject.org/docs/">Yocto Project Documentation</a>.</p>
+<p>A quick way to see if you have the <code>$MACHINE</code> variable set correctly
+is to use the following command:</p>
+<div class="highlight"><pre><span></span><code>grep -w -e <span class="s2">&quot;^MACHINE =&quot;</span> <span class="nv">$AGL_TOP</span>/build/conf/local.conf
+</code></pre></div>
+<p>Depending on the Renesas board you are using, you should see output
+as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">MACHINE</span> <span class="o">=</span> <span class="s2">&quot;h3ulcb&quot;</span>
+</code></pre></div>
+<p>or</p>
+<div class="highlight"><pre><span></span><code><span class="nv">MACHINE</span> <span class="o">=</span> <span class="s2">&quot;m3ulcb&quot;</span>
+</code></pre></div>
+<p>or</p>
+<div class="highlight"><pre><span></span><code><span class="nv">MACHINE</span> <span class="o">=</span> <span class="s2">&quot;h3-salvator-x&quot;</span>
+</code></pre></div>
+<p>If you ran the <code>aglsetup.sh</code> script as described in the
+"<a href="./#4-making-sure-your-build-environment-is-correct">Making Sure Your Build Environment is Correct</a>"
+section earlier, the "agl-devel", "agl-demo", "agl-netboot", "agl-appfw-smack", and
+"agl-localdev" AGL features will be in effect.
+These features provide the following:</p>
+<ul>
+<li>A debugger (gdb)</li>
+<li>Some tweaks, including a disabled root password</li>
+<li>A SFTP server</li>
+<li>The TCF Agent for easier application deployment and remote debugging</li>
+<li>Some extra system tools such as USB and bluetooth</li>
+<li>Support for the AGL demo platform</li>
+<li>Network boot support through TFTP and NBD protocols</li>
+<li><a href="https://iot.bzh/en/">IoT.bzh</a> Application Framework plus
+<a href="https://en.wikipedia.org/wiki/Smack_(software)">SMACK</a> and
+<a href="https://wiki.tizen.org/Security:Cynara">Cynara</a></li>
+<li>Support for local development including <code>localdev.inc</code> when present</li>
+</ul>
+<h3 id="42-check-the-scripts-log">4.2. Check the Script's Log:</h3>
+<p>Running the <code>aglsetup.sh</code> script creates the <code>setup.log</code> file, which is in
+the <code>build/conf</code> folder.
+You can examine this log to see the results of the script.
+For example, suppose the graphics drivers were missing or could not be extracted
+when you ran the script.
+In case of missing graphics drivers, you could notice an error message
+similar to the following:</p>
+<div class="highlight"><pre><span></span><code>[snip]
+--- fragment /home/working/workspace_agl_master/meta-agl/templates/machine/h3ulcb/50_setup.sh
+/home/working/workspace_agl_master /home/working/workspace_agl_master/build_gen3
+The graphics and multimedia acceleration packages for
+the R-Car Gen3 board can be downloaded from:
+https://www.renesas.com/en-us/solutions/automotive/rcar-demoboard-2.html
+
+These 2 files from there should be store in your&#39;/home/devel/Downloads&#39; directory.
+    R-Car_Gen3_Series_Evaluation_Software_Package_for_Linux-weston8-20200923.zip
+    R-Car_Gen3_Series_Evaluation_Software_Package_of_Linux_Drivers-weston8-20200923.zip
+/home/working/workspace_agl_master/build_gen3
+--- fragment /home/working/workspace_agl_master/meta-agl/templates/base/99_setup_EULAconf.sh
+--- end of setup script
+OK
+Generating setup file: /home/working/workspace_agl_master/build_gen3/agl-init-build-env ... OK
+------------ aglsetup.sh: Done
+[snip]
+</code></pre></div>
+<p>If you encounter this issue, or any other unwanted behavior, you can fix the error
+mentioned, remove the <code>$AGL_TOP/build</code> directory, and then re-launch the
+<code>aglsetup.sh</code> again.</p>
+<p>Here is another example that indicates the driver files could not be extracted from the downloads directory:</p>
+<div class="highlight"><pre><span></span><code>~/workspace_agl/build/conf $ cat setup.log
+--- beginning of setup script
+--- fragment /home/working/workspace_agl/meta-agl/templates/base/01_setup_EULAfunc.sh
+--- fragment /home/working/workspace_agl/meta-agl/templates/machine/h3ulcb/50_setup.sh
+~/workspace_agl ~/workspace_agl/build
+ERROR: FILES &quot;+/home/working/Downloads/R-Car_Gen3_Series_Evaluation_Software_Package_for_Linux-weston8-20200923.zip+&quot; NOT EXTRACTING CORRECTLY
+ERROR: FILES &quot;+/home/working/Downloads/R-car_Gen3_Series_Evaluation_Software_Package_of_Linux_Drivers-weston8-20200923.zip+&quot; NOT EXTRACTING CORRECTLY
+The graphics and multimedia acceleration packages for
+the R-Car Gen3 board BSP can be downloaded from:
+&lt;https://www.renesas.com/us/en/application/automotive/r-car-h3-m3-documents-software&gt;
+
+These 2 files from there should be stored in your
+&#39;/home/working/Downloads&#39; directory.
+    R-Car_Gen3_Series_Evaluation_Software_Package_for_Linux-weston8-20200923.zip
+    R-Car_Gen3_Series_Evaluation_Software_Package_of_Linux_Drivers-weston8-20200923.zip
+ERROR: Script /home/working/workspace_agl/build/conf/setup.sh failed
+[snip]
+</code></pre></div>
+<h3 id="43-updating-the-boards-firmware">4.3. Updating the Board's Firmware</h3>
+<p>Follow these steps to update the firmware:</p>
+<ol>
+<li>
+<p><strong>Update the Sample Loader and MiniMonitor:</strong></p>
+<p>You only need to make these updates one time per device.</p>
+<p>Follow the procedure found on the
+eLinux.org wiki to update to at least version 3.02,
+which is mandatory to run the AGL image
+(<a href="https://elinux.org/R-Car/Boards/Kingfisher#How_to_update_of_Sample_Loader_and_MiniMonitor">R-car loader update</a>).</p>
+</li>
+<li>
+<p><strong>Update the Firmware Stack:</strong></p>
+<p>You only need to update the firmware stack if you are
+using the Eel or later (5.0) version of AGL software.</p>
+<p>M3 and H3 Renesas board are AArch64 platforms.
+As such, they have a firmware stack that is divided across: <strong>ARM Trusted Firmware</strong>, <strong>OP-Tee</strong> and <strong>U-Boot</strong>.</p>
+<p>If you are using the Eel (5.0) version or later of the AGL software, you must update
+the firmware using the <strong>[h3ulcb] <a href="http://elinux.org/R-Car/Boards/H3SK#Flashing_firmware">R-car h3ulcb firmware update</a></strong>
+or <strong>[m3ulcb] <a href="https://elinux.org/R-Car/Boards/M3SK#Flashing_firmware">R-car m3ulcb firmware update</a></strong> links from the
+<a href="https://www.elinux.org/Main_Page">Embedded Linux Wiki</a> (i.e. <code>elinux.org</code>).</p>
+<p>The table in the wiki lists the files you need to flash the firmware.
+You can find these files in the following directory:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$AGL_TOP</span>/build/tmp/deploy/images/<span class="nv">$MACHINE</span>
+</code></pre></div>
+<p><strong>NOTE:</strong> The Salvator-X firmware update process is not documented on eLinux.
+<strong>NOTE:</strong> The AGL Reference Hardware board generally should not require a
+firmware update to be usable, and has a slightly different update procedure.
+If you do need to update the firmware, the procedure is documented
+<a href="https://git.automotivelinux.org/AGL/meta-agl-refhw/tree/meta-agl-refhw-gen3/docs/ReferenceHW_Rcar_gen3.md">here</a>.</p>
+</li>
+</ol>
+<h3 id="44-logging-into-the-console">4.4. Logging Into the Console</h3>
+<p>Once the board boots, you should see the
+<a href="https://en.wikipedia.org/wiki/Wayland_(display_server_protocol)">Wayland display</a>
+on the external monitor.
+A login prompt should appear as follows depending on your board:</p>
+<p><strong>h3ulcb</strong> or <strong>AGL Reference Hardware</strong>:</p>
+<div class="highlight"><pre><span></span><code>Automotive Grade Linux ${AGL_VERSION} h3ulcb ttySC0
+
+h3ulcb login: root
+</code></pre></div>
+<p>At the prompt, login by using <code>root</code> as the login.
+The password is "empty" so you should not be prompted for the password.</p>
+<h3 id="45-determining-the-boards-ip-address">4.5. Determining the Board's IP Address</h3>
+<p>If your board is connected to a local network using Ethernet and
+if a DHCP server is able to distribute IP addresses,
+you can determine the board's IP address and log in using <code>ssh</code>.</p>
+<p>Here is an example for the <strong>h3ulcb</strong> board:</p>
+<div class="highlight"><pre><span></span><code>h3ulcb login: root
+Last login: Tue Dec  <span class="m">6</span> <span class="m">09</span>:55:15 UTC <span class="m">2016</span> on tty2
+root@h3ulcb:~# ip -4 a
+<span class="m">1</span>: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span class="m">65536</span> qdisc noqueue state UNKNOWN group default
+    inet <span class="m">127</span>.0.0.1/8 scope host lo
+    valid_lft forever preferred_lft forever
+<span class="m">3</span>: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu <span class="m">1500</span> qdisc pfifo_fast state UP group default qlen <span class="m">1000</span>
+    inet <span class="m">10</span>.0.0.27/24 brd <span class="m">10</span>.0.0.255 scope global eth0
+    valid_lft forever preferred_lft forever
+root@h3ulcb:~#
+</code></pre></div>
+<p>In the previous example, IP address is 10.0.0.27.
+Once you know the address, you can use <code>ssh</code> to login.
+Following is an example that shows logging into SSH and then
+displaying the contents of the <code>/etc/os-release</code> file:</p>
+<div class="highlight"><pre><span></span><code>$ ssh root@10.0.0.27
+Last login: Tue Dec  <span class="m">6</span> <span class="m">10</span>:01:11 <span class="m">2016</span> from <span class="m">10</span>.0.0.13
+root@h3ulcb:~# cat /etc/os-release
+<span class="nv">ID</span><span class="o">=</span><span class="s2">&quot;poky-agl&quot;</span>
+<span class="nv">NAME</span><span class="o">=</span><span class="s2">&quot;Automotive Grade Linux&quot;</span>
+<span class="nv">VERSION</span><span class="o">=</span><span class="s2">&quot;11.0.0+snapshot-20210128 (koi)&quot;</span>
+<span class="nv">VERSION_ID</span><span class="o">=</span><span class="s2">&quot;11.0.0-snapshot-20210128&quot;</span>
+<span class="nv">PRETTY_NAME</span><span class="o">=</span><span class="s2">&quot;Automotive Grade Linux 11.0.0+snapshot-20210128 (koi)&quot;</span>
+</code></pre></div>
+<h2 id="5-supplementary-information">5. Supplementary Information</h2>
+<h3 id="51-r-car-generation-3-information">5.1. R-Car Generation 3 Information</h3>
+<p>Refer to the <a href="https://elinux.org/R-Car">R-Car</a> page on the
+<a href="https://elinux.org">elinux.org</a> website for more information.</p>
+<h3 id="52-proprietary-libraries-for-meta-rcar-gen3">5.2. Proprietary libraries for meta-rcar-gen3</h3>
+<p>The meta-rcar-gen3 layer of meta-renesas supports Graphic GLES(GSX)
+libraries, proprietary multimedia libraries, and ICCOM software.</p>
+<h3 id="53-build-with-renesas-multimedia-libraries">5.3. Build with Renesas multimedia libraries</h3>
+<p>Multimedia portions depend on GLES portions.</p>
+<ul>
+<li>
+<p>A. Configuration for Multimedia features</p>
+<ul>
+<li>
+<p>Please copy proprietary libraries to the directory of recipes.</p>
+</li>
+<li>
+<p>Please set local.conf the following.</p>
+<p><strong>Enable multimedia features. This provides package group of plug-ins of the GStreamer, multimedia libraries and kernel drivers.</strong></p>
+<div class="highlight"><pre><span></span><code>MACHINE_FEATURES:append <span class="o">=</span> <span class="s2">&quot; multimedia&quot;</span>
+</code></pre></div>
+</li>
+</ul>
+</li>
+<li>
+<p>B. Configuration for optional codecs and middleware</p>
+<ul>
+<li>
+<p>Please copy proprietary libraries to the directory of recipes.</p>
+</li>
+<li>
+<p>Add features to <code>DISTRO_FEATURES:append</code> to local.conf</p>
+<p><strong>Additional configuration in OMX module</strong>:</p>
+<div class="highlight"><pre><span></span><code>&quot; h263dec_lib&quot;       - for OMX Media Component H263 Decoder Library
+&quot; h264dec_lib&quot;       - for OMX Media Component H264 Decoder Library
+&quot; h264enc_lib&quot;       - for OMX Media Component H.264 Encoder Library
+&quot; h265dec_lib&quot;       - for OMX Media Component H265 Decoder Library
+&quot; mpeg2dec_lib&quot;      - for OMX Media Component MPEG2 Decoder Library
+&quot; mpeg4dec_lib&quot;      - for OMX Media Component MPEG4 Decoder Library
+&quot; vc1dec_lib&quot;        - for OMX Media Component VC-1 Decoder Library
+&quot; divxdec_lib&quot;       - for OMX Media Component DivX Decoder Library
+&quot; rvdec_lib&quot;         - for OMX Media Component RealVideo Decoder Library
+&quot; alacdec_lib&quot;       - for OMX Media Component ALAC Decoder Library
+&quot; flacdec_lib&quot;       - for OMX Media Component FLAC Decoder Library
+&quot; aaclcdec_lib&quot;      - for OMX Media Component AAC-LC Decoder Library
+&quot; aaclcdec_mdw&quot;      - for AAC-LC 2ch Decoder Middleware for Linux
+&quot; aacpv2dec_lib&quot;     - for OMX Media Component aacPlus V2 Decoder Library
+&quot; aacpv2dec_mdw&quot;     - for aacPlus V2 Decoder Middleware for Linux
+&quot; mp3dec_lib&quot;        - for OMX Media Component MP3 Decoder Library
+&quot; mp3dec_mdw&quot;        - for MP3 Decoder Middleware for Linux
+&quot; wmadec_lib&quot;        - for OMX Media Component WMA Standard Decoder Library
+&quot; wmadec_mdw&quot;        - for WMA Standard Decoder Middleware for Linux
+&quot; dddec_lib&quot;         - for OMX Media Component Dolby(R) Digital Decoder Library
+&quot; dddec_mdw&quot;         - for Dolby(R) Digital Decoder Middleware for Linux
+&quot; aaclcenc_lib&quot;      - for OMX Media Component AAC-LC Encoder Library
+&quot; vp8dec_lib&quot;        - for OMX Media Component VP8 Decoder Library for Linux
+&quot; vp8enc_lib&quot;        - for OMX Media Component VP8 Encoder Library for Linux
+&quot; vp9dec_lib&quot;        - for OMX Media Component VP9 Decoder Library for Linux
+&quot; aaclcenc_mdw&quot;      - for AAC-LC Encoder Middleware for Linux
+&quot; cmsbcm&quot;            - for CMS Basic Color Management Middleware for Linux
+&quot; cmsblc&quot;            - for CMS CMM3 Backlight Control Middleware for Linux
+&quot; cmsdgc&quot;            - for CMS VSP2 Dynamic Gamma Correction Middleware for Linux
+&quot; dtv&quot;               - for ISDB-T DTV Software Package for Linux
+&quot; dvd&quot;               - for DVD Core-Middleware for Linux
+&quot; adsp&quot;              - for ADSP driver, ADSP interface and ADSP framework for Linux
+&quot; avb&quot;               - for AVB Software Package for Linux
+</code></pre></div>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code>DISTRO_FEATURES:append <span class="o">=</span> <span class="s2">&quot; h264dec_lib h265dec_lib mpeg2dec_lib aaclcdec_lib aaclcdec_mdw&quot;</span>
+</code></pre></div>
+</li>
+</ul>
+</li>
+<li>
+<p>C. Configuration for test packages</p>
+<p>Must ensure that Multimedia features have been enabled.
+(Please refer to III/A to enable Multimedia.)</p>
+<ul>
+<li>
+<p>Please add feature to <code>DISTRO_FEATURES:append</code> to local.conf.</p>
+<p><strong>Configuration for multimedia test package</strong></p>
+<div class="highlight"><pre><span></span><code>DISTRO_FEATURES:append <span class="o">=</span> <span class="s2">&quot; mm-test&quot;</span>
+</code></pre></div>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="54-enable-linux-iccom-driver-and-linux-iccom-library">5.4. Enable Linux ICCOM driver and Linux ICCOM library</h3>
+<p>For Linux ICCOM driver and Linux ICCOM library</p>
+<ul>
+<li>
+<p>Please copy proprietary libraries to the directory of recipes.</p>
+</li>
+<li>
+<p>Please set the following in local.conf:</p>
+<div class="highlight"><pre><span></span><code>DISTRO_FEATURES:append <span class="o">=</span> <span class="s2">&quot;iccom&quot;</span>
+</code></pre></div>
+</li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../5_4_Virtio/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../5_4_Virtio/" class="btn btn-xs btn-link">
+        Building for virtio
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../5_2_Raspberry_Pi_4/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../5_2_Raspberry_Pi_4/" class="btn btn-xs btn-link">
+        Building for Raspberry Pi 4
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="None">
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>AGL Documentation</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+      <script src="./js/elasticlunr.min.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = (window === window.parent);
+        
+        var pageToc = [
+          {title: "Welcome to the Automotive Grade Linux (AGL) documentation.", url: "#_top", children: [
+          ]},
+          {title: "What is Automotive Grade Linux?", url: "#what-is-automotive-grade-linux", children: [
+          ]},
+          {title: "What Can I Do Right Away Using AGL?", url: "#what-can-i-do-right-away-using-agl", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+<nav class="navbar wm-page-top-frame">
+  <div class="container-fluid wm-top-container">
+    
+    <div class="wm-top-tool pull-right wm-vcenter">
+      <form class="dropdown wm-vcentered" id="wm-search-form" action="./search.html">
+        
+        <button id="wm-search-show" class="btn btn-sm btn-default" type="submit"
+          ><i class="fa fa-search" aria-hidden="true"></i></button>
+
+        <div class="input-group input-group-sm wm-top-search">
+          <input type="text" name="q" class="form-control" id="mkdocs-search-query" placeholder="Search" autocomplete="off">
+          <span class="input-group-btn" role="search">
+            
+            <button class="btn btn-default dropdown-toggle collapse" data-toggle="dropdown" type="button"><span class="caret"></span></button>
+            <ul id="mkdocs-search-results" class="dropdown-menu dropdown-menu-right"></ul>
+            <button id="wm-search-go" class="btn btn-default" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </span>
+        </div>
+      </form>
+    </div>
+
+    
+    <div class="wm-top-tool wm-vcenter pull-right wm-small-left">
+      <button id="wm-toc-button" type="button" class="btn btn-sm btn-default wm-vcentered"><i class="fa fa-th-list" aria-hidden="true"></i></button>
+    </div>
+
+    
+    
+
+    
+    <a href="" class="wm-top-brand wm-top-link wm-vcenter">
+      
+      <div class="wm-top-title">
+        AGL Documentation<br>
+        
+      </div>
+    </a>
+  </div>
+</nav>
+
+  <div id="main-content" class="wm-page-top-frame">
+    
+<nav class="wm-toc-pane">
+  
+  <ul class="wm-toctree">
+        <li class="wm-toc-li wm-toc-lev1 "><a href="" class="wm-article-link wm-toc-text">Home</a>
+</li>
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">0 Getting Started</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">1 Quickstart</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="0_Getting_Started/1_Quickstart/Using_Ready_Made_Images/" class="wm-article-link wm-toc-text">Using Ready Made Images</a>
+</li>
+  </ul>
+</li>
+
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">2 Building AGL Image</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="0_Getting_Started/2_Building_AGL_Image/0_Build_Process/" class="wm-article-link wm-toc-text">Build Process Overview</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="0_Getting_Started/2_Building_AGL_Image/1_Preparing_Your_Build_Host/" class="wm-article-link wm-toc-text">Preparing Your Build Host</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="0_Getting_Started/2_Building_AGL_Image/2_Downloading_AGL_Software/" class="wm-article-link wm-toc-text">Downloading AGL Software</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="0_Getting_Started/2_Building_AGL_Image/3_Initializing_Your_Build_Environment/" class="wm-article-link wm-toc-text">Initializing Your Build Environment</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="0_Getting_Started/2_Building_AGL_Image/4_Customizing_Your_Build/" class="wm-article-link wm-toc-text">Customizing Your Build</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="0_Getting_Started/2_Building_AGL_Image/5_0_Building_the_AGL_Image/" class="wm-article-link wm-toc-text">Building the AGL Image</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="0_Getting_Started/2_Building_AGL_Image/5_1_x86_Emulation_and_Hardware/" class="wm-article-link wm-toc-text">Building for x86 (Emulation and Hardware)</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="0_Getting_Started/2_Building_AGL_Image/5_2_Raspberry_Pi_4/" class="wm-article-link wm-toc-text">Building for Raspberry Pi 4</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="0_Getting_Started/2_Building_AGL_Image/5_3_RCar_Gen_3/" class="wm-article-link wm-toc-text">Building for Supported Renesas Boards</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="0_Getting_Started/2_Building_AGL_Image/5_4_Virtio/" class="wm-article-link wm-toc-text">Building for virtio</a>
+</li>
+  </ul>
+</li>
+
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">3 AGL Profile</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="0_Getting_Started/3_AGL_Profile/Build%20and%20Boot%20AGL%20Instrument%20Cluster%20demo%20image%20%28IC-IVI%20with%20Container%20isolation%29/" class="wm-article-link wm-toc-text">Build and Boot AGL Instrument Cluster demo image (IC-IVI with Container isolation)</a>
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">1 Hardware Support</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="1_Hardware_Support/Overview/" class="wm-article-link wm-toc-text">Supported Boards</a>
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">2 Architecture Guides</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">1 Introduction</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="2_Architecture_Guides/1_Introduction/0_Overview/" class="wm-article-link wm-toc-text">Overview</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="2_Architecture_Guides/1_Introduction/1_AGL_Requirements_Specifications/" class="wm-article-link wm-toc-text">AGL Requirements Specifications</a>
+</li>
+  </ul>
+</li>
+
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">2 Security Blueprint</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="2_Architecture_Guides/2_Security_Blueprint/0_Overview/" class="wm-article-link wm-toc-text">Overview</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="2_Architecture_Guides/2_Security_Blueprint/1_Hardware/" class="wm-article-link wm-toc-text">Hardware</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="2_Architecture_Guides/2_Security_Blueprint/2_Secure_Boot/" class="wm-article-link wm-toc-text">Secure Boot</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="2_Architecture_Guides/2_Security_Blueprint/3_Hypervisor/" class="wm-article-link wm-toc-text">Hypervisor</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="2_Architecture_Guides/2_Security_Blueprint/4_Kernel/" class="wm-article-link wm-toc-text">Kernel</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="2_Architecture_Guides/2_Security_Blueprint/5_Platform/" class="wm-article-link wm-toc-text">Platform</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="2_Architecture_Guides/2_Security_Blueprint/6_Application/" class="wm-article-link wm-toc-text">Application</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="2_Architecture_Guides/2_Security_Blueprint/7_Connectivity/" class="wm-article-link wm-toc-text">Connectivity</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="2_Architecture_Guides/2_Security_Blueprint/8_Update_OTA/" class="wm-article-link wm-toc-text">Update (Over The Air)</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="2_Architecture_Guides/2_Security_Blueprint/9_Secure_development/" class="wm-article-link wm-toc-text">Secure development</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="2_Architecture_Guides/2_Security_Blueprint/Annexes/" class="wm-article-link wm-toc-text">Annexes</a>
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">3 Developer Guides</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="3_Developer_Guides/0_FIXME/" class="wm-article-link wm-toc-text">0 FIXME</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="3_Developer_Guides/1_Setting_Up_AGL_SDK/" class="wm-article-link wm-toc-text">Setting Up AGL SDK</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="3_Developer_Guides/2_Creating_a_New_Service/" class="wm-article-link wm-toc-text">Creating a New Service</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="3_Developer_Guides/3_Creating_a_New_Application/" class="wm-article-link wm-toc-text">Creating a New Application</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="3_Developer_Guides/4_Creating_a_custom_recipe/" class="wm-article-link wm-toc-text">Creating a Custom Recipe</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="3_Developer_Guides/5_General_setup/" class="wm-article-link wm-toc-text">Generic devices setup</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">1 Application Framework</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="3_Developer_Guides/1_Application_Framework/1_Introduction/" class="wm-article-link wm-toc-text">Introduction</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="3_Developer_Guides/1_Application_Framework/2_Application_Startup/" class="wm-article-link wm-toc-text">Application Startup</a>
+</li>
+  </ul>
+</li>
+
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">6 AGL Layers</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="3_Developer_Guides/6_AGL_Layers/1_Overview/" class="wm-article-link wm-toc-text">Overview</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="3_Developer_Guides/6_AGL_Layers/2_meta-agl/" class="wm-article-link wm-toc-text">meta-agl</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="3_Developer_Guides/6_AGL_Layers/3_meta-agl-demo/" class="wm-article-link wm-toc-text">meta-agl-demo</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="3_Developer_Guides/6_AGL_Layers/4_meta-agl-devel/" class="wm-article-link wm-toc-text">meta-agl-devel</a>
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">4 APIs and Services</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="4_APIs_and_Services/FIXME/" class="wm-article-link wm-toc-text">FIXME</a>
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">5 Component Documentation</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="5_Component_Documentation/0_AGL_components/" class="wm-article-link wm-toc-text">AGL Components</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="5_Component_Documentation/1_agl-compositor/" class="wm-article-link wm-toc-text">agl-compositor</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="5_Component_Documentation/2_waltham-receiver_waltham-transmitter/" class="wm-article-link wm-toc-text">Waltham receiver/transmitter</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="5_Component_Documentation/3_rba/" class="wm-article-link wm-toc-text">Rule Based Arbitrator (RBA)</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="5_Component_Documentation/4_drm-leasemanager/" class="wm-article-link wm-toc-text">DRM lease manager</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="5_Component_Documentation/5_application_framework/" class="wm-article-link wm-toc-text">Application Framework</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="5_Component_Documentation/6_pipewire_wireplumber/" class="wm-article-link wm-toc-text">PipeWire / WirePlumber</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="5_Component_Documentation/7_ic-sound-manager/" class="wm-article-link wm-toc-text">Instrument Cluster Sound Management</a>
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">6 How To Contribute</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="6_How_To_Contribute/1_Getting_Linux_Foundation_account/" class="wm-article-link wm-toc-text">Getting Linux Foundation account</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="6_How_To_Contribute/2_Using_Jira_for_current_work_items/" class="wm-article-link wm-toc-text">Using Jira for current work items</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="6_How_To_Contribute/3_Working_with_Gerrit/" class="wm-article-link wm-toc-text">Working with Gerrit</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="6_How_To_Contribute/4_Submitting_Changes/" class="wm-article-link wm-toc-text">Submitting Changes</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="6_How_To_Contribute/5_Reviewing_Changes/" class="wm-article-link wm-toc-text">Reviewing Changes</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="6_How_To_Contribute/6_Gerrit_Recommended_Practices/" class="wm-article-link wm-toc-text">Gerrit Recommended Practices</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="6_How_To_Contribute/7_General_Guidelines/" class="wm-article-link wm-toc-text">General Guidelines</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="6_How_To_Contribute/8_Adding_Documentation/" class="wm-article-link wm-toc-text">Adding Documentation</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="6_How_To_Contribute/9_Contribution_Checklist/" class="wm-article-link wm-toc-text">Contribution Checklist</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="6_How_To_Contribute/A_How_to_setup_your_own_AGL_LAVA_Lab/" class="wm-article-link wm-toc-text">A How to setup your own AGL LAVA Lab</a>
+</li>
+  </ul>
+</li>
+
+  </ul>
+</nav>
+
+    <div class="wm-content-pane">
+      <iframe class="wm-article" name="article"></iframe>
+    </div>
+  </div>
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="0_Getting_Started/1_Quickstart/Using_Ready_Made_Images/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="0_Getting_Started/1_Quickstart/Using_Ready_Made_Images/" class="btn btn-xs btn-link">
+        Using Ready Made Images
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h4 id="welcome-to-the-automotive-grade-linux-agl-documentation"><em>Welcome to the Automotive Grade Linux (AGL) documentation.</em></h4>
+<p><img alt="AGL" src="img/agl.png" /></p>
+<p>This current page provides you with a brief overview of the AGL Distribution
+and with an introduction to selected topics that can help
+you get a quick start using AGL for development.</p>
+<h2 id="what-is-automotive-grade-linux">What is Automotive Grade Linux?</h2>
+<p>Automotive Grade Linux is a collaborative, open source project
+that brings together automakers, suppliers, and technology companies
+for the purpose of building Linux-based, open source software platforms
+for automotive applications that can serve as de facto industry
+standards.</p>
+<p>AGL address all software in the vehicle: infotainment,
+instrument cluster, heads-up-display (HUD), telematics, connected car,
+advanced driver assistance systems (ADAS), functional
+safety, and autonomous driving.</p>
+<p>Adopting a shared platform across the industry reduces fragmentation
+and allows automakers and suppliers to reuse the same code base, which
+leads to rapid innovation and faster time-to-market for new products.</p>
+<p>AGL is a Linux Foundation project and its goals are as follows:</p>
+<ul>
+<li>Build a single platform for the entire industry</li>
+<li>Develop 70 to 80% of the starting point for a production project</li>
+<li>Reduce fragmentation by combining the best of open source</li>
+<li>Develop an ecosystem of developers, suppliers, and expertise
+  that all use a single platform</li>
+</ul>
+<p>You can find additional overview information on the
+"<a href="https://www.automotivelinux.org/about">About Automotive Grade Linux</a>" page.
+You can find information on the AGL Unified Code Base on the
+"<a href="https://www.automotivelinux.org/software/unified-code-base">Unified Code Base</a>"
+page.</p>
+<h2 id="what-can-i-do-right-away-using-agl">What Can I Do Right Away Using AGL?</h2>
+<p>The "Getting Started" topics allow you to quickly accomplish some work using
+AGL.
+You can use the "Getting Started" sections to do the following:</p>
+<ul>
+<li>
+<p><a href="0_Getting_Started/1_Quickstart/Using_Ready_Made_Images/">Quickstart</a> to quickly install the     pre-built images into an emulation or hardware platform.</p>
+</li>
+<li>
+<p><a href="0_Getting_Started/2_Building_AGL_Image/0_Build_Process/">Learn How to Build an AGL Image</a> by working
+  through fundamental steps that show you how to build for various supported
+  hardware targets (e.g. Raspberry PI boards).</p>
+</li>
+<li>
+<p><a href="3_Developer_Guides/1_Setting_Up_AGL_SDK/">Learn How to Create an Application</a> using the
+  application development workflow.</p>
+</li>
+</ul>
+<p>The AGL community is diverse and supportive.
+You can become an active community member that contributes feedback,
+ideas, suggestions, bugs and documentation.</p>
+<ul>
+<li>
+<p>Join the IRC conversation using the <code>#automotive</code> channel on
+  <code>irc.libera.chat</code>. Make sure to turn on SSL and register your nickname.</p>
+</li>
+<li>
+<p>Subscribe to the AGL discussions mailing list at
+  <a href="https://lists.automotivelinux.org/g/agl-dev-community">agl-dev-community</a>.</p>
+</li>
+<li>
+<p>Learn about AGL distribution by visiting the
+  "<a href="https://wiki.automotivelinux.org/agl-distro">AGL Distribution</a>" wiki page.</p>
+</li>
+<li>
+<p>Explore further "Getting Started" information by visiting the
+  "<a href="0_Getting_Started/1_Quickstart/Using_Ready_Made_Images/">Getting Started with AGL</a>"
+  wiki page.</p>
+</li>
+<li>
+<p>Learn how to contribute by visiting the
+  "<a href="6_How_To_Contribute/4_Submitting_Changes/">Contributing to the AGL Distro</a>"
+  wiki page.</p>
+</li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="0_Getting_Started/1_Quickstart/Using_Ready_Made_Images/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="0_Getting_Started/1_Quickstart/Using_Ready_Made_Images/" class="btn btn-xs btn-link">
+        Using Ready Made Images
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>
+<!--
+MkDocs version : 1.3.0
+Build Date UTC : 2022-07-04 02:55:37.838684+00:00
+-->

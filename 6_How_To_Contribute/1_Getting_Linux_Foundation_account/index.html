@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/6_How_To_Contribute/1_Getting_Linux_Foundation_account/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Getting Linux Foundation account - AGL Documentation</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Creating Linux Foundation ID", url: "#_top", children: [
+          ]},
+          {title: "Configuring Gerrit to Use SSH", url: "#configuring-gerrit-to-use-ssh", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../2_Using_Jira_for_current_work_items/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../2_Using_Jira_for_current_work_items/" class="btn btn-xs btn-link">
+        Using Jira for current work items
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../5_Component_Documentation/7_ic-sound-manager/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../5_Component_Documentation/7_ic-sound-manager/" class="btn btn-xs btn-link">
+        Instrument Cluster Sound Management
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p>In order to participate in the development of the Automotive Grade Linux
+project, you will need a Linux Foundation account. You will need to use
+your LF ID to access to all the AGL community development tools,
+including <a href="http://gerrit.automotivelinux.org/">Gerrit</a>,
+<a href="https://jira.automotivelinux.org/">Jira</a> and the
+<a href="https://wiki.automotivelinux.org/">Wiki</a> (for editing, only).</p>
+<p><strong>NOTE:</strong> Further information about Contributing to the AGL Distro
+available at <a href="https://wiki.automotivelinux.org/agl-distro/contributing">AGL wiki</a>.</p>
+<h2 id="creating-linux-foundation-id">Creating Linux Foundation ID</h2>
+<ol>
+<li>
+<p>Go to the <a href="https://identity.linuxfoundation.org/">Linux Foundation ID website</a>.</p>
+</li>
+<li>
+<p>Select the option <code>I need to create a Linux Foundation ID</code>, and fill
+ out the form that appears. (It is advised to authenticate through email
+ instead of logging through Facebook/Google/Github.)</p>
+</li>
+<li>
+<p>Wait a few minutes, then look for an email message with the subject
+ line: <code>Validate your Linux Foundation ID email</code>.</p>
+</li>
+<li>
+<p>Open the received URL to validate your email address.</p>
+</li>
+<li>
+<p>Verify that your browser displays the message  <code>You have
+ successfully validated your e-mail address</code>.</p>
+</li>
+<li>
+<p>Access <a href="http://gerrit.automotivelinux.org/">Gerrit</a> by selecting
+ <code>Sign In</code>, and use your new Linux Foundation account ID to sign in.</p>
+</li>
+</ol>
+<h2 id="configuring-gerrit-to-use-ssh">Configuring Gerrit to Use SSH</h2>
+<p>Gerrit uses SSH to interact with your Git client. If you already have an SSH
+key pair, you can skip the part of this section that explains how to generate one.</p>
+<p>What follows explains how to generate an SSH key pair in a Linux environment ---
+follow the equivalent steps on your OS.</p>
+<p>First, create an SSH key pair with the command:</p>
+<div class="highlight"><pre><span></span><code>$ ssh-keygen -t rsa -C <span class="s2">&quot;John Doe john.doe@example.com&quot;</span>
+</code></pre></div>
+<p><strong>Note:</strong> This will ask you for a password to protect the private key as
+it generates a unique key. Please keep this password private, and DO NOT
+enter a blank password.</p>
+<p>The generated SSH key pair can be found in the files <code>~/.ssh/id_rsa</code> and
+<code>~/.ssh/id_rsa.pub</code>.</p>
+<p>Next, add the private key in the <code>id_rsa</code> file to your key ring, e.g.:</p>
+<div class="highlight"><pre><span></span><code>$ ssh-add ~/.ssh/id_rsa
+</code></pre></div>
+<p>Finally, add the public key of the generated key pair to the Gerrit
+server, with the following steps:</p>
+<ol>
+<li>
+<p>Go to <a href="http://gerrit.automotivelinux.org/">Gerrit</a>.</p>
+</li>
+<li>
+<p>Click on your account name in the upper right corner.</p>
+</li>
+<li>
+<p>From the pop-up menu, select <code>Settings</code>.</p>
+</li>
+<li>
+<p>On the left side menu, click on <code>SSH Public Keys</code>.</p>
+</li>
+<li>
+<p>Paste the contents of your public key <code>~/.ssh/id_rsa.pub</code> and click
+   <code>Add key</code>.</p>
+</li>
+</ol>
+<p><strong>Note:</strong> The <code>id_rsa.pub</code> file can be opened with any text editor.
+Ensure that all the contents of the file are selected, copied and pasted
+into the <code>Add SSH key</code> window in Gerrit.</p>
+<p><strong>Note:</strong> The SSH key generation instructions operate on the assumption
+that you are using the default naming. It is possible to generate
+multiple SSH keys and to name the resulting files differently. See the
+<a href="https://en.wikipedia.org/wiki/Ssh-keygen">ssh-keygen</a> documentation for
+details on how to do that. Once you have generated non-default keys, you
+need to configure SSH to use the correct key for Gerrit. In that case,
+you need to create a <code>~/.ssh/config</code> file modeled after the one below.</p>
+<p><code>sh
+host gerrit.automotivelinux.org
+  HostName gerrit.automotivelinux.org
+  IdentityFile ~/.ssh/id_rsa_automotivelinux_gerrit
+  User &lt;LFID&gt;</code></p>
+<p><code>&lt;LFID&gt;</code> is your Linux Foundation ID and the value of IdentityFile is the
+name of the public key file you generated.</p>
+<p><strong>Warning:</strong> Potential Security Risk! Do not copy your private key
+<code>~/.ssh/id_rsa</code>. Use only the public <code>~/.ssh/id_rsa.pub</code>.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../2_Using_Jira_for_current_work_items/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../2_Using_Jira_for_current_work_items/" class="btn btn-xs btn-link">
+        Using Jira for current work items
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../5_Component_Documentation/7_ic-sound-manager/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../5_Component_Documentation/7_ic-sound-manager/" class="btn btn-xs btn-link">
+        Instrument Cluster Sound Management
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

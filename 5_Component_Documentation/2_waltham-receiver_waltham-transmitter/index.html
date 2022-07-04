@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/5_Component_Documentation/2_waltham-receiver_waltham-transmitter/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Waltham receiver/transmitter - AGL Documentation</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Waltham", url: "#_top", children: [
+              {title: "Differences from Wayland to Waltham", url: "#differences-from-wayland-to-waltham" },
+              {title: "Waltham-transmitter and remoting plugin", url: "#waltham-transmitter-and-remoting-plugin" },
+              {title: "The receiver client", url: "#the-receiver-client" },
+              {title: "Migrating/Placing applications on other outputs", url: "#migratingplacing-applications-on-other-outputs" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../3_rba/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../3_rba/" class="btn btn-xs btn-link">
+        Rule Based Arbitrator (RBA)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../1_agl-compositor/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../1_agl-compositor/" class="btn btn-xs btn-link">
+        agl-compositor
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="waltham">Waltham</h1>
+<p><a href="https://github.com/waltham/waltham">Waltham protocol</a> is a IPC library similar
+to <a href="https://wayland.freedesktop.org">Wayland</a>, developed with networking in
+mind. It operates over TCP sockets, while the wayland protocol only works
+locally over a UNIX socket. It retains wayland-esque paradigm, making use of
+XMLs to describe the protocol, and it follows an object-oriented design with an
+asynchronous architecture.</p>
+<h2 id="differences-from-wayland-to-waltham">Differences from Wayland to Waltham</h2>
+<p>Some of the differences between Wayland and Waltham are:</p>
+<ul>
+<li>Waltham uses TCP sockets for communication</li>
+<li>Waltham cannot send file descriptors</li>
+<li>Waltham API is minimal and symmetric between server and client sides</li>
+<li>Waltham does not provide an event loop implementation</li>
+<li>The registry implementation is left out of the library, only the interface is
+  provided</li>
+<li>No multi-threading support for sharing objects between threads</li>
+</ul>
+<h2 id="waltham-transmitter-and-remoting-plugin">Waltham-transmitter and remoting plugin</h2>
+<p>Surface sharing is not part of Waltham protocol, each system needs to implement
+the most efficient way of passing by the buffers from one side to another.  On
+AGL, make use of remoting-plugin to enable surface sharing which uses GStreamer
+as encoder/decoder. It uses libweston DRM virtual API to grab the buffers, and
+then to stream them over the network. The gstreamer pipeline uses UDP while the
+input events are communicated with Waltham protocol. The input part is handled
+by <em>waltham-transmitter</em> plugin which provides an API to create remote
+connections and push surfaces over the network and handles remote input. The
+act of pushing surface is a misnomer, kept from the older, previous
+implementation, and acts a notification mechanism from the transmitter side to
+the remote side.</p>
+<h2 id="the-receiver-client">The receiver client</h2>
+<p>waltham-receiver application is a wayland demo implementation  which should be
+running at the remote side. It is using Waltham protocol to obtain and process
+remote input events which handled the transmitter side by the waltham-transmitter
+plugin. It creates a similar gstreamer pipeline to process the incoming buffers
+and draw and displaying them into a subsurface created by waylandsink.</p>
+<p>Contrary to expectations, the waltham receiver is the one that implements the
+server side of the Waltham protocol and is capable of displaying the incoming
+buffers but also process input events locally and forward them with the help of
+the Waltham protocol back at the transmitter side, which in turn will update
+the image contents and stream to the receiver, showing the changes caused by
+that input. </p>
+<pre><code> ECU 1                                                               ECU 2
+ +---------------------------------------------+                    +--------------------------------------+
+ |        +-----------------+                  |                    |                                      |
+ |        |     Application |                  |                    |       +-----------+-----------+      |
+ |        +-----------------+                  |                    |       | Gstreamer |           |      |
+ |                 ^                           |    Buffer   ---------------&gt; (Decode)  |           |      |
+ |        wayland  |                    +-------------------/       |       +-----------+           |      |
+ |                 v                    |      |    (Ethernet)      |       |     Waltham-receiver  |      |
+ |   +----+---------------------+       |      |        --------------------&gt;                       |      |
+ |   |    |  Transmitter plugin |&lt;---------------------/            |       +-----------------------+      |
+ |   |    |                     |       |      |  Waltham-Protocol  |                     ^                |
+ |   |    |---------------------|       |      |                    |             wayland |                |
+ |   |    |  Remoting plugin    |-------+      |                    |                     v                |
+ |   |    |                     |              |                    |         +---------------------+      |
+ |   |    +---------------------+              |                    |         |                     |      |
+ |   |                          |              |                    |         |       compositor    |      |
+ |   |         compositor       |              |                    |         |                     |      |
+ |   +------+-------------------+              |                    |         +----------------+----+      |
+ |          |                                  |                    |                          |           |
+ |          v                                  |                    |                          v           |
+ |   +------------+                            |                    |                    +----------+      |
+ |   |  Display   |                            |                    |                    |  Display |      |
+ |   |            |                            |                    |                    |          |      |
+ |   +------------+                            |                    |                    +----------+      |
+ +---------------------------------------------+                    +--------------------------------------+
+</code></pre>
+<h2 id="migratingplacing-applications-on-other-outputs">Migrating/Placing applications on other outputs</h2>
+<p>In order to start or place an application on the remoting-ouput output, we can
+use <code>agl-shell-app-id</code> ini entry for that particular output.</p>
+<pre><code>[transmitter-output]
+name=transmitter-1
+mode=640x720@30
+host=192.168.20.99
+port=5005
+agl-shell-app-id=&lt;APP_ID&gt;
+</code></pre>
+<p>Alternatively, and programmatically, one can use the
+<a href="../1_agl-compositor/#private-extensions">agl-shell-desktop</a> protocol and inform
+the compositor that it should migrate it to other, remote outputs.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../3_rba/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../3_rba/" class="btn btn-xs btn-link">
+        Rule Based Arbitrator (RBA)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../1_agl-compositor/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../1_agl-compositor/" class="btn btn-xs btn-link">
+        agl-compositor
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

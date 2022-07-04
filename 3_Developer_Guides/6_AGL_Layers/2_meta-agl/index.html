@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/3_Developer_Guides/6_AGL_Layers/2_meta-agl/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>meta-agl - AGL Documentation</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Introduction", url: "#_top", children: [
+          ]},
+          {title: "Sub-Layers", url: "#sub-layers", children: [
+          ]},
+          {title: "Packagegroups", url: "#packagegroups", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../3_meta-agl-demo/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../3_meta-agl-demo/" class="btn btn-xs btn-link">
+        meta-agl-demo
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../1_Overview/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../1_Overview/" class="btn btn-xs btn-link">
+        Overview
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="introduction">Introduction</h2>
+<p>The <code>meta-agl</code> layer provides the minimal set of software
+to boot an AGL Distribution system.
+You use this layer as the minimal core on which to build AGL profiles.</p>
+<p><strong>NOTE:</strong> The <code>meta-agl</code> layer does not include a reference UI.
+  The reference UI is included as part of the
+  <a href="../3_meta-agl-demo/"><code>meta-agl-demo</code></a> layer.
+  Furthermore, <code>meta-agl</code> does not include additional components, such
+  as security, which are part of the
+  <code>meta-agl-extra</code> layer.</p>
+<h2 id="sub-layers">Sub-Layers</h2>
+<p>The <code>meta-agl</code> layer itself contains many sub-layers and files.
+Following is a "tree" look at the layer:</p>
+<div class="highlight"><pre><span></span><code>.
+├── docs
+├── meta-agl
+├── meta-agl-bsp
+├── meta-agl-distro
+├── meta-agl-profile-cluster
+├── meta-agl-profile-cluster-qt5
+├── meta-agl-profile-core
+├── meta-agl-profile-graphical
+├── meta-agl-profile-graphical-html5
+├── meta-agl-profile-graphical-qt5
+├── meta-agl-profile-hud
+├── meta-agl-profile-telematics
+├── meta-app-framework
+├── meta-netboot
+├── meta-security
+├── README-AGL.md
+├── README.md
+├── scripts
+├── templates
+</code></pre></div>
+<p>This list provides some overview information on the files and sub-layers
+in <code>meta-agl</code>:</p>
+<ul>
+<li><code>docs</code>: Contains files that support AGL documentation.</li>
+<li><code>meta-agl</code>: Contains layer configuration for the <code>meta-agl</code> layer.</li>
+<li><code>meta-agl-bsp</code>: Contains adaptations for recipes and required packages
+  to boot an AGL distribution on targeted hardware and emulation (i.e. QEMU).</li>
+<li><code>meta-agl-distro</code>: Contains distro configuration and supporting scripts.</li>
+<li><code>meta-agl-profile-cluster</code>: The middleware for the AGL cluster profile.
+  The set of packages required for AGL Cluster Distribution.
+  Profiles include support for Wayland images.</li>
+<li><code>meta-agl-profile-cluster-qt5</code>: The middleware for the AGL Qt5-based cluster profile.
+  The set of packages required for AGL Qt5-based Cluster Distribution.
+  Profiles include support for Wayland images with Qt5.</li>
+<li><code>meta-agl-profile-core</code>: Configuration and recipes for the AGL core profiles.</li>
+<li><code>meta-agl-profile-graphical</code>: Configuration and recipes supporting graphical user
+  interfaces.</li>
+<li><code>meta-agl-profile-graphical-html5</code>: Configuration and recipes supporting profiles
+  with HTML user interface support.</li>
+<li><code>meta-agl-profile-graphical-qt5</code>: Configuration and recipes supporting profiles
+  with Qt5-based user interface support.</li>
+<li><code>meta-agl-profile-hud</code>: Configuration and recipes supporting profiles with
+  Head-Up-Display (HUD) support.</li>
+<li><code>meta-agl-profile-telematics</code>: Configuration and recipes supporting profiles with
+  telematics support.</li>
+<li><code>meta-app-framework</code>: Configuration and recipes supporting the AGL Application
+  Framework.</li>
+<li><code>meta-netboot</code>: Contains recipes and configuration adjustments to allow network
+  boot through network block device (NBD) since network file system (NFS) does not
+  support security labels.</li>
+<li><code>meta-security</code>: Configuration and recipes supporting security applications.</li>
+<li><code>scripts</code>: AGL development setup and support scripts.</li>
+<li><code>templates</code>: Base, feature, and machine templates used in the AGL development
+  environment.</li>
+</ul>
+<h2 id="packagegroups">Packagegroups</h2>
+<p>This section describes the AGL
+<a href="https://yoctoproject.org/docs/3.1.4/dev-manual/dev-manual.html#usingpoky-extend-customimage-customtasks">packagegroup</a>
+design:</p>
+<ul>
+<li>packagegroup-agl-image-minimal<pre><code>packagegroup-agl-core-automotive.bb
+packagegroup-agl-core-connectivity.bb
+packagegroup-agl-core-graphics.bb
+packagegroup-agl-core-kernel.bb
+packagegroup-agl-core-multimedia.bb
+packagegroup-agl-core-navi-lbs.bb
+packagegroup-agl-core-os-commonlibs.bb
+packagegroup-agl-core-security.bb
+packagegroup-agl-core-speech-services.bb
+</code></pre>
+</li>
+</ul>
+<p>The previous list of Packagegroups are used to create the <code>agl-image-minimal</code> image,
+  which is a small image just capable of allowing a device to boot.</p>
+<p>Subsystem should maintain packagegroup-agl-core-[subsystem].bb which should
+  hold sufficient packages to build <code>agl-image-minimal</code>.</p>
+<ul>
+<li>packagegroup-agl-image-ivi<pre><code>packagegroup-agl-ivi-automotive.bb
+packagegroup-agl-ivi-connectivity.bb
+packagegroup-agl-ivi-graphics.bb
+packagegroup-agl-ivi-kernel.bb
+packagegroup-agl-ivi-multimedia.bb
+packagegroup-agl-ivi-navi-lbs.bb
+packagegroup-agl-ivi-os-commonlibs.bb
+packagegroup-agl-ivi-security.bb
+packagegroup-agl-ivi-speech-services.bb
+</code></pre>
+</li>
+</ul>
+<p>The previous list of Packagegroups are used to create the <code>agl-image-ivi</code>
+  image, which is a baseline image (i.e. Service Layer and Operating System
+  Layer defined in AGL Spec v1.0) for the AGL profiles.</p>
+<ul>
+<li>packagegroup-agl-test.bb</li>
+</ul>
+<p>Additional tools used in QA tests (for agl-image*-qa).</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../3_meta-agl-demo/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../3_meta-agl-demo/" class="btn btn-xs btn-link">
+        meta-agl-demo
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../1_Overview/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../1_Overview/" class="btn btn-xs btn-link">
+        Overview
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

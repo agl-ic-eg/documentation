@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/0_Getting_Started/2_Building_AGL_Image/1_Preparing_Your_Build_Host/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Preparing Your Build Host - AGL Documentation</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../2_Downloading_AGL_Software/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../2_Downloading_AGL_Software/" class="btn btn-xs btn-link">
+        Downloading AGL Software
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../0_Build_Process/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../0_Build_Process/" class="btn btn-xs btn-link">
+        Build Process Overview
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p>Preparing your build host so that it can build an AGL image means
+making sure your system is set up to use the
+<a href="https://yoctoproject.org">Yocto Project</a> OpenEmbedded build system,
+which is based on
+<a href="https://yoctoproject.org/docs/3.1.4/bitbake-user-manual/bitbake-user-manual.html">BitBake</a>.</p>
+<p>This section presents minimal information so you can prepare the build host
+to use the "Dunfell" version of the Yocto Project (i.e. version 3.1.2).
+If you want more details on how the Yocto Project works, you can reference
+the Yocto Project documentation
+<a href="https://www.yoctoproject.org/docs/">here</a>.</p>
+<p><strong>NOTE:</strong> This entire section presumes you want to build an image.
+You can skip the entire build process if you want to use a ready-made
+development image.
+The <a href="https://download.automotivelinux.org/AGL/snapshots/master/latest/">supported images</a> exist for several boards as
+well as for the Quick EMUlator (QEMU).
+See the
+"<a href="../../1_Quickstart/Using_Ready_Made_Images/">Quickstart</a>"
+section for more information on the ready-made images.</p>
+<ol>
+<li>
+<p><strong>Use a Supported Linux Distribution:</strong> To use the AGL software, it is
+   recommended that your build host is a native Linux machine that runs a
+   Yocto Project supported distribution as described by the
+   "<a href="https://www.yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#detailed-supported-distros">Supported Linux Distributions</a>"
+   section in the Yocto Project Reference Manual.
+   Basically, you should be running a recent version of Ubuntu, Fedora, openSUSE,
+   CentOS, or Debian.</p>
+</li>
+<li>
+<p><strong>Be Sure Your Build Host Has Enough Free Disk Space:</strong>
+   Your build host should have at least 100 Gbytes.</p>
+</li>
+<li>
+<p><strong>Be Sure Tools are Recent:</strong>  You need to have recent versions for the following tools:</p>
+<ul>
+<li>Git 1.8.3.1 or greater</li>
+<li>Tar 1.27 or greater</li>
+<li>Python 3.4.0 or greater</li>
+</ul>
+</li>
+</ol>
+<p>If your distribution does not meet these minimal requirements, see the
+   "<a href="https://www.yoctoproject.org/docs/3.1.4/ref-manual/ref-manual.html#required-git-tar-and-python-versions">Required Git, tar, and Python Versions</a>"
+   section in the Yocto Project Reference Manual for steps that you can
+   take to be sure you have these tools.</p>
+<ol>
+<li><strong>Install Essential, Graphical, and Eclipse Plug-in Build Host Packages:</strong>
+   Your build host needs certain host packages.
+   Depending on the Linux distribution you are using, the list of
+   host packages differ.
+   See
+   "<a href="https://www.yoctoproject.org/docs/3.1.4/yocto-project-qs/yocto-project-qs.html#packages">The Build Host Packages</a>"
+   section of the Yocto Project Quick Start for information on the packages you need.</li>
+</ol>
+<p><strong>NOTE:</strong> If you are using the CentOS distribution, you need to
+   separately install the epel-release package and run the <code>makecache</code> command as
+   described in
+   "<a href="https://www.yoctoproject.org/docs/3.1.4/yocto-project-qs/yocto-project-qs.html#packages">The Build Host Packages</a>"
+   section of the Yocto Project Quick Start.</p>
+<p>Aside from the packages listed in the previous section, you need the following:</p>
+<ul>
+<li><strong>Ubuntu and Debian:</strong> curl</li>
+<li><strong>Fedora:</strong> curl</li>
+<li><strong>OpenSUSE:</strong> glibc-locale curl</li>
+<li><strong>CentOS:</strong> curl</li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../2_Downloading_AGL_Software/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../2_Downloading_AGL_Software/" class="btn btn-xs btn-link">
+        Downloading AGL Software
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../0_Build_Process/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../0_Build_Process/" class="btn btn-xs btn-link">
+        Build Process Overview
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

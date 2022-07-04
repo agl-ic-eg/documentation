@@ -1,0 +1,2483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/2_Architecture_Guides/2_Security_Blueprint/Annexes/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Annexes - AGL Documentation</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Config notes", url: "#_top", children: [
+          ]},
+          {title: "Todo notes", url: "#todo-notes", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../../3_Developer_Guides/0_FIXME/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../../3_Developer_Guides/0_FIXME/" class="btn btn-xs btn-link">
+        0 FIXME
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../9_Secure_development/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../9_Secure_development/" class="btn btn-xs btn-link">
+        Secure development
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p>The first part resumed all the configurations you must implement without any
+explications since all the explanations are given as and when in the document.</p>
+<ul>
+<li>
+<p>The <em>config</em> tag quickly identifies the configurations and the recommendations
+  to take.</p>
+</li>
+<li>
+<p>The <em>note</em> tag allows you to notify some additional details.</p>
+</li>
+<li>
+<p>The <em>todo</em> tag shows the possible improvements.</p>
+</li>
+</ul>
+<p>The second one allows to visualize all the todo notes in order to have a global
+vision of the possible improvements of the document.</p>
+<h1 id="config-notes">Config notes</h1>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hardware-Integrity-1</td>
+<td>Bootloader</td>
+<td>Must control bootloader integrity.</td>
+</tr>
+<tr>
+<td>Hardware-Integrity-2</td>
+<td>Board</td>
+<td>Must use a HSM.</td>
+</tr>
+<tr>
+<td>Hardware-Integrity-3</td>
+<td>RTC</td>
+<td>Must not be alterable.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hardware-Certificate-1</td>
+<td>System</td>
+<td>Shall allow storing dedicated certificates.</td>
+</tr>
+<tr>
+<td>Hardware-Certificate-2</td>
+<td>ECU</td>
+<td>The ECU must verify the certification authority hierarchy.</td>
+</tr>
+<tr>
+<td>Hardware-Certificate-3</td>
+<td>System</td>
+<td>Allow the modification of certificates only if the source can be authenticated by a certificate already stored or in the higher levels of the chain of trust.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hardware-Memory-1</td>
+<td>ECU</td>
+<td>The ECU shall never expose the unencrypted key in RAM when using cryptographic keys.</td>
+</tr>
+<tr>
+<td>Hardware-Memory-2</td>
+<td>Bootloader</td>
+<td>Internal NVM only</td>
+</tr>
+<tr>
+<td>Hardware-Module-3</td>
+<td>-</td>
+<td>HSM must be used to secure keys.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><em>Variable</em> / <code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Image-Selection-1</td>
+<td><code>CONFIG_BOOTDELAY</code></td>
+<td><code>-2</code></td>
+</tr>
+<tr>
+<td>Boot-Image-Selection-2</td>
+<td><em>bootdelay</em></td>
+<td><code>-2</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Image-Authenticity-1</td>
+<td><code>CONFIG_FIT</code></td>
+<td><em>Enable</em></td>
+</tr>
+<tr>
+<td>Boot-Image-Authenticity-2</td>
+<td><code>CONFIG_FIT_SIGNATURE</code></td>
+<td><em>Enable</em></td>
+</tr>
+<tr>
+<td>Boot-Image-Authenticity-3</td>
+<td><code>CONFIG_RSA</code></td>
+<td><em>Enable</em></td>
+</tr>
+<tr>
+<td>Boot-Image-Authenticity-4</td>
+<td><code>CONFIG_OF_CONTROL</code></td>
+<td><em>Enable</em></td>
+</tr>
+<tr>
+<td>Boot-Image-Authenticity-5</td>
+<td><code>CONFIG_OF_SEPARATE</code></td>
+<td><em>Enable</em></td>
+</tr>
+<tr>
+<td>Boot-Image-Authenticity-6</td>
+<td><code>CONFIG_DEFAULT_DEVICE_TREE</code></td>
+<td><em>Enable</em></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Communication modes</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Communication-1</td>
+<td><code>USB</code></td>
+<td><em>Disabled</em> and <em>Compiled-out</em> if not required.</td>
+</tr>
+<tr>
+<td>Boot-Communication-2</td>
+<td><code>USB</code></td>
+<td>Else, Kernel should be configured to only enable the minimum required USB devices and filesystems should be treated with special care.</td>
+</tr>
+<tr>
+<td>Boot-Communication-3</td>
+<td><code>Ethernet</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Boot-Communication-4</td>
+<td>U-boot and sboot <code>DOCSIS</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Boot-Communication-5</td>
+<td><code>Serial ports</code></td>
+<td><em>Disabled</em></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Communication-USB-1</td>
+<td><code>CONFIG_CMD_USB</code></td>
+<td><em>Not defined</em></td>
+</tr>
+<tr>
+<td>Boot-Communication-USB-2</td>
+<td><code>CONFIG_USB_UHCI</code></td>
+<td><em>Not defined</em></td>
+</tr>
+<tr>
+<td>Boot-Communication-USB-3</td>
+<td><code>CONFIG_USB_KEYBOARD</code></td>
+<td><em>Not defined</em></td>
+</tr>
+<tr>
+<td>Boot-Communication-USB-4</td>
+<td><code>CONFIG_USB_STORAGE</code></td>
+<td><em>Not defined</em></td>
+</tr>
+<tr>
+<td>Boot-Communication-USB-5</td>
+<td><code>CONFIG_USB_HOST_ETHER</code></td>
+<td><em>Not defined</em></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Communication modes</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Communication-1</td>
+<td><code>Network interfaces</code></td>
+<td>Preferably <em>no network interface is allowed</em>, otherwise, restrict the services to those used.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Communication-1</td>
+<td><code>Services</code>, <code>ports</code> and <code>devices</code></td>
+<td>Restrict the <code>services</code>, <code>ports</code> and <code>devices</code> to those used.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Command</code> name</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Communication-Flash-1</td>
+<td><code>do_nand</code></td>
+<td><em>Disable</em></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Consoles-Serial-1</td>
+<td><code>CONFIG_SILENT_CONSOLE</code></td>
+<td><code>Disable</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Serial-2</td>
+<td><code>CONFIG_SYS_DEVICE_NULLDEV</code></td>
+<td><code>Disable</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Serial-3</td>
+<td><code>CONFIG_SILENT_CONSOLE_UPDATE_ON_RELOC</code></td>
+<td><code>Disable</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Environment variable</code> name</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Consoles-Serial-1</td>
+<td><code>INC_DEBUG_PRINT</code></td>
+<td><em>Not defined</em></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Consoles-Variables-1</td>
+<td><code>CONFIG_ENV_IS_IN_MMC</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-2</td>
+<td><code>CONFIG_ENV_IS_IN_EEPROM</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-3</td>
+<td><code>CONFIG_ENV_IS_IN_FLASH</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-4</td>
+<td><code>CONFIG_ENV_IS_IN_DATAFLASH</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-5</td>
+<td><code>CONFIG_ENV_IS_IN_FAT</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-6</td>
+<td><code>CONFIG_ENV_IS_IN_NAND</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-7</td>
+<td><code>CONFIG_ENV_IS_IN_NVRAM</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-8</td>
+<td><code>CONFIG_ENV_IS_IN_ONENAND</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-9</td>
+<td><code>CONFIG_ENV_IS_IN_SPI_FLASH</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-10</td>
+<td><code>CONFIG_ENV_IS_IN_REMOTE</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-11</td>
+<td><code>CONFIG_ENV_IS_IN_UBI</code></td>
+<td><code>#undef</code></td>
+</tr>
+<tr>
+<td>Boot-Consoles-Variables-12</td>
+<td><code>CONFIG_ENV_IS_NOWHERE</code></td>
+<td><code>#define</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Command</code> name</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Consoles-MemDump-1</td>
+<td><code>md</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Boot-Consoles-MemDump-2</td>
+<td><code>mm</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Boot-Consoles-MemDump-3</td>
+<td><code>nm</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Boot-Consoles-MemDump-4</td>
+<td><code>mw</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Boot-Consoles-MemDump-5</td>
+<td><code>cp</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Boot-Consoles-MemDump-6</td>
+<td><code>mwc</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Boot-Consoles-MemDump-7</td>
+<td><code>mdc</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Boot-Consoles-MemDump-8</td>
+<td><code>mtest</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Boot-Consoles-MemDump-9</td>
+<td><code>loopw</code></td>
+<td><em>Disabled</em></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-MAC-1</td>
+<td>CONFIG_IP_NF_SECURITY</td>
+<td>m</td>
+</tr>
+<tr>
+<td>Kernel-General-MAC-2</td>
+<td>CONFIG_IP6_NF_SECURITY</td>
+<td>m</td>
+</tr>
+<tr>
+<td>Kernel-General-MAC-3</td>
+<td>CONFIG_EXT2_FS_SECURITY</td>
+<td>y</td>
+</tr>
+<tr>
+<td>Kernel-General-MAC-4</td>
+<td>CONFIG_EXT3_FS_SECURITY</td>
+<td>y</td>
+</tr>
+<tr>
+<td>Kernel-General-MAC-5</td>
+<td>CONFIG_EXT4_FS_SECURITY</td>
+<td>y</td>
+</tr>
+<tr>
+<td>Kernel-General-MAC-6</td>
+<td>CONFIG_SECURITY</td>
+<td>y</td>
+</tr>
+<tr>
+<td>Kernel-General-MAC-7</td>
+<td>CONFIG_SECURITY_SMACK</td>
+<td>y</td>
+</tr>
+<tr>
+<td>Kernel-General-MAC-8</td>
+<td>CONFIG_TMPFS_XATTR</td>
+<td>y</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-kexec-1</td>
+<td><code>CONFIG_KEXEC</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-IPAutoConf-1</td>
+<td><code>CONFIG_IP_PNP</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-SysCtl_SysCall-1</td>
+<td><code>CONFIG_SYSCTL_SYSCALL</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-LegacyLinux-1</td>
+<td><code>CONFIG_USELIB</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-FirmHelper-1</td>
+<td><code>CONFIG_FW_LOADER_USER_HELPER</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-PanicOnOOPS-1</td>
+<td><code>CONFIG_PANIC_ON_OOPS</code></td>
+<td><code>y</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-SocketMon-1</td>
+<td><code>CONFIG_PACKET_DIAG</code></td>
+<td><code>n</code></td>
+</tr>
+<tr>
+<td>Kernel-General-SocketMon-2</td>
+<td><code>CONFIG_UNIX_DIAG</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-BPF_JIT-1</td>
+<td><code>CONFIG_BPF_JIT</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-ModuleSigning-1</td>
+<td><code>CONFIG_MODULE_SIG_FORCE</code></td>
+<td><code>y</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Variable</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-ModuleSigning-2</td>
+<td><code>kernel.modules_disabled</code></td>
+<td><code>1</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-Drivers-1</td>
+<td><code>USB</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Kernel-General-Drivers-2</td>
+<td><code>PCMCIA</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Kernel-General-Drivers-3</td>
+<td>Other <code>hotplug</code> bus</td>
+<td><em>Disabled</em></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>compiler</code> and <code>linker</code> options</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-IndependentExec-1</td>
+<td><code>-pie -fpic</code></td>
+<td><em>Enable</em></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>compiler</code> and <code>linker</code> options</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-OverwriteAttacks-1</td>
+<td><code>-z,relro</code></td>
+<td><em>Enable</em></td>
+</tr>
+<tr>
+<td>Kernel-General-OverwriteAttacks-2</td>
+<td><code>-z,now</code></td>
+<td><em>Enable</em></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-LibraryLinking-1</td>
+<td>Dynamic linking</td>
+<td>Should generally not be allowed.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Memory-RestrictAccess-1</td>
+<td><code>CONFIG_DEVKMEM</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Memory-CoreDump-1</td>
+<td><code>CONFIG_PROC_KCORE</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Memory-Swap-1</td>
+<td><code>CONFIG_SWAP</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Memory-LoadAllSymbols-1</td>
+<td><code>CONFIG_KALLSYMS</code></td>
+<td><code>n</code></td>
+</tr>
+<tr>
+<td>Kernel-Memory-LoadAllSymbols-2</td>
+<td><code>CONFIG_KALLSYMS_ALL</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Memory-Stack-1</td>
+<td><code>CONFIG_CC_STACKPROTECTOR</code></td>
+<td><code>y</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Memory-Access-1</td>
+<td><code>CONFIG_DEVMEM</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Memory-CrossMemAttach-1</td>
+<td><code>CROSS_MEMORY_ATTACH</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>compiler</code> and <code>linker</code> options</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Memory-StackSmashing-1</td>
+<td><code>-fstack-protector-all</code></td>
+<td><em>Enable</em></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>compiler</code> options and <code>config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Memory-BufferOverflows-1</td>
+<td><code>-D_FORTIFY_SOURCE</code></td>
+<td><code>2</code></td>
+</tr>
+<tr>
+<td>Kernel-Memory-BufferOverflows-2</td>
+<td><code>CONFIG_FORTIFY_SOURCE</code></td>
+<td><code>y</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Consoles-Serial-1</td>
+<td><code>CONFIG_SERIAL_8250</code></td>
+<td><code>n</code></td>
+</tr>
+<tr>
+<td>Kernel-Consoles-Serial-2</td>
+<td><code>CONFIG_SERIAL_8250_CONSOLE</code></td>
+<td><code>n</code></td>
+</tr>
+<tr>
+<td>Kernel-Consoles-Serial-3</td>
+<td><code>CONFIG_SERIAL_CORE</code></td>
+<td><code>n</code></td>
+</tr>
+<tr>
+<td>Kernel-Consoles-Serial-4</td>
+<td><code>CONFIG_SERIAL_CORE_CONSOLE</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Consoles-CommandLine-1</td>
+<td><code>CONFIG_CMDLINE_BOOL</code></td>
+<td><code>y</code></td>
+</tr>
+<tr>
+<td>Kernel-Consoles-CommandLine-2</td>
+<td><code>CONFIG_CMDLINE</code></td>
+<td><code>"insert kernel command line here"</code></td>
+</tr>
+<tr>
+<td>Kernel-Consoles-CommandLine-3</td>
+<td><code>CONFIG_CMDLINE_OVERRIDE</code></td>
+<td><code>y</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Consoles-KDBG-1</td>
+<td><code>CONFIG_KGDB</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Consoles-SysRQ-1</td>
+<td><code>CONFIG_MAGIC_SYSRQ</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Consoles-BinaryFormat-1</td>
+<td><code>CONFIG_BINFMT_MISC</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-Symbols-1</td>
+<td><code>CONFIG_DEBUG_INFO</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-Kprobes-1</td>
+<td><code>CONFIG_KPROBES</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-Tracing-1</td>
+<td><code>CONFIG_FTRACE</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-Profiling-1</td>
+<td><code>CONFIG_OPROFILE</code></td>
+<td><code>n</code></td>
+</tr>
+<tr>
+<td>Kernel-Debug-Profiling-2</td>
+<td><code>CONFIG_PROFILING</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-OOPSOnBUG-1</td>
+<td><code>CONFIG_DEBUG_BUGVERBOSE</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-Dev-1</td>
+<td><code>CONFIG_DEBUG_KERNEL</code></td>
+<td><code>n</code></td>
+</tr>
+<tr>
+<td>Kernel-Debug-Dev-2</td>
+<td><code>CONFIG_EMBEDDED</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-FileSystem-1</td>
+<td><code>CONFIG_DEBUG_FS</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-BUG-1</td>
+<td><code>CONFIG_BUG</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-CoreDumps-1</td>
+<td><code>CONFIG_COREDUMP</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>File</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-AdressDisplay-1</td>
+<td><code>/proc/sys/kernel/kptr_restrict</code></td>
+<td><code>1</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>File</code> or <code>Directorie</code> name</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-AdressDisplay-1</td>
+<td><code>/boot/vmlinuz*</code></td>
+<td><em>Readable Only for root user</em></td>
+</tr>
+<tr>
+<td>Kernel-Debug-AdressDisplay-2</td>
+<td><code>/boot/System.map*</code></td>
+<td><em>Readable Only for root user</em></td>
+</tr>
+<tr>
+<td>Kernel-Debug-AdressDisplay-3</td>
+<td><code>/sys/kernel/debug/</code></td>
+<td><em>Readable Only for root user</em></td>
+</tr>
+<tr>
+<td>Kernel-Debug-AdressDisplay-4</td>
+<td><code>/proc/slabinfo</code></td>
+<td><em>Readable Only for root user</em></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>File</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-DMESG-1</td>
+<td><code>/proc/sys/kernel/dmesg_restrict</code></td>
+<td><code>1</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-Debug-Config-1</td>
+<td><code>CONFIG_IKCONFIG</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-FileSystems-NFS-1</td>
+<td><code>CONFIG_NFSD</code></td>
+<td><code>n</code></td>
+</tr>
+<tr>
+<td>Kernel-FileSystems-NFS-2</td>
+<td><code>CONFIG_NFS_FS</code></td>
+<td><code>n</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Partition</code></th>
+<th><code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-FileSystems-Mount-1</td>
+<td><code>/boot</code></td>
+<td><code>nosuid</code>, <code>nodev</code> and <code>noexec</code>.</td>
+</tr>
+<tr>
+<td>Kernel-FileSystems-Mount-2</td>
+<td><code>/var</code> &amp; <code>/tmp</code></td>
+<td>In <code>/etc/fstab</code> or <code>vfstab</code>, add <code>nosuid</code>, <code>nodev</code> and <code>noexec</code>.</td>
+</tr>
+<tr>
+<td>Kernel-FileSystems-Mount-3</td>
+<td><em>Non-root local</em></td>
+<td>If type is <code>ext2</code> or <code>ext3</code> and mount point not '/', add <code>nodev</code>.</td>
+</tr>
+<tr>
+<td>Kernel-FileSystems-Mount-4</td>
+<td><em>Removable storage</em></td>
+<td>Add <code>nosuid</code>, <code>nodev</code> and <code>noexec</code>.</td>
+</tr>
+<tr>
+<td>Kernel-FileSystems-Mount-5</td>
+<td><em>Temporary storage</em></td>
+<td>Add <code>nosuid</code>, <code>nodev</code> and <code>noexec</code>.</td>
+</tr>
+<tr>
+<td>Kernel-FileSystems-Mount-6</td>
+<td><code>/dev/shm</code></td>
+<td>Add <code>nosuid</code>, <code>nodev</code> and <code>noexec</code>.</td>
+</tr>
+<tr>
+<td>Kernel-FileSystems-Mount-7</td>
+<td><code>/dev</code></td>
+<td>Add <code>nosuid</code> and <code>noexec</code>.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Config</code> name</th>
+<th><em>State</em> or <code>Value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-FileSystems-Mount-1</td>
+<td><code>CONFIG_DEVTMPFS_MOUNT</code></td>
+<td><em>Disabled</em> or add remount with <code>noexec</code> and <code>nosuid</code> to system startup.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Label</code> name</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-MAC-Floor-1</td>
+<td><code>^</code></td>
+<td>Only for privileged system services.</td>
+</tr>
+<tr>
+<td>Kernel-MAC-Floor-2</td>
+<td><code>*</code></td>
+<td>Used for device files or <code>/tmp</code> Access restriction via DAC.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Label</code> name</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-MAC-System-1</td>
+<td><code>System</code></td>
+<td>Process should write only to file with transmute attribute.</td>
+</tr>
+<tr>
+<td>Kernel-MAC-System-2</td>
+<td><code>System::run</code></td>
+<td>Files are created with the directory label from user and system domain (transmute) Lock is implicit with <code>w</code>.</td>
+</tr>
+<tr>
+<td>Kernel-MAC-System-3</td>
+<td><code>System::Shared</code></td>
+<td>Files are created with the directory label from system domain (transmute) User domain has locked privilege.</td>
+</tr>
+<tr>
+<td>Kernel-MAC-System-4</td>
+<td><code>System::Log</code></td>
+<td>Some limitation may impose to add <code>w</code> to enable append.</td>
+</tr>
+<tr>
+<td>Kernel-MAC-System-5</td>
+<td><code>System::Sub</code></td>
+<td>Isolation of risky Subsystem.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Label</code> name</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-MAC-System-1</td>
+<td><code>User::Pkg::$AppID</code></td>
+<td>Only one Label is allowed per App. A data directory is created by the AppFw in <code>rwx</code> mode.</td>
+</tr>
+<tr>
+<td>Kernel-MAC-System-2</td>
+<td><code>User::Home</code></td>
+<td>AppFw needs to create a directory in <code>/home/$USER/App-Shared</code> at first launch if not present with label app-data access is <code>User::App-Shared</code> without transmute.</td>
+</tr>
+<tr>
+<td>Kernel-MAC-System-3</td>
+<td><code>User::App-Shared</code></td>
+<td>Shared space between all App running for a given user.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-SystemD-1</td>
+<td>Security model</td>
+<td>Use Namespaces for containerization.</td>
+</tr>
+<tr>
+<td>Platform-SystemD-2</td>
+<td>Security model</td>
+<td>Use CGroups to organise processes.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-DBus-1</td>
+<td>Security model</td>
+<td>Use D-Bus as IPC.</td>
+</tr>
+<tr>
+<td>Platform-DBus-2</td>
+<td>Security model</td>
+<td>Apply D-BUS security patches: <a href="https://www.cvedetails.com/vulnerability-list/vendor_id-13442/D-bus-Project.html">D-Bus CVE</a></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Tool</code> name</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-Utilities-1</td>
+<td><code>connman</code></td>
+<td><em>Used</em> as a connection manager.</td>
+</tr>
+<tr>
+<td>Platform-Utilities-2</td>
+<td><code>bluez</code></td>
+<td><em>Used</em> as a Bluetooth manager.</td>
+</tr>
+<tr>
+<td>Platform-Utilities-3</td>
+<td><code>gstreamer</code></td>
+<td><em>Used</em> to manage multimedia file format.</td>
+</tr>
+<tr>
+<td>Platform-Utilities-4</td>
+<td><code>alsa</code></td>
+<td><em>Used</em> to provides an API for sound card device drivers.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-AGLFw-AppFw-1</td>
+<td>Security model</td>
+<td>Use the AppFw as Security model.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-AGLFw-Cynara-1</td>
+<td>Permissions</td>
+<td>Use Cynara as policy-checker service.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Tool</code> name</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-Utilities-1</td>
+<td><code>busybox</code></td>
+<td><em>Used</em> to provide a number of tools. Do not compile development tools.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Utility</code> name and normal <code>path</code></th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-Utilities-1</td>
+<td><code>chgrp</code> in <code>/bin/chgrp</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-2</td>
+<td><code>chmod</code> in <code>/bin/chmod</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-3</td>
+<td><code>chown</code> in <code>/bin/chown</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-4</td>
+<td><code>dmesg</code> in <code>/bin/dmesg</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-5</td>
+<td><code>Dnsdomainname</code> in <code>/bin/dnsdomainname</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-6</td>
+<td><code>dropbear</code>, Remove "dropbear" from <code>/etc/init.d/rcs</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-7</td>
+<td><code>Editors</code> in (vi) <code>/bin/vi</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-8</td>
+<td><code>find</code> in <code>/bin/find</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-9</td>
+<td><code>gdbserver</code> in <code>/bin/gdbserver</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-10</td>
+<td><code>hexdump</code> in <code>/bin/hexdump</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-11</td>
+<td><code>hostname</code> in <code>/bin/hostname</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-12</td>
+<td><code>install</code> in <code>/bin/install</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-13</td>
+<td><code>iostat</code> in <code>/bin/iostat</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-14</td>
+<td><code>killall</code> in <code>/bin/killall</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-15</td>
+<td><code>klogd</code> in <code>/sbin/klogd</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-16</td>
+<td><code>logger</code> in <code>/bin/logger</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-17</td>
+<td><code>lsmod</code> in <code>/sbin/lsmod</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-18</td>
+<td><code>pmap</code> in <code>/bin/pmap</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-19</td>
+<td><code>ps</code> in <code>/bin/ps</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-20</td>
+<td><code>ps</code> in <code>/bin/ps</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-21</td>
+<td><code>rpm</code> in <code>/bin/rpm</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-22</td>
+<td><code>SSH</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-23</td>
+<td><code>stbhotplug</code> in <code>/sbin/stbhotplug</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-24</td>
+<td><code>strace</code> in <code>/bin/trace</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-25</td>
+<td><code>su</code> in <code>/bin/su</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-26</td>
+<td><code>syslogd</code> in (logger) <code>/bin/logger</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-27</td>
+<td><code>top</code> in <code>/bin/top</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-28</td>
+<td><code>UART</code> in <code>/proc/tty/driver/</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-29</td>
+<td><code>which</code> in <code>/bin/which</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-30</td>
+<td><code>who</code> and <code>whoami</code> in <code>/bin/whoami</code></td>
+<td><em>Disabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-31</td>
+<td><code>awk</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-32</td>
+<td><code>cut</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-33</td>
+<td><code>df</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-34</td>
+<td><code>echo</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-35</td>
+<td><code>fdisk</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-36</td>
+<td><code>grep</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-37</td>
+<td><code>mkdir</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-38</td>
+<td><code>mount</code> (vfat) (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-39</td>
+<td><code>printf</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-40</td>
+<td><code>sed</code> in <code>/bin/sed</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-41</td>
+<td><code>tail</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-42</td>
+<td><code>tee</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+<tr>
+<td>Platform-Utilities-43</td>
+<td><code>test</code> (busybox)</td>
+<td><em>Enabled</em></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-Users-root-1</td>
+<td>Main application</td>
+<td>Should not execute as root.</td>
+</tr>
+<tr>
+<td>Platform-Users-root-2</td>
+<td>UI</td>
+<td>Should run in a context on a user with no capability.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th><code>Utility</code> name</th>
+<th><em>State</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-Users-root-3</td>
+<td><code>login</code></td>
+<td><em>Not allowed</em></td>
+</tr>
+<tr>
+<td>Platform-Users-root-4</td>
+<td><code>su</code></td>
+<td><em>Not allowed</em></td>
+</tr>
+<tr>
+<td>Platform-Users-root-5</td>
+<td><code>ssh</code></td>
+<td><em>Not allowed</em></td>
+</tr>
+<tr>
+<td>Platform-Users-root-6</td>
+<td><code>scp</code></td>
+<td><em>Not allowed</em></td>
+</tr>
+<tr>
+<td>Platform-Users-root-7</td>
+<td><code>sftp</code></td>
+<td><em>Not allowed</em></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application-Installation-1</td>
+<td>AppFw</td>
+<td>Provide offline-mode in order to install app with the base image.</td>
+</tr>
+<tr>
+<td>Application-Installation-2</td>
+<td>Integrity</td>
+<td>Allow the installation of applications only if their integrity is good.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Tech name</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connectivity-BusAndConnector-Bus-1</td>
+<td>CAN</td>
+<td>Implement hardware solution in order to prohibit sending unwanted signals.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Tech name</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connectivity-BusAndConnector-Connectors-1</td>
+<td>USB</td>
+<td>Must be disabled. If not, only enable the minimum require USB devices.</td>
+</tr>
+<tr>
+<td>Connectivity-BusAndConnector-Connectors-2</td>
+<td>USB</td>
+<td>Confidential data exchanged with the ECU over USB must be secure.</td>
+</tr>
+<tr>
+<td>Connectivity-BusAndConnector-Connectors-3</td>
+<td>USB</td>
+<td>USB Boot on a ECU must be disable.</td>
+</tr>
+<tr>
+<td>Connectivity-BusAndConnector-Connectors-4</td>
+<td>OBD-II</td>
+<td>Must be disabled outside garages.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connectivity-Wireless-1</td>
+<td>Update</td>
+<td>Always follow the latest updates of remote communication channels.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Tech name or object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connectivity-Wireless-Wifi-1</td>
+<td>WEP, PSK, TKIP</td>
+<td>Disabled</td>
+</tr>
+<tr>
+<td>Connectivity-Wireless-Wifi-2</td>
+<td>WPA2 and AES-CCMP</td>
+<td>Used</td>
+</tr>
+<tr>
+<td>Connectivity-Wireless-Wifi-3</td>
+<td>WPA2</td>
+<td>Should protect data sniffing.</td>
+</tr>
+<tr>
+<td>Connectivity-Wireless-Wifi-4</td>
+<td>PSK</td>
+<td>Changing regularly the password.</td>
+</tr>
+<tr>
+<td>Connectivity-Wireless-Wifi-5</td>
+<td>Device</td>
+<td>Upgraded easily in software or firmware to have the last security update.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Tech name</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connectivity-Wireless-Bluetooth-1</td>
+<td>BLE</td>
+<td>Use with caution.</td>
+</tr>
+<tr>
+<td>Connectivity-Wireless-Bluetooth-2</td>
+<td>Bluetooth</td>
+<td>Monitoring</td>
+</tr>
+<tr>
+<td>Connectivity-Wireless-Bluetooth-3</td>
+<td>SSP</td>
+<td>Avoid using the "Just Works" association model.</td>
+</tr>
+<tr>
+<td>Connectivity-Wireless-Bluetooth-4</td>
+<td>Visibility</td>
+<td>Configured by default as undiscoverable. Except when needed.</td>
+</tr>
+<tr>
+<td>Connectivity-Wireless-Bluetooth-5</td>
+<td>Anti-scanning</td>
+<td>Used, inter alia, to slow down brute force attacks.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Tech name</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connectivity-Wireless-Cellular-1</td>
+<td>GPRS/EDGE</td>
+<td>Avoid</td>
+</tr>
+<tr>
+<td>Connectivity-Wireless-Cellular-2</td>
+<td>UMTS/HSPA</td>
+<td>Protected against Jamming.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Tech name</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connectivity-Wireless-Radio-1</td>
+<td>RDS</td>
+<td>Only audio output and meta concerning radio.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Tech name</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connectivity-Wireless-NFC-1</td>
+<td>NFC</td>
+<td>Protected against relay and replay attacks.</td>
+</tr>
+<tr>
+<td>Connectivity-Wireless-NFC-2</td>
+<td>Device</td>
+<td>Disable unneeded and unapproved services and profiles.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application-Cloud-Download-1</td>
+<td>authentication</td>
+<td>Must implement authentication process.</td>
+</tr>
+<tr>
+<td>Application-Cloud-Download-2</td>
+<td>Authorization</td>
+<td>Must implement Authorization process.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application-Cloud-Infrastructure-1</td>
+<td>Packet</td>
+<td>Should implement a DPI.</td>
+</tr>
+<tr>
+<td>Application-Cloud-Infrastructure-2</td>
+<td>DoS</td>
+<td>Must implement a DoS protection.</td>
+</tr>
+<tr>
+<td>Application-Cloud-Infrastructure-3</td>
+<td>Test</td>
+<td>Should implement scanning tools like SATS and DAST.</td>
+</tr>
+<tr>
+<td>Application-Cloud-Infrastructure-4</td>
+<td>Log</td>
+<td>Should implement security tools (IDS and IPS).</td>
+</tr>
+<tr>
+<td>Application-Cloud-Infrastructure-5</td>
+<td>App integrity</td>
+<td>Applications must be signed by the code signing authority.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Object</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application-Cloud-Transport-1</td>
+<td>Integrity, confidentiality and legitimacy</td>
+<td>Should implement IPSec standards.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="todo-notes">Todo notes</h1>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Abstract-1</td>
+<td>More generic and add examples (The chain of trust).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Abstract-1</td>
+<td>Review the definition of the "boot loader".</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot-Consoles-1</td>
+<td>Secure loader: No reference earlier?</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hypervisor-Abstract-1</td>
+<td>Complete Hypervisor part (<a href="https://github.com/siemens/jailhouse">jailhouse</a> / <a href="https://www.linux-kvm.org/page/Main_Page">KVM</a> / <a href="https://www.xenproject.org/developers/teams/embedded-and-automotive.html">Xen</a>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-IndependentExec-1</td>
+<td>Kernel or/and platform part ?</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel-General-LibraryLinking-1</td>
+<td>Keep this part?</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-Abstract-1</td>
+<td>Create a graphics and sound part.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-Services-1</td>
+<td>SystemD ?</td>
+</tr>
+<tr>
+<td>Platform-Services-2</td>
+<td>Secure daemon ?</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform-Users-Capabilities-1</td>
+<td>Kernel or Platform-user?</td>
+</tr>
+<tr>
+<td>Platform-Users-Capabilities-2</td>
+<td>Add config note.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application-Installation-1</td>
+<td>Talk about AppFw offline mode.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application-Signature-1</td>
+<td>Add content (see secure build in Secure development part).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application-Services-1</td>
+<td>Add content (Which services?).</td>
+</tr>
+<tr>
+<td>Application-Services-2</td>
+<td>Add Binder.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connectivity-Abstract-1</td>
+<td>Improve abstract.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connectivity-Wireless-1</td>
+<td>Add communication channels (RFID, ZigBee?).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Update-SOTA-1</td>
+<td>Part to complete.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SecureDev-SecureBuild-1</td>
+<td>Add content.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SecureDev-Signatures-1</td>
+<td>Add content.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SecureDev-CodeAudit-1</td>
+<td>Add CVE analyser.</td>
+</tr>
+<tr>
+<td>SecureDev-CodeAudit-2</td>
+<td><a href="http://www.isecom.org/mirror/OSSTMM.3.pdf">OSSTMM</a>.</td>
+</tr>
+</tbody>
+</table>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../../3_Developer_Guides/0_FIXME/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../../3_Developer_Guides/0_FIXME/" class="btn btn-xs btn-link">
+        0 FIXME
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../9_Secure_development/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../9_Secure_development/" class="btn btn-xs btn-link">
+        Secure development
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

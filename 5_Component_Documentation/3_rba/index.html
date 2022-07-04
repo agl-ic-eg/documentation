@@ -1,0 +1,2174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/5_Component_Documentation/3_rba/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Rule Based Arbitrator (RBA) - AGL Documentation</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "RBA", url: "#_top", children: [
+              {title: "1. Overview", url: "#1-overview" },
+              {title: "2. Common", url: "#2-common" },
+              {title: "3. Area", url: "#3-area" },
+              {title: "4. Value / Z order definition", url: "#4-value-z-order-definition" },
+              {title: "5. ViewContent definition", url: "#5-viewcontent-definition" },
+              {title: "6. Priority definition", url: "#6-priority-definition" },
+              {title: "7. Screen layout definition", url: "#7-screen-layout-definition" },
+              {title: "8. Constraint defination", url: "#8-constraint-defination" },
+              {title: "9. Group definition", url: "#9-group-definition" },
+              {title: "10. Scene definition", url: "#10-scene-definition" },
+              {title: "11. Stereotype", url: "#11-stereotype" },
+              {title: "12. Tag", url: "#12-tag" },
+              {title: "Generate .json from .rba file", url: "#generate-json-from-rba-file" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../4_drm-leasemanager/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../4_drm-leasemanager/" class="btn btn-xs btn-link">
+        DRM lease manager
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../2_waltham-receiver_waltham-transmitter/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../2_waltham-receiver_waltham-transmitter/" class="btn btn-xs btn-link">
+        Waltham receiver/transmitter
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="rba">RBA</h1>
+<p>Rule Based Arbitrator decides which of the content to display when a large number of contents to be displayed on the cockpit display device (CID, meter, HUD, etc.) occur simultaneously under a certain rule (arbitration).</p>
+<h3 id="1-overview">1. Overview</h3>
+<h4 id="11-purpose-of-this-document">1.1 Purpose of this document</h4>
+<p>This document describes the syntax of the Rule-based Arbitration Model.</p>
+<h4 id="12-basic-syntax">1.2 Basic syntax</h4>
+<p>The basic syntax of the Rule-based Arbitration Model is as follows.</p>
+<p><img alt="Basic syntax" src="../images/rba/Basic_syntax.png" /></p>
+<p>Define the properties of the model element in {} after declaration of Model element keyword,　Model element ID. Each property depends on the element. The properties of the model element may also define other model elements.</p>
+<h4 id="13-relationship-between-files-and-model-definitions">1.3 Relationship between files and Model definitions</h4>
+<p>The Rule-based Arbitration Model can be defined in multiple files. (The extension of the file will be ".rba") Firstly, define the Package model element in the file.</p>
+<p>Areas.rba
+<div class="highlight"><pre><span></span><code>Package AreasPackage <span class="o">{</span>
+
+<span class="o">}</span>
+</code></pre></div>
+Content.rba
+<div class="highlight"><pre><span></span><code>Package ContentsPackage <span class="o">{</span>
+
+<span class="o">}</span>
+</code></pre></div></p>
+<h4 id="14-structure-of-rule-based-arbitration-model">1.4 Structure of Rule-based Arbitration Model</h4>
+<p>The elements of the Rule-based Arbitration Model are as follows. Each inheritance relationship between elements is defined and expresses elements that can be described in PackagableElement.</p>
+<p><img alt="model" src="../images/rba/model.png" /></p>
+<h4 id="15-notation-of-syntax-definition">1.5 Notation of Syntax Definition</h4>
+<p>For Model element</p>
+<p>syntax:
+<div class="highlight"><pre><span></span><code>Package <span class="o">[</span>ID<span class="o">]</span> <span class="o">{</span>
+  description: <span class="o">[</span>String<span class="o">]</span>
+  <span class="o">[</span>PackagableElement<span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<p>Description:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Syntax element</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">description:  0..1</td>
+<td align="left">Description</td>
+</tr>
+<tr>
+<td align="left">[PackagableElement]   *</td>
+<td align="left">Child element Package,Display,Size,Constraint,PostConstraint,Scene,Event,Rule,Area,AreaSet,ViewContent,ViewContentSet</td>
+</tr>
+</tbody>
+</table>
+<p>The multiplicity is expressed as follows:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Expression of multiplicity</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">*</td>
+<td align="left">0 or more</td>
+</tr>
+<tr>
+<td align="left">1..*</td>
+<td align="left">1 or more</td>
+</tr>
+<tr>
+<td align="left">1</td>
+<td align="left">1</td>
+</tr>
+<tr>
+<td align="left">0..1</td>
+<td align="left">0 or 1</td>
+</tr>
+</tbody>
+</table>
+<p>Description of [] notation is as follows:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Syntax element</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">[ID]</td>
+<td align="left">ID. A character string in which the first character is not a number. Only _ can be used for symbols, Space cannot be used.</td>
+</tr>
+<tr>
+<td align="left">[String]</td>
+<td align="left">An arbitrary character string. specify it by enclosing with "".</td>
+</tr>
+<tr>
+<td align="left">[Number]</td>
+<td align="left">An integer that is greater than equal 0.</td>
+</tr>
+<tr>
+<td align="left">[expression]</td>
+<td align="left">An expression whose return value is a property type.</td>
+</tr>
+<tr>
+<td align="left">[&lt;Model element keyword>]</td>
+<td align="left">Definition of other Model elements. Sometimes an abstract class is specified.</td>
+</tr>
+<tr>
+<td align="left">[ID of A]</td>
+<td align="left">Reference to other Model elements. A represents an element.</td>
+</tr>
+<tr>
+<td align="left">[X|Y]</td>
+<td align="left">Indicates that you can describe X or Y.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-common">2. Common</h3>
+<h4 id="21-package">2.1 Package</h4>
+<p>The Package element is the root element in the file. It has PackagableElement as a Child element and groups PackagableElements in arbitrary units.</p>
+<p>syntax:
+<div class="highlight"><pre><span></span><code>Package <span class="o">[</span>ID<span class="o">]</span> <span class="o">{</span>
+  description: <span class="o">[</span>String<span class="o">]</span>
+  <span class="o">[</span>PackagableElement<span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<table>
+<thead>
+<tr>
+<th align="left">Syntax element</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">description:  0..1</td>
+<td align="left">Description</td>
+</tr>
+<tr>
+<td align="left">[PackagableElement]   *</td>
+<td align="left">Child element Package,Display,Size,Constraint,PostConstraint,Scene,Event,Rule,Area,AreaSet,ViewContent,ViewContentSet</td>
+</tr>
+</tbody>
+</table>
+<p>Description example:
+<div class="highlight"><pre><span></span><code>Package SamplePackage <span class="o">{</span>
+    description: <span class="s2">&quot;This is a sample Packege&quot;</span>
+    Area SampleArea <span class="o">{</span>
+        arbitrationPolicy: DEFAULT
+        sizeReference: SampleSize1
+        visibility: NONE_VALUE
+        zorder: <span class="m">3</span>
+    <span class="o">}</span>
+    ViewContent SampleContent <span class="o">{</span>
+        allocatable: <span class="o">[</span>SampleArea1<span class="o">]</span>
+        State NORMAL <span class="o">{</span>
+            priority: STANDARD_VALUE
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<h4 id="22-size">2.2 Size</h4>
+<p>Size is the size of Area and ViewContent.</p>
+<p>Syntax:</p>
+<div class="highlight"><pre><span></span><code>Size <span class="o">[</span>ID<span class="o">]</span> <span class="o">{</span>
+  description: <span class="o">[</span>String<span class="o">]</span>
+  width: <span class="o">[</span>Number<span class="o">]</span>
+  height: <span class="o">[</span>Number<span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th align="left">Syntax element</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">description:  0..1</td>
+<td align="left">Description of Size element</td>
+</tr>
+<tr>
+<td align="left">width: 1</td>
+<td align="left">width</td>
+</tr>
+<tr>
+<td align="left">height:   1</td>
+<td align="left">height</td>
+</tr>
+</tbody>
+</table>
+<p>Description example:
+<div class="highlight"><pre><span></span><code>Size ScreenSize <span class="o">{</span>
+    description: <span class="s2">&quot; Screen size&quot;</span>
+    width: <span class="m">200</span>
+    height: <span class="m">200</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<h4 id="23-project">2.3 Project</h4>
+<p>The Project element is an element that can be defined only once in one project.
+Like The Package element, it can be defined directly under the file.</p>
+<p>Syntax:
+<div class="highlight"><pre><span></span><code>Project <span class="o">{</span>
+  version: <span class="o">[</span>String<span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<table>
+<thead>
+<tr>
+<th align="left">Syntax element</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">version:   1</td>
+<td align="left">Version of the Project</td>
+</tr>
+</tbody>
+</table>
+<p>Description example:
+<div class="highlight"><pre><span></span><code>Project <span class="o">{</span>
+    version: <span class="s2">&quot;version 1.0&quot;</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<h3 id="3-area">3. Area</h3>
+<p>Area is a frame to display the ViewContent on the screen. Only one ViewContent is allocated to one Area at most. Since Arbitration is executed for each Area, the Arbitration Policy is defined.</p>
+<p>Syntax:</p>
+<div class="highlight"><pre><span></span><code>Area <span class="o">[</span>ID<span class="o">]</span> <span class="o">{</span>
+  description: <span class="o">[</span>String<span class="o">]</span>
+  arbitrationPolicy: <span class="o">[</span>DEFAULT <span class="p">|</span> FIRST_COME_FIRST <span class="p">|</span> LAST_COME_FIRST <span class="p">|</span> PRIORITY_FIRST_COME_FIRST <span class="p">|</span> PRIORITY_LAST_COME_FIRST<span class="o">]</span>
+  <span class="o">[[</span>Size<span class="o">]</span><span class="p">|</span> sizeReference:<span class="o">[</span>ID of Size<span class="o">]]</span>
+  <span class="o">[</span>visibility<span class="p">|</span>priority<span class="o">]</span>:<span class="o">[</span>Number<span class="p">|</span>Expression<span class="o">]</span>
+  zorder:<span class="o">[</span>Number<span class="p">|</span>Expression<span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th align="left">Syntax element</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">description:  0..1</td>
+<td align="left">Description</td>
+</tr>
+<tr>
+<td align="left">arbitrationPolicy: 0..1</td>
+<td align="left">Arbitration Policy for Area. Refer to "Types of Arbitration Policy" for the policies which can be specified. If not specified, consider it as "DEFAULT".</td>
+</tr>
+<tr>
+<td align="left">[Size|sizeReference:]    1..*</td>
+<td align="left">Size: Size definition.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">sizeReference: Reference to Size definition.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">※One or more definitions of either Size or sizeReference are needed. Multiple definitions should be defined consecutively.</td>
+</tr>
+<tr>
+<td align="left">[visibility|priority]:   1</td>
+<td align="left">Value of Area. Describe the relative value for other Areas as an expression or set a numerical value.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">The following predefined value can be set as a String. NONE_VALUE, STANDARD_VALUE, MIN_VALUE, MAX_VALUE See " Value / Z order definition" for details.</td>
+</tr>
+<tr>
+<td align="left">zorder:   1</td>
+<td align="left">Z order of Area. Describe the relative Z order for other Areas as an expression or set a numerical value. The following predefined value can be set as a String.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">NONE_VALUE, STANDARD_VALUE, MIN_VALUE, MAX_VALUE See " Value / Z order definition" for details.</td>
+</tr>
+</tbody>
+</table>
+<p>Types of Arbitration Policy</p>
+<table>
+<thead>
+<tr>
+<th align="left">Arbitration Policy</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">DEFAULT</td>
+<td align="left">Same as Priority and First Come First Arbitration. If the Arbitration Policy is not specified, it will be this type.</td>
+</tr>
+<tr>
+<td align="left">FIRST_COME_FIRST</td>
+<td align="left">First Come First Arbitration. Give priority to the request which occurred first.</td>
+</tr>
+<tr>
+<td align="left">LAST_COME_FIRST</td>
+<td align="left">Last Come First Arbitration. Give priority to the request which occurred later.</td>
+</tr>
+<tr>
+<td align="left">PRIORITY_FIRST_COME_FIRST</td>
+<td align="left">Priority and First Come First Arbitration. It follows the priority set to the Content. If the priority is the same, give priority to the request which occurred first.</td>
+</tr>
+<tr>
+<td align="left">PRIORITY_LAST_COME_FIRST</td>
+<td align="left">Priority and Last Come First Arbitration. It follows the priority set to the Content. If the priority is the same, give priority to the request which occurred later.</td>
+</tr>
+</tbody>
+</table>
+<p>Description example:
+<div class="highlight"><pre><span></span><code>Area SampleArea <span class="o">{</span>
+    description: <span class="s2">&quot;This is a sample Area.&quot;</span>
+    arbitrationPolicy: DEFAULT
+    Size Default <span class="o">{</span>
+        width: <span class="m">200</span>
+        height: <span class="m">150</span>
+    <span class="o">}</span>
+    sizeReference: SampleSize1
+    visibility: NONE_VALUE
+    zorder: <span class="m">3</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<h3 id="4-value-z-order-definition">4. Value / Z order definition</h3>
+<p>Values (visibility or priority) of area is the order of arbitrating of the area. The higher is arbitrated first. You can describe only one of the visibility or priority.
+For the Z order (zorder), the higher one will be on the front of the screen. You can define values absolutely by number or define relatively to other areas by expressions. You can use comparison operators (&gt; and &lt;), equality operator (=) and That-of operator for the expressions.</p>
+<ul>
+<li>Description example of value :
+Visibility of SampleArea2 is 10, zorder is 5.
+<div class="highlight"><pre><span></span><code>Area SampleArea2 <span class="o">{</span>
+    visibility: <span class="m">10</span>
+    zorder: <span class="m">5</span>
+<span class="o">}</span>
+</code></pre></div></li>
+<li>Description example of comparison operator:
+Priority of SampleArea1 is greater than SampleArea2. Zorder of SampleArea1 is less than SampleArea3.
+<div class="highlight"><pre><span></span><code>Area SampleArea1 <span class="o">{</span>
+    priority: &gt; That-of SampleArea1
+    zorder: &lt; That-of SampleArea3
+<span class="o">}</span>
+</code></pre></div></li>
+<li>
+<p>Description example of range:
+Visibility of SampleArea1 is greater than 1 and less than SampleArea2. Zorder of SampleArea1 is greater than SampleArea3 and less than SampleArea4.
+<div class="highlight"><pre><span></span><code>Area SampleArea1 <span class="o">{</span>
+    visibility: <span class="o">(</span>&gt; <span class="m">1</span> AND &lt; That-of SampleArea2<span class="o">)</span>
+    zorder: <span class="o">(</span>&gt; That-of SampleArea3 AND &lt; That-of SampleArea4<span class="o">)</span>
+<span class="o">}</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>Description example of equality operator:
+<div class="highlight"><pre><span></span><code>Area SampleArea1 <span class="o">{</span>
+    visibility: <span class="o">=</span> That-of SampleArea2
+    zorder: <span class="o">=</span> That-of SampleArea3 + That-of SampleArea2
+<span class="o">}</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>Equality operator can be omitted.
+<div class="highlight"><pre><span></span><code>Area SampleArea1 <span class="o">{</span>
+    visibility: That-of SampleArea2
+    zorder: That-of SampleArea3 + That-of SampleArea2
+<span class="o">}</span>
+</code></pre></div></p>
+</li>
+</ul>
+<h3 id="5-viewcontent-definition">5. ViewContent definition</h3>
+<h4 id="51-viewcontent">5.1 ViewContent</h4>
+<p>ViewContent is an object to be displayed in the Area. ViewContent has multiple states. When ViewContent is allocated to an Area, active state of theViewContent is displayed. Define the Area which can display ViewContent to the ViewContent. You can define several Areas.</p>
+<p>Syntax:
+<div class="highlight"><pre><span></span><code>ViewContent <span class="o">[</span>ID<span class="o">]</span> <span class="o">{</span>
+  description: <span class="o">[</span>String<span class="o">]</span>
+  allocatable: <span class="o">[</span> <span class="o">[</span>ID of Area<span class="o">]</span> <span class="p">|</span> <span class="o">[</span>ID of Set<span class="o">]</span> <span class="o">]</span>
+  <span class="o">[</span>ViewContentState<span class="o">]</span>
+  <span class="o">[[</span>Size<span class="o">]</span><span class="p">|</span>sizeReference: <span class="o">[</span>ID of Size<span class="o">]]</span>
+  loserType: <span class="o">[</span>GOOD_LOSER <span class="p">|</span> DO_NOT_GIVEUP_UNTIL_WIN <span class="p">|</span> NEVER_GIVEUP<span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<table>
+<thead>
+<tr>
+<th align="left">Syntax element</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">description:   0..1</td>
+<td align="left">Description</td>
+</tr>
+<tr>
+<td align="left">allocatable:   0..*</td>
+<td align="left">Displayable Area. Specify the ID of displayable Areas or Sets with comma-separated.If don’t specify allocatable, should specify allocatable in the ViewContentSet that includes this ViewContent.</td>
+</tr>
+<tr>
+<td align="left">[ViewContentState]    1..*</td>
+<td align="left">Define the State of ViewContent.</td>
+</tr>
+<tr>
+<td align="left">[Size|sizeReference:] 1..*</td>
+<td align="left">Size: Size definition</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">sizeReference: Reference to Size definition.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">※One or more definitions of either Size or sizeReference are needed. Multiple definitions should be defined consecutively.</td>
+</tr>
+<tr>
+<td align="left">loserType: 0..1</td>
+<td align="left">Action on lost. Specify whether to cancel a request, if ViewContent is not displayed after arbitration. See "Types of Action on lost" for details. If not defined, consider it as "NEVER_GIVEUP".</td>
+</tr>
+</tbody>
+</table>
+<p>Types of Action on lost</p>
+<table>
+<thead>
+<tr>
+<th align="left">loserType</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">GOOD_LOSER</td>
+<td align="left">When losing arbitration, cancel a request.</td>
+</tr>
+<tr>
+<td align="left">DO_NOT_GIVEUP_UNTIL_WIN</td>
+<td align="left">When the state is changed visible to invisible , cancel a request.</td>
+</tr>
+<tr>
+<td align="left">NEVER_GIVEUP</td>
+<td align="left">Keep a request.</td>
+</tr>
+</tbody>
+</table>
+<p>Description example:
+<div class="highlight"><pre><span></span><code>ViewContent Power <span class="o">{</span>
+description: <span class="s2">&quot; Warning from power management&quot;</span>
+  allocatable: <span class="o">[</span>
+    MessageArea, HUDMessageArea
+  <span class="o">]</span>
+  State Warning <span class="o">{</span>
+    priority: &gt; That-of Power.Attention
+  <span class="o">}</span>
+  State Attention <span class="o">{</span>
+    priority: &gt; That-of TEL.Incoming
+  <span class="o">}</span>
+Size Default <span class="o">{</span>
+description: <span class="s2">&quot;Default size&quot;</span>
+width: <span class="m">200</span>
+height: <span class="m">200</span>
+<span class="o">}</span>
+  sizeReference: InterruptMessageSize
+  loserType: GOOD_LOSER
+<span class="o">}</span>
+</code></pre></div></p>
+<h4 id="52-stateviewcontent">5.2 State(ViewContent)</h4>
+<p>State is the state of the ViewContent.</p>
+<p>Syntax:
+<div class="highlight"><pre><span></span><code>State <span class="o">[</span>ID<span class="o">]</span> <span class="o">{</span>
+  description: <span class="o">[</span>String<span class="o">]</span>
+  <span class="o">[</span>priority<span class="p">|</span>value<span class="o">]</span>: <span class="o">[</span>Number<span class="p">|</span>Expression<span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<table>
+<thead>
+<tr>
+<th align="left">Syntax element</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">description:   0..1</td>
+<td align="left">Description</td>
+</tr>
+<tr>
+<td align="left">[priority|value]: 1</td>
+<td align="left">Priority of ViewContent.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">Describe the relative value for other State under ViewContent as an expression, or set a numerical value.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">The following predefined value can be set as a String.NONE_VALUE, STANDARD_VALUE, MIN_VALUE, MAX_VALUE See "Priority definition"for details.</td>
+</tr>
+</tbody>
+</table>
+<p>Description example:
+<div class="highlight"><pre><span></span><code>State Warning <span class="o">{</span>
+  description: <span class="s2">&quot;Display warning message&quot;</span>
+priority: &gt; That-of Attention
+<span class="o">}</span>
+State Attention <span class="o">{</span>
+  description: <span class="s2">&quot; Display attention message &quot;</span>
+priority: &gt; That-of TEL.Incoming
+<span class="o">}</span>
+</code></pre></div></p>
+<h3 id="6-priority-definition">6. Priority definition</h3>
+<p>Define the priority of Content to the State under ViewContent or SoundContent (hereinafter, Content). The priority is used when the area / zone arbitration policy is "Priority and First Come First Arbitration" or "Priority and Last Come First Arbitration", the higher one is allocated first. Values can be defined absolutely by number or relative to other areas by expressions. You can describe only one of the visibility or priority. You can use comparison operators (&gt; and &lt;), equality operator (=) and That-of operator for the expressions.</p>
+<ul>
+<li>Description example of value:
+Priority of Warning is 10.
+<div class="highlight"><pre><span></span><code>State Warning <span class="o">{</span>
+  description: <span class="s2">&quot; Display warning message &quot;</span>
+priority: <span class="m">10</span>
+<span class="o">}</span>
+</code></pre></div></li>
+<li>
+<p>Description example of comparison operator:
+Value of Warning is greater than Attention.
+<br>Value of Attention is greater than State Incoming of TEL of other Content.
+<br>Value of Notice is less than Attention.
+<br>※When referring to the State of another Content, refer to the Content ID and State ID by connecting with “.”.
+<div class="highlight"><pre><span></span><code>State Warning <span class="o">{</span>
+  value: &gt; That-of Attention
+<span class="o">}</span>
+
+State Attention <span class="o">{</span>
+  value: &gt; That-of TEL.Incoming
+<span class="o">}</span>
+
+State Notice <span class="o">{</span>
+  value: &lt; That-of Attention
+<span class="o">}</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>Description example of range: Priority of Attention is greater than Incoming of TEL and less than Warning.
+<br>※When referring to the State of another Content, refer to the Content ID and State ID by connecting with “.”.
+<div class="highlight"><pre><span></span><code>State Attention <span class="o">{</span>
+  priority: <span class="o">(</span>&gt; That-of TEL.Incoming AND &lt; That-of Warning<span class="o">)</span>
+<span class="o">}</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>Description example of equality operator:Value of Attention is equal to State Incoming of TEL of other Content.
+<div class="highlight"><pre><span></span><code>State Attention <span class="o">{</span>
+  priority: <span class="o">=</span> That-of TEL.Incoming
+<span class="o">}</span>
+</code></pre></div></p>
+</li>
+<li>Equality operator can be omitted.
+<div class="highlight"><pre><span></span><code>State Attention <span class="o">{</span>
+  priority: That-of TEL.Incoming
+<span class="o">}</span>
+</code></pre></div></li>
+</ul>
+<h3 id="7-screen-layout-definition">7. Screen layout definition</h3>
+<h4 id="71-display">7.1. Display</h4>
+<p>Display represents one screen. When defined more than one, it will be Multi-screen layout.
+The Display defines the set of Areas to be allocated on the screen.</p>
+<p>Syntax:
+<div class="highlight"><pre><span></span><code>Display <span class="o">[</span>ID<span class="o">]</span> <span class="o">{</span>
+  description: <span class="o">[</span>String<span class="o">]</span>
+  <span class="o">[</span>CompositeArea<span class="o">]</span>
+  <span class="o">[[</span>Size<span class="o">]</span><span class="p">|</span>sizeReference:<span class="o">[</span>ID of Size<span class="o">]]</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<table>
+<thead>
+<tr>
+<th align="left">Syntax element</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">description:  0..1</td>
+<td align="left">Description</td>
+</tr>
+<tr>
+<td align="left">[CompositeArea]    1</td>
+<td align="left">Component of the screen</td>
+</tr>
+<tr>
+<td align="left">[Size|sizeReference:] 1</td>
+<td align="left">Size: Size definition</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">sizeReference: Reference to Size definition</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">※One or more definitions of either Size or sizeReference are needed.</td>
+</tr>
+</tbody>
+</table>
+<p>Description example:
+<div class="highlight"><pre><span></span><code>Display METER <span class="o">{</span>
+    description:<span class="s2">&quot;Meter display definition&quot;</span>
+    Size FULLSCREEN <span class="o">{</span>
+        width: <span class="m">500</span>
+        height: <span class="m">400</span>
+    <span class="o">}</span>
+    CompositeArea METER_Root <span class="o">{</span>
+        layout: FixedPositionLayout <span class="o">{</span>
+            PositionContainer <span class="o">{</span>
+                x: <span class="m">100</span>
+                y: <span class="m">100</span>
+                basePoint: LEFT_TOP
+                areaReference: SpeedMeterArea
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<h4 id="72-compositearea">7.2. CompositeArea</h4>
+<p>CompositeArea specifies an Area that becomes a component of Display.</p>
+<p>Syntax:
+<div class="highlight"><pre><span></span><code>CompositeArea <span class="o">[</span>ID<span class="o">]</span> <span class="o">{</span>
+  description: <span class="o">[</span>String<span class="o">]</span>
+  layout: <span class="o">[</span>FixedPositionLayout<span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<table>
+<thead>
+<tr>
+<th align="left">Syntax element</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">description:   0..1</td>
+<td align="left">Description</td>
+</tr>
+<tr>
+<td align="left">layout: [FixedPositionLayout]  1</td>
+<td align="left">Layout type of Area</td>
+</tr>
+</tbody>
+</table>
+<p>Description example:
+<div class="highlight"><pre><span></span><code>CompositeArea METER_Root <span class="o">{</span>
+    description:<span class="s2">&quot; Definition of Area’s layout method&quot;</span>
+    layout: FixedPositionLayout <span class="o">{</span>
+        PositionContainer <span class="o">{</span>
+            x: <span class="m">100</span>
+            y: <span class="m">100</span>
+            basePoint: LEFT_TOP
+            areaReference: SpeedMeterArea
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<h4 id="73-fixedpositionlayout">7.3. FixedPositionLayout</h4>
+<p>FixedPositionLayout declares that areas are laid out with fixed values. The specific position define by PositionContainer.</p>
+<p>Syntax:
+<div class="highlight"><pre><span></span><code>FixedPositionLayout <span class="o">{</span>
+  <span class="o">[</span>PositionContainer<span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<table>
+<thead>
+<tr>
+<th align="left">Syntax element</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">[PositionContainer]    1..*</td>
+<td align="left">Position information.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code>FixedPositionLayout <span class="o">{</span>
+    PositionContainer <span class="o">{</span>
+        x: <span class="m">100</span>
+        y: <span class="m">100</span>
+        basePoint: LEFT_TOP
+        areaReference: SpeedMeterArea
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<h4 id="74-positioncontainer">7.4. PositionContainer</h4>
+<p>PositionContainer specifies the display position of the Area.</p>
+<p>syntax:
+<div class="highlight"><pre><span></span><code>PositionContainer <span class="o">{</span>
+  x: <span class="o">[</span>Number<span class="o">]</span>
+  y: <span class="o">[</span>Number<span class="o">]</span>
+  basePoint: <span class="o">[</span>Value<span class="o">]</span>
+  areaReference: <span class="o">[</span>ID of Area<span class="o">]</span>
+  <span class="o">[</span>Offset<span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<table>
+<thead>
+<tr>
+<th align="left">Syntax element</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">x: 1</td>
+<td align="left">x position</td>
+</tr>
+<tr>
+<td align="left">y: 1</td>
+<td align="left">y position</td>
+</tr>
+<tr>
+<td align="left">basePoint: 1</td>
+<td align="left">Defined x, y position. The following predefined value can be set.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">CENTER_BOTTOM (Define x, y as the lower center position)</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">CENTER_MIDDLE(Define x, y as center position)</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">CENTER_TOP (Define x, y as the upper center position)</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">LEFT_BOTTOM (Define x, y as the lower left position)</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">LEFT_MIDDLE (Define x, y as the left center position)</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">LEFT_TOP (Define x, y as the upper left position)</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">RIGHT_BOTTOM (Define x, y as the lower right position)</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">RIGHT_MIDDLE (Define x, y as right center position)</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">RIGHT_TOP (Define x, y as the upper right position)</td>
+</tr>
+<tr>
+<td align="left">areaReference: 1</td>
+<td align="left">Area to be placed in Display. Specify ID of the Area.</td>
+</tr>
+<tr>
+<td align="left">[Offset]   0..*</td>
+<td align="left">Display position offset of AreaSpecify the position of the Area for each size.</td>
+</tr>
+</tbody>
+</table>
+<p>Description example:
+<div class="highlight"><pre><span></span><code>FixedPositionLayout <span class="o">{</span>
+    PositionContainer <span class="o">{</span>
+        x: <span class="m">100</span>
+        y: <span class="m">100</span>
+        basePoint: LEFT_TOP
+        areaReference: SpeedMeterArea
+        Offset <span class="o">{</span> x:-50 y:20 sizeReference: SpeedMeterArea <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<h4 id="75-offset">7.5. Offset</h4>
+<p>Offset is the offset position for each size.</p>
+<p>Syntax:
+<div class="highlight"><pre><span></span><code>Offset <span class="o">{</span>
+  description: <span class="o">[</span>String<span class="o">]</span>
+  x: <span class="o">[</span>Number<span class="o">]</span>
+  y: <span class="o">[</span>Number<span class="o">]</span>
+  sizeReference: <span class="o">[</span>ID of Size<span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<table>
+<thead>
+<tr>
+<th align="left">Syntax element</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">description:   0..1</td>
+<td align="left">Description</td>
+</tr>
+<tr>
+<td align="left">x: 1</td>
+<td align="left">Offset from x position of PositionContainer.</td>
+</tr>
+<tr>
+<td align="left">y: 1</td>
+<td align="left">Offset from y position of PositionContainer.</td>
+</tr>
+<tr>
+<td align="left">sizeReference: 1</td>
+<td align="left">Size to apply the offset. Specify ID of Size.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">※ This Size must be specified in Area.</td>
+</tr>
+</tbody>
+</table>
+<p>Description example:
+<div class="highlight"><pre><span></span><code>Offset <span class="o">{</span>
+description:<span class="s2">&quot;Offset&quot;</span>
+    x: <span class="m">100</span>
+    y: -50
+    sizeReference: SpeedMeterSize
+<span class="o">}</span>
+</code></pre></div></p>
+<h3 id="8-constraint-defination">8. Constraint defination</h3>
+<p>Constraints can be defined according to the state of the Area/Zone and the state of the ViewContent/SoundContent. The syntax can be used for Constraints is shown below.</p>
+<ul>
+<li>State reference of Area:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Notation</th>
+<th align="left">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">IsDisplayed</td>
+<td align="left">&lt;Area>.isDisplayed()</td>
+<td align="left">The Area is displayed. (At this time, the ViewContent is necessarily allocated to the Area) True if the Area is displayed.</td>
+</tr>
+<tr>
+<td align="left">DisplayingContent</td>
+<td align="left">&lt;Area>.displayingContent()</td>
+<td align="left">ViewContent which is displayed in the Area. When the Area is hidden or ViewContent is not allocated, it is not evaluated.</td>
+</tr>
+<tr>
+<td align="left">AllocatedContent</td>
+<td align="left">&lt;Area>.allocatedContent()</td>
+<td align="left">ViewContent which is allocated to the Area. Even if the Area is hidden after allocation, it is possible to refer to the allocated ViewContent.</td>
+</tr>
+<tr>
+<td align="left">IsHidden</td>
+<td align="left">&lt;Area>.isHidden()</td>
+<td align="left">The Area is hidden. Regardless of whether the ViewContent is allocated to the Area or not,true if the Area is hidden.</td>
+</tr>
+<tr>
+<td align="left">ContentValue</td>
+<td align="left">&lt;Area>.contentValue()</td>
+<td align="left">The value of the ViewContentState allocated to the Area. If ViewContent is not allocated to the Area, it is not evaluated.</td>
+</tr>
+<tr>
+<td align="left">ContentsList</td>
+<td align="left">&lt;Area>.contentsList()</td>
+<td align="left">A set of ViewContent which is allocatable to the Area.</td>
+</tr>
+<tr>
+<td align="left">activeContents</td>
+<td align="left">&lt;Area>.activeContents()</td>
+<td align="left">The set of active content amang the ViewContent which is allocatable to the Area</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>State reference of ViewContent:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Notation</th>
+<th align="left">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">IsActive</td>
+<td align="left">&lt;ViewContent>.isActive()</td>
+<td align="left">True if there is a Content request of ViewContent.</td>
+</tr>
+<tr>
+<td align="left">IsVisible</td>
+<td align="left">&lt;ViewContent>.isVisible()</td>
+<td align="left">The ViewContent is displayed. True if the ViewContent is allocated to any Area.</td>
+</tr>
+<tr>
+<td align="left">StateValue</td>
+<td align="left">&lt;ViewContent>.stateValue()</td>
+<td align="left">Priority/value that is defined in active state of the ViewContent. When the ViewContent has no active state, it does not evaluate.</td>
+</tr>
+<tr>
+<td align="left">HasComeEarlierThan</td>
+<td align="left">&lt;ViewContentA>.hasComeEarlierThan(&lt;ViewContentB>)</td>
+<td align="left">True if the ViewContentA’s request has come earlier than the ViewContentB’s. When the either ViewContent has been not requested, it does not evaluate.</td>
+</tr>
+<tr>
+<td align="left">HasComeLaterThan</td>
+<td align="left">&lt;ViewContentA>.hasComeLaterThan(&lt;ViewContentB>)</td>
+<td align="left">True if the ViewContentA’s request has come later than the ViewContentB’s. When the either ViewContent has been not requested, it does not evaluate.</td>
+</tr>
+<tr>
+<td align="left">Allocatables</td>
+<td align="left">&lt;ViewContent>.allocatables()</td>
+<td align="left">A set of Areas where the ViewContent can be displayed.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Scene reference:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Notation</th>
+<th align="left">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">IsOn</td>
+<td align="left">&lt;Scene>.isOn()</td>
+<td align="left">True if the Scene is valid.</td>
+</tr>
+<tr>
+<td align="left">Get</td>
+<td align="left">&lt;Scene>.&lt;Property>.get()</td>
+<td align="left">Get scene property value.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Stereotyope:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Notation</th>
+<th align="left">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">isTypeOf</td>
+<td align="left">&lt;Model>.isTypeOf(“&lt;ID of Stereotype>”)</td>
+<td align="left">Whether or not “&lt;ID of Stereotype>” is used in the &lt;Model></td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">It can be applied to the following models Area,ViewContent</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Operator:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Notation</th>
+<th align="left">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">AND</td>
+<td align="left">&lt;Bool expression> AND &lt;Bool expression></td>
+<td align="left">True if all Bool expressions are true.</td>
+</tr>
+<tr>
+<td align="left">OR</td>
+<td align="left">&lt;Bool expression> OR &lt;Bool expression></td>
+<td align="left">True if any Bool expression is true.</td>
+</tr>
+<tr>
+<td align="left">Negation</td>
+<td align="left">! &lt;Bool expression></td>
+<td align="left">True if Bool expression is false.</td>
+</tr>
+<tr>
+<td align="left">Implication</td>
+<td align="left"><Bool expression\> -> &lt;Bool expression></td>
+<td align="left">A -&gt; B is equivalent to ((A AND B) OR !A).</td>
+</tr>
+<tr>
+<td align="left">Equal sign (Comparison of values)</td>
+<td align="left">&lt;Expression> = &lt;Expression></td>
+<td align="left">True if the values shown on the left-hand side and the right-hand side are identical.The type of left-hand side and the right-hand side expressions must match.</td>
+</tr>
+<tr>
+<td align="left">Equal sign (Comparison of objects)</td>
+<td align="left">&lt;Expression> == &lt;Expression></td>
+<td align="left">True if the values shown on the left-hand side and the right-hand side are identical.The type of left-hand side and the right-hand side expressions must match.</td>
+</tr>
+<tr>
+<td align="left">Comparison (greater than)</td>
+<td align="left">&lt;Number> > &lt;Number></td>
+<td align="left">True if the Number on the left-hand side is greater than the Number on the right-hand side.</td>
+</tr>
+<tr>
+<td align="left">Comparison (greater than)</td>
+<td align="left">&lt;Number> >= &lt;Number></td>
+<td align="left">True if the Number on the left-hand side is greater than equal to the Number on the right-hand side.</td>
+</tr>
+<tr>
+<td align="left">Comparison (less than)</td>
+<td align="left">&lt;Number> &lt; &lt;Number></td>
+<td align="left">True if the Number on the left-hand side is less than the Number on the right-hand side.</td>
+</tr>
+<tr>
+<td align="left">Comparison (less than)</td>
+<td align="left">&lt;Number> &lt;= &lt;Number></td>
+<td align="left">True if the Number on the left-hand side is less than the equal to Number on the right-hand side.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Quantization symbol:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Notation</th>
+<th align="left">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">∀(For All)</td>
+<td align="left">For-All&lt;Set>{ &lt;x> | &lt;Expression> }</td>
+<td align="left">&lt;Set> contains the ViewContentSet or the SoundContentSet, the AreaSet, the ZoneSet, and the One-time Set. True if &lt;Expression> is true for all set element &lt;x>.</td>
+</tr>
+<tr>
+<td align="left">∃(Exists)</td>
+<td align="left">Exists&lt; Set>{ &lt;x> | &lt;Expression> }</td>
+<td align="left">&lt;Set> contains the ViewContentSet or the SoundContentSet, the AreaSet, the ZoneSet, and the One-time Set. True if &lt; Set> has one or more elements that satisfy &lt;Expression>.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Built-in defined Expression:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Notation</th>
+<th align="left">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">All Area</td>
+<td align="left">ALL_AREAS</td>
+<td align="left">A set of all the Areas defined in the Model.</td>
+</tr>
+<tr>
+<td align="left">All ViewContent</td>
+<td align="left">ALL_VIEWCONTENTS</td>
+<td align="left">A set of all the ViewContents defined in the Model.</td>
+</tr>
+<tr>
+<td align="left">IF-THEN-ELSE Syntax</td>
+<td align="left">IF (&lt;Bool expression>)THEN &lt;Expression>ELSE &lt;Expression></td>
+<td align="left">The type of the expression must be identical, for the THEN clause, if the Bool expression is true, for THEN and ELSE clause ,if the Bool expression is false.</td>
+</tr>
+<tr>
+<td align="left">Let　Expression</td>
+<td align="left">let &lt;Variable name> = &lt;Object expression></td>
+<td align="left">Evaluate &lt;Object expression>　as variable <variabl name>, which can then be referenced in subsequent expressions</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">Can only be used inside the expression. For-All, Exists, Max, Min, Select</td>
+</tr>
+<tr>
+<td align="left">Pre-arbitration value specifier</td>
+<td align="left">(pre)&lt;Area | ViewContent | Scene| Scene.Property></td>
+<td align="left">Refere to the state before arbitration of Area, ViewContent, Property.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The syntax precedence and associativity are shown below:</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">Priority</th>
+<th align="left">Name</th>
+<th align="left">Notation</th>
+<th align="left">Connectivity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">1</td>
+<td align="left">Parentheses</td>
+<td align="left">(&lt;Expression>)</td>
+<td align="left">-</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left">∃(Exists)</td>
+<td align="left">Exists&lt;Set>{ &lt;x> | &lt;Expression> }</td>
+<td align="left">-</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">∀(For All)</td>
+<td align="left">For-All&lt;Set>{ &lt;x> | &lt;Expression> }</td>
+<td align="left">-</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">IF-THEN-ELSE Syntax</td>
+<td align="left">IF (&lt;Bool expressinon>) THEN &lt;Expressinon> ELSE &lt;Expressinon></td>
+<td align="left">-</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">SetOf operator</td>
+<td align="left">{ &lt;Expression>, &lt;Expression> }</td>
+<td align="left">-</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">Pre-arbitration value specifier</td>
+<td align="left">(pre)&lt;Area| ViewContent| Scene| Scene.Property></td>
+<td align="left">-</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left">Predicate connector</td>
+<td align="left">&lt;Object>.&lt;Predicate expression></td>
+<td align="left">Left</td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left">Negation</td>
+<td align="left">! &lt;Bool expression></td>
+<td align="left">Right</td>
+</tr>
+<tr>
+<td align="left">5</td>
+<td align="left">Comparison (less than)</td>
+<td align="left">&lt;Number> &lt; &lt;Number></td>
+<td align="left">Left</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">Comparison (greater than)</td>
+<td align="left">&lt;Number> > &lt;Number></td>
+<td align="left">Left</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">Comparison (less than)</td>
+<td align="left">&lt;Number> &lt;= &lt;Number></td>
+<td align="left">Left</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">Comparison (greater than)</td>
+<td align="left">&lt;Number> >= &lt;Number></td>
+<td align="left">Left</td>
+</tr>
+<tr>
+<td align="left">6</td>
+<td align="left">Equal sign (Comparison of values)</td>
+<td align="left">&lt;Expressinon> = &lt;Expressinon></td>
+<td align="left">Left</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">Equal sign (Comparison of objects)</td>
+<td align="left">&lt;Expressinon> == &lt;Expressinon></td>
+<td align="left">Left</td>
+</tr>
+<tr>
+<td align="left">7</td>
+<td align="left">AND</td>
+<td align="left">&lt;BoolExpressinon> AND &lt;BoolExpressinon></td>
+<td align="left">Left</td>
+</tr>
+<tr>
+<td align="left">8</td>
+<td align="left">OR</td>
+<td align="left">&lt;BoolExpressinon> OR &lt;BoolExpressinon></td>
+<td align="left">Left</td>
+</tr>
+<tr>
+<td align="left">9</td>
+<td align="left">Implication</td>
+<td align="left">&lt;BoolExpressinon> -> &lt;BoolExpressinon></td>
+<td align="left">Left</td>
+</tr>
+</tbody>
+</table>
+<h4 id="81-constraint">8.1 Constraint</h4>
+<p>Constraint describes constraint expressions. There are two types of constraint expressions Runtime constraints and Offline constraints. A Runtime constraint is a constraint expression that should be be true at the time of arbitration and controls the behavior of arbitration. An Offline constraint is a constraint expression that should be satisfied after arbitration and tests the arbitration result.</p>
+<p>Syntax:
+<div class="highlight"><pre><span></span><code>Constraint <span class="o">[</span>ID<span class="o">]</span> <span class="o">{</span>
+  description: <span class="o">[</span>String<span class="o">]</span>
+  runtime: <span class="o">[</span>true<span class="p">|</span>false<span class="o">]</span>
+  <span class="o">[</span>expression<span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<table>
+<thead>
+<tr>
+<th align="left">Syntax element</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">description:   0..1</td>
+<td align="left">Description</td>
+</tr>
+<tr>
+<td align="left">runtime:   1</td>
+<td align="left">true: Runtime constraint</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">Arbitrate each Area / Zone to be true this constraint.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">false: Offline constraint</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">Verify that this constraint is true after all Area arbitration.</td>
+</tr>
+<tr>
+<td align="left">[expression]   1</td>
+<td align="left">Constraint expression</td>
+</tr>
+</tbody>
+</table>
+<p>Description example</p>
+<ul>
+<li>AND/ OR/ Negation
+<br>In the constraint expression, it is possible to express logical AND, logical OR, negation, which is a general logical operator, with AND, OR, and !. By using () you can also use in combination.</li>
+</ul>
+<p>Example: Content1 is displayed or Content2 and Content3 are not displayed at the same time.
+<div class="highlight"><pre><span></span><code>Constraint SampleConstraint1 <span class="o">{</span>
+runtime: <span class="nb">true</span>
+Content1.isVisible<span class="o">()</span> OR !<span class="o">(</span>Content2.isVisible<span class="o">()</span> AND Content3.isVisible<span class="o">())</span>
+<span class="o">}</span>
+</code></pre></div>
+Example: SampleContent1 is displayed or SampleContent2 is not displayed.
+<div class="highlight"><pre><span></span><code>Constraint SampleConstraint1 <span class="o">{</span>
+    description: <span class="s2">&quot;Sample Constraint Expression&quot;</span>
+    runtime: <span class="nb">true</span>
+    SampleContent1.isVisible<span class="o">()</span> OR !SampleContent2.isVisible<span class="o">()</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<ul>
+<li>Implication</li>
+</ul>
+<p>Implications are false only if the left-hand side is true and the right-hand side is false, otherwise it is true.</p>
+<p>Example: SampleContent4 is displayed if there is a request of SampleContent4.
+<div class="highlight"><pre><span></span><code>Constraint SampleConstraint3 <span class="o">{</span>
+    runtime: <span class="nb">true</span>
+    SampleContent4.isActive<span class="o">()</span> -&gt; SampleContent4.isVisible<span class="o">()</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<p>Example: If SampleArea1 displays SampleContent3, SampleArea2 does not display SampleContent3.
+<div class="highlight"><pre><span></span><code>Constraint SampleConstraint2 <span class="o">{</span>
+    runtime: <span class="nb">true</span>
+    <span class="o">(</span>SampleArea1.displayingContent<span class="o">()</span> <span class="o">==</span> SampleContent3<span class="o">)</span>
+-&gt; !<span class="o">(</span>SampleArea2.displayingContent<span class="o">()</span> <span class="o">==</span> SampleContent3<span class="o">)</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<p>Example: If the value of the content displayed on SampleArea1 is higher than the value of the content displayed in SampleArea2, hide SampleArea2.
+<div class="highlight"><pre><span></span><code>Constraint SampleConstraint2 <span class="o">{</span>
+    runtime: <span class="nb">true</span>
+    <span class="o">(</span>SampleArea1.contentValue<span class="o">()</span> &gt; SampleArea2.contentValue<span class="o">())</span>
+-&gt; SampleArea2.isHidden<span class="o">())</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<p>Example: If the value of property1 of the information received from other RBAModel (Project) is 1, Content10 is not displayed.
+<div class="highlight"><pre><span></span><code>Constraint SampleConstraint <span class="o">{</span>
+  <span class="o">(</span>SampleScene1.isOn<span class="o">()</span> AND SampleScene1.property1.get<span class="o">()</span> <span class="o">=</span> <span class="m">1</span><span class="o">)</span>
+    -&gt; ! Content10.isVisible<span class="o">()</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<ul>
+<li>For-All</li>
+</ul>
+<p>For-All targets a set, and it is true if all element of the set satisfies a lambda expression ({element name declaration | element condition}).
+For the set, you can specify a defined set or an One-time set. (Refer to “Group definition” for more informations.)
+<br>Example: If SampleContent1 is displayed, all Areas of AreaGroup1 is not displayed.
+<br> It is assumed that "AreaGroup1" is defined as AreaSet.</p>
+<div class="highlight"><pre><span></span><code>Constraint SampleConstraint <span class="o">{</span>
+    runtime: <span class="nb">true</span>
+    SampleContent1.isVisible<span class="o">()</span> -&gt;
+For-All AreaGroup1 <span class="o">{</span> x <span class="p">|</span> x.isHidden<span class="o">()</span> <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<ul>
+<li>Exists</li>
+</ul>
+<p>Exists targets a set, and it is true if even one element of the set satisfies a Lambda expression ({element name declaration | element condition}).
+<br>For the set, you can specify a defined set or an One-time set. (Refer to “Group definition” for more informations.)
+<br>Example: If any Content of ContentGroup1 is displayed, all Areas of AreaGroup1 is not displayed.
+<br> It is assumed that "ContentGroup1" is defined as ContentSet.
+<br> It is assumed that "AreaGroup1" is defined as AreaSet.
+<div class="highlight"><pre><span></span><code>Constraint SampleConstraint <span class="o">{</span>
+    runtime: <span class="nb">true</span>
+    Exists ContentGroup1<span class="o">{</span> x <span class="p">|</span> x.isVisible<span class="o">()</span> <span class="o">}</span> -&gt;
+For-All AreaGroup1 <span class="o">{</span> x <span class="p">|</span> x.isHidden<span class="o">()</span> <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<ul>
+<li>IF-THEN-ELSE
+Example: If the scene is SampleScene1, SampleContent4 is displayed, otherwise SampleContent4 is not displayed.</li>
+</ul>
+<div class="highlight"><pre><span></span><code>Constraint SampleConstraint4 <span class="o">{</span>
+    runtime: <span class="nb">true</span>
+    IF<span class="o">(</span>SampleScene1.isOn<span class="o">())</span>
+    THEN
+        SampleContent4.isVisible<span class="o">()</span>
+    ELSE
+        !SampleContent4.isVisible<span class="o">()</span>
+<span class="o">}</span>
+</code></pre></div>
+<ul>
+<li>
+<p>(pre)
+Example: If SampleContent 1 is displayed (before arbitration), SampleContent 2 is not displayed.
+<div class="highlight"><pre><span></span><code>Constraint SampleConstraint <span class="o">{</span>
+    runtime: <span class="nb">true</span>
+<span class="o">(</span>pre<span class="o">)</span>SampleContent1.isVisible<span class="o">()</span> -&gt; !SampleContent2.isVisible<span class="o">()</span>
+<span class="o">}</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>HasComeEarlierThan/HasComeLaterThan
+Example: If request SampleContent 1 has come earlier then SampleContent 2, SampleContent 2 does not displayed.
+<div class="highlight"><pre><span></span><code>Constraint SampleConstraint <span class="o">{</span>
+    runtime: <span class="nb">true</span>
+SampleContent1.hasComeEarlierThan<span class="o">(</span>SampleContent2<span class="o">)</span> -&gt; !SampleContent2.isVisible<span class="o">()</span>
+<span class="o">}</span>
+</code></pre></div>
+Below constraint behave as same as above.
+<div class="highlight"><pre><span></span><code>Constraint SampleConstraint <span class="o">{</span>
+    runtime: <span class="nb">true</span>
+SampleContent2.hasComeLaterThan<span class="o">(</span>SampleContent1<span class="o">)</span> -&gt; !SampleContent2.isVisible<span class="o">()</span>
+<span class="o">}</span>
+</code></pre></div></p>
+</li>
+</ul>
+<h4 id="82-syntax-sugar">8.2 Syntax sugar</h4>
+<p>This syntax sugar simplifies the constraint expressions and improves their readability. You can use them like the existing constraint expressions.
+Below are the syntax sugars that can be used.</p>
+<ul>
+<li>Inequality（!=）
+<br>It means that the left side value and the right side value are not equal. You can use this to compare objects.
+True if the left side value and the right side value are not equal.
+The types of expressions on the left and the right sides must match.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">Type</th>
+<th align="left">Operator</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Notation</td>
+<td align="left">&lt;Expression1> != &lt;Expression2></td>
+</tr>
+<tr>
+<td align="left">ECE*</td>
+<td align="left">!(&lt;Expression1> == &lt;Expression2>)</td>
+</tr>
+</tbody>
+</table>
+<p>*ECE: Equivalent constraint expression</p>
+<p>Description example: The ViewContent allocated to AreaA is not Content1.</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Notation</td>
+<td align="left">AreaA.allocatedContent() != Content1</td>
+</tr>
+<tr>
+<td align="left">ECE</td>
+<td align="left">!( AreaA.allocatedContent() == Content1)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Allocation of Area/Zone
+<br>It indicates that ViewContent/SoundContent is allocated to the Area/Zone.
+True if theViewConten/SoundContentt is allocated to the Area/Zone.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">Type</th>
+<th align="left">State reference of ViewContent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Notation</td>
+<td align="left">&lt;ViewContent>.isAllocatedTo(&lt;Area>)</td>
+</tr>
+<tr>
+<td align="left">ECE</td>
+<td align="left">&lt;Area>.allocatedContent() == &lt;ViewContent></td>
+</tr>
+</tbody>
+</table>
+<p>Description example: The Content1 is allocated to the AreaA.</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Notation</td>
+<td align="left">Content1.isAllocatedTo(AreaA)</td>
+</tr>
+<tr>
+<td align="left">ECE</td>
+<td align="left">AreaA.allocatedContent() == Content1</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Allocation changing of Area/Zone
+<br>It indicates a changing of the ViewContent’s/SoundContent’s allocated to the Area/Zone.
+True if the changing happens.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">Type</th>
+<th align="left">State reference of Area</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Notation</td>
+<td align="left">&lt;Area>.isChanged()</td>
+</tr>
+<tr>
+<td align="left">ECE</td>
+<td align="left">!((pre)&lt;Area>.allocatedContent() == &lt;Area>.allocatedContent())</td>
+</tr>
+</tbody>
+</table>
+<p>Description example: The ViewContent allocated to AreaA has changed.</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Notation</td>
+<td align="left">AreaA.isChanged()</td>
+</tr>
+<tr>
+<td align="left">ECE</td>
+<td align="left">!((pre)AreaA.allocatedContent() == AreaA.allocatedContent())</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Changing of a content allocated to Area/Zone
+<br>It indicates whether a ViewContent/SoundContent allocated to the Area/Zone has changed to the specified ViewContent/SoundContent.True if the changing happens</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">Type</th>
+<th align="left">State reference of Area</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Notation</td>
+<td align="left">&lt;Area>.isTranslatedTo(&lt;ViewContent>)</td>
+</tr>
+<tr>
+<td align="left">ECE</td>
+<td align="left">!((pre)&lt;Area>.allocatedContent() == &lt;ViewContent>) AND (&lt;Area>.allocatedContent() == &lt;ViewContent>)</td>
+</tr>
+</tbody>
+</table>
+<p>Description example: A ViewContent allocated to the AreaA has changed to Content1.</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Notation</td>
+<td align="left">AreaA.isTranslatedTo(Content1)</td>
+</tr>
+<tr>
+<td align="left">ECE</td>
+<td align="left">!((pre)AreaA.allocatedContent() == Content1) AND (AreaA.allocatedContent() == Content1)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Displaying in the Area
+<br>It indicates whether the ViewContent displayed or not in the Area.
+True if the ViewContent is displayed in the Area.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">Type</th>
+<th align="left">State reference of ViewContent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Notation</td>
+<td align="left">&lt;ViewContent>.isDisplayedOn(&lt;Area>)</td>
+</tr>
+<tr>
+<td align="left">ECE</td>
+<td align="left">&lt;Area>.isDisplayed() AND (&lt;Area>.displayingContent() == &lt;ViewContent>)</td>
+</tr>
+</tbody>
+</table>
+<p>Description example: The Content1 is displayed in the AreaA.</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Notation</td>
+<td align="left">Content1.isDisplayedOn(AreaA)</td>
+</tr>
+<tr>
+<td align="left">ECE</td>
+<td align="left">AreaA.isDisplayed() AND (AreaA.displayingContent() == Content1)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Display changing of the Area
+<br>It indicates whether the display of the Area changes or not.
+True if the change happens.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">Type</th>
+<th align="left">State reference of Area</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Notation</td>
+<td align="left">&lt;Area>.isChangedDisplay()</td>
+</tr>
+<tr>
+<td align="left">ECE</td>
+<td align="left">!((pre)&lt;Area>.displayingContent() == &lt;Area>.displayingContent()) OR ((pre)&lt;Area>.isDisplayed() AND !&lt;Area>.isDisplayed()) OR (!(pre)&lt;Area>.isDisplayed() AND &lt;Area>.isDisplayed())</td>
+</tr>
+</tbody>
+</table>
+<p>Description example: The display of the AreaA has changed.</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Notation</td>
+<td align="left">AreaA.isChangedDisplay()</td>
+</tr>
+<tr>
+<td align="left">ECE</td>
+<td align="left">!((pre)AreaA.displayingContent() == AreaA.displayingContent()) OR((pre)AreaA.isDisplayed() AND !AreaA.isDisplayed()) OR(!(pre)AreaA.isDisplayed() AND AreaA.isDisplayed())</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Changing of the displayed ViewContent to the specified ViewContent
+<br>It indicates whether the ViewContent displayed in the Area has changed to anther specified ViewContent.
+True if the change happens.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">Type</th>
+<th align="left">State reference of Area</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Notation</td>
+<td align="left">&lt;Area>.isTranslatedViewTo(&lt;ViewContent>)</td>
+</tr>
+<tr>
+<td align="left">ECE</td>
+<td align="left">(&lt;Area>.isDisplayed()) AND (&lt;Area>.displayingContent() == &lt;ViewContent>) AND (!((pre)&lt;Area>.displayingContent() == &lt;ViewContent>) OR !(pre) &lt;Area>.isDisplayed())</td>
+</tr>
+</tbody>
+</table>
+<p>Description example: A ViewContent displayed in the AreaA has changed to another Content1.</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Notation</td>
+<td align="left">AreaA.isTranslatedViewTo(Content1)</td>
+</tr>
+<tr>
+<td align="left">ECE</td>
+<td align="left">(AreaA.isDisplayed()) AND (AreaA.displayingContent() == Content1) AND (!((pre)AreaA.displayingContent() == Content1) OR !(pre)AreaA.isDisplayed())</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Hide a lower priority Area
+<br>Compare the two Areas and hide the Area displaying a ViewContent with lower priority.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">Type</th>
+<th align="left">State reference of Area</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Notation</td>
+<td align="left">HideLowerPriority(&lt;Area1>, &lt;Area2>)</td>
+</tr>
+<tr>
+<td align="left">ECE</td>
+<td align="left">((&lt;Area1>.contentValue() &lt; &lt;Area2>.contentValue() -> &lt;Area1>.isHidden()) AND (&lt;Area1>.contentValue() > &lt;Area2>.contentValue() -> &lt;Area2>.isHidden()))</td>
+</tr>
+</tbody>
+</table>
+<p>Description example: AreaA and AreaB are compared to hide the Area which displays a ViewContent with lower priority.</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Notation</td>
+<td align="left">HideLowerPriority(AreaA, AreaB)</td>
+</tr>
+<tr>
+<td align="left">ECE</td>
+<td align="left">((AreaA.contentValue() &lt; AreaB.contentValue() -> AreaA.isHidden()) AND (AreaA.contentValue() > AreaB.contentValue() -> AreaB.isHidden()))</td>
+</tr>
+</tbody>
+</table>
+<h3 id="9-group-definition">9. Group definition</h3>
+<h4 id="91-areaset">9.1 AreaSet</h4>
+<p>When dealing with multiple Areas in the Constraint expression, in order to describe it simply, you can define multiple Areas together in one group.</p>
+<p>Syntax:
+<div class="highlight"><pre><span></span><code>AreaSet <span class="o">[</span>ID<span class="o">]</span> <span class="o">{</span>
+  description: <span class="o">[</span>String<span class="o">]</span>
+  target: <span class="o">[</span> <span class="o">[</span>ID of Area<span class="o">]</span> <span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<table>
+<thead>
+<tr>
+<th align="left">Syntax element</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">description:</td>
+<td align="left">0..1    Description</td>
+</tr>
+<tr>
+<td align="left">target:    0..*</td>
+<td align="left">Areas or AreaSets which compose the group. Specify the ID of the Area or the AreaSet with comma-separated.</td>
+</tr>
+</tbody>
+</table>
+<p>Description example:
+<div class="highlight"><pre><span></span><code>AreaSet MainScreen <span class="o">{</span>
+    description: <span class="s2">&quot;Area constituting the main screen&quot;</span>
+    target: <span class="o">[</span>SampleArea, SampleArea1, OtherAreaSet<span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<h4 id="92-viewcontentset">9.2 ViewContentSet</h4>
+<p>When dealing with multiple ViewContents in the Constraint expression, in order to describe it simply, you can define multiple ViewContents together in one group.</p>
+<p>Syntax:
+<div class="highlight"><pre><span></span><code>ViewContentSet <span class="o">[</span>ID<span class="o">]</span> <span class="o">{</span>
+  description: <span class="o">[</span>String<span class="o">]</span>
+  allocatable: <span class="o">[</span> <span class="o">[</span>ID of Area<span class="o">]</span> <span class="o">]</span>
+  target: <span class="o">[</span> <span class="o">[</span>ID of ViewContent<span class="o">]</span> <span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<table>
+<thead>
+<tr>
+<th align="left">Syntax element</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">description:</td>
+<td align="left">0..1    Description</td>
+</tr>
+<tr>
+<td align="left">allocatable:   0..*</td>
+<td align="left">Displayable Areas or AreaSets.Specify the ID of the Areas or the AreaSets with comma-separated.</td>
+</tr>
+<tr>
+<td align="left">target:    0..*</td>
+<td align="left">ViewContents or ViewContentSets which compose the group. Specify the ID of the ViewContents or ViewContentSets with comma-separated.</td>
+</tr>
+</tbody>
+</table>
+<p>Description example:
+<div class="highlight"><pre><span></span><code>ViewContentSet InterruptContent<span class="o">{</span>
+  allocatable: <span class="o">[</span>
+    MessageArea, HUDMessageArea, InterruptAreaGroup
+  <span class="o">]</span>
+  target: <span class="o">[</span>
+    TEL,Power, ViewContentGroup
+  <span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<h4 id="93-one-time-set">9.3 One-time Set</h4>
+<p>Specify an set in the For-All or the Exists constraint, you can define the One-time set.</p>
+<p>Syntax:
+<div class="highlight"><pre><span></span><code><span class="o">{</span> <span class="o">[</span>ID<span class="o">]</span> <span class="o">}</span>
+</code></pre></div></p>
+<table>
+<thead>
+<tr>
+<th align="left">Syntax element</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">[ID]   1..*</td>
+<td align="left">Element of the set. Specify the IDs of elements with comma-separated.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">The type of elements should be same.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">At this time, Area and AreaSet regard it as the same type.( ViewContent and ViewContentSet are treat similarly.)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<p>Description example: Define the One-time set as AreaSet.
+<div class="highlight"><pre><span></span><code>Constraint SampleConstraint <span class="o">{</span>
+    runtime: <span class="nb">true</span>
+    SampleContent1.isVisible<span class="o">()</span> -&gt;
+For-All <span class="o">{</span>Area1, Area2, Area3<span class="o">}</span> <span class="o">{</span> x <span class="p">|</span> x.isHidden<span class="o">()</span> <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>Description example: Define the One-time set as ViewContentSet.
+<div class="highlight"><pre><span></span><code>Constraint SampleConstraint <span class="o">{</span>
+    runtime: <span class="nb">true</span>
+    Exists <span class="o">{</span>ViewContent1, ViewContentSet1<span class="o">}</span> <span class="o">{</span> x <span class="p">|</span> x.isActive<span class="o">()</span> -&gt; x.isVisible<span class="o">()</span> <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></p>
+</li>
+</ul>
+<h3 id="10-scene-definition">10. Scene definition</h3>
+<h4 id="101-scene">10.1 Scene</h4>
+<p>Scene comprehensively expresses the state at the time including the system, and it is used to switch the status of Area/Zone, View/Sound Content by Scene. You can also define the Global scene and share the results of arbitration among multiple RBA Models (Projects).</p>
+<p>Syntax:
+<div class="highlight"><pre><span></span><code>Scene <span class="o">[</span>ID<span class="o">]</span> <span class="o">{</span>
+  description: <span class="o">[</span>String<span class="o">]</span>
+  global: <span class="o">[</span>true<span class="p">|</span>false<span class="o">]</span>
+  <span class="o">[</span>Property<span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<table>
+<thead>
+<tr>
+<th align="left">Syntax element</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">description:   0..1</td>
+<td align="left">Description</td>
+</tr>
+<tr>
+<td align="left">global:    0..1</td>
+<td align="left">true: Global Scene for sharing arbitration results with other RBA Models (Projects).</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">false: Local Scene.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">If not defined, consider it as "false".</td>
+</tr>
+<tr>
+<td align="left">[Property] 0..*</td>
+<td align="left">Information for sharing arbitration results with other RBA models (Projects).</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">Can define only if global is true.</td>
+</tr>
+</tbody>
+</table>
+<p>Description example:
+<div class="highlight"><pre><span></span><code>Scene AutoDrivingScene <span class="o">{</span>
+  description: <span class="s2">&quot;In auto driving mode&quot;</span>
+<span class="o">}</span>
+
+Scene DisplayEventNotification <span class="o">{</span>
+  global: <span class="nb">true</span>
+  int OverallPriority: <span class="m">6</span>
+  int RiskSeverity: <span class="m">3</span>
+  int RiskMargin: <span class="m">1</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<h4 id="102-property">10.2 Property</h4>
+<p>Property is arbitrary properties which is defined in the Scene.</p>
+<p>Syntax:
+<div class="highlight"><pre><span></span><code>int <span class="o">[</span>String<span class="o">]</span>: <span class="o">[</span>Number<span class="o">]</span>
+</code></pre></div></p>
+<table>
+<thead>
+<tr>
+<th align="left">Syntax element</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">[String]   1</td>
+<td align="left">Arbitrary Property name</td>
+</tr>
+<tr>
+<td align="left">[Number]   1</td>
+<td align="left">Default value of Property. Positive integer can be specified.</td>
+</tr>
+</tbody>
+</table>
+<p>Description example:
+<div class="highlight"><pre><span></span><code>int RiskSeverity: <span class="m">3</span>
+</code></pre></div></p>
+<h3 id="11-stereotype">11. Stereotype</h3>
+<p>Syntax:
+<div class="highlight"><pre><span></span><code>StereoType&lt;<span class="o">[</span>Target Model Name<span class="o">]</span>&gt; <span class="o">[</span>ID<span class="o">]</span> <span class="o">([</span>valiable<span class="o">])</span> @BEGIN@
+description: <span class="o">[</span>String<span class="o">]</span>
+    <span class="o">[</span>Propaties of Element<span class="o">]</span>
+@END@
+</code></pre></div></p>
+<table>
+<thead>
+<tr>
+<th align="left">Syntax element</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">description:   0..1</td>
+<td align="left">Description</td>
+</tr>
+<tr>
+<td align="left">[Target Model Name]    1</td>
+<td align="left">Identify the applicable model by describing the model element keywords</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">It can be applied to the Area, ViewContent models</td>
+</tr>
+<tr>
+<td align="left">[valiable] 0..*</td>
+<td align="left">Describe an arbitrary variable as the parameter to be replaced, which will be set in the property of the model element specified in [Target Model Name].If there are multiple variables, separate them with commas.</td>
+</tr>
+<tr>
+<td align="left">[Properties of Element]    1..*</td>
+<td align="left">Describe the properties of the model element specified in [Target Model Name].In the property, the value to be replaced is written in @{[variable]} .</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">The variables must match the variables described in ().</td>
+</tr>
+</tbody>
+</table>
+<p>Description example:
+<div class="highlight"><pre><span></span><code>Stereotype&lt;ViewContent&gt; display_warnning <span class="o">(</span>name,allocatable,priority<span class="o">)</span> @BEGIN@
+    description: “@<span class="o">{</span>name<span class="o">}</span>”
+    allocatable: <span class="o">[</span>@<span class="o">{</span>allocatable<span class="o">}]</span>
+    Size WarnSize <span class="o">{</span>
+        width: <span class="m">300</span>
+        height: <span class="m">100</span>
+    <span class="o">}</span>
+    State NORMAL <span class="o">{</span> piority: @<span class="o">{</span>priority<span class="o">}</span> <span class="o">}</span>
+
+@END@
+</code></pre></div></p>
+<h3 id="12-tag">12. Tag</h3>
+<p>Syntax:
+<div class="highlight"><pre><span></span><code>&lt;&lt;<span class="o">[</span>Stereotype ID<span class="o">]</span>&gt;&gt; <span class="p">|</span> &lt;&lt;<span class="o">[</span>Stereotype ID<span class="o">]</span>&gt;&gt;<span class="o">{</span>“<span class="o">[</span>String<span class="o">]</span>”<span class="o">}</span>
+</code></pre></div></p>
+<table>
+<thead>
+<tr>
+<th align="left">Syntax element</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">[ID of Stereotype] 0..*</td>
+<td align="left">Can be assigned to Area, ViewContent</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">If StereoType is defined, then the child elements and attributes defined there will be expanded as child elements and attributes of this object</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">Multiple definitions can be made for a single model. To define more than one, define them consecutively.</td>
+</tr>
+<tr>
+<td align="left">[String]   0..*</td>
+<td align="left">Argument value</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">If there is no argument, it can be omitted</td>
+</tr>
+</tbody>
+</table>
+<p>Description example:
+<div class="highlight"><pre><span></span><code>ViewContent Warning_1 <span class="o">{</span>
+    <span class="s">&lt;&lt;display_warning&gt;&gt;{ “Warning_01”,”Area1”,“1” }</span>
+<span class="s">}</span>
+
+<span class="s">ViewContent Warning_2 {</span>
+<span class="s">    &lt;&lt;display_warning</span>&gt;&gt;<span class="o">{</span> “Warning_02”,”Area2”,”2” <span class="o">}</span>
+<span class="o">}</span>
+
+Stereotype&lt;ViewContent&gt; display_warnning <span class="o">(</span>name,allocatable,priority<span class="o">)</span> @BEGIN@
+    description: “@<span class="o">{</span>name<span class="o">}</span>”
+    allocatable: <span class="o">[</span>@<span class="o">{</span>allocatable<span class="o">}]</span>
+    Size WarnSize <span class="o">{</span>
+        width: <span class="m">300</span>
+        height: <span class="m">100</span>
+    <span class="o">}</span>
+    State NORMAL <span class="o">{</span> piority: @<span class="o">{</span>priority<span class="o">}</span> <span class="o">}</span>
+@END@
+</code></pre></div></p>
+<h2 id="generate-json-from-rba-file">Generate .json from .rba file</h2>
+<p>Download <a href="https://git.automotivelinux.org/staging/rba-tool/tree/tool_bin">prebuilt package</a></p>
+<ul>
+<li>If some errors occur, RBAModel.json is not generated (exit code 1).
+<div class="highlight"><pre><span></span><code>java -cp ./ -jar JSONGenerator.jar &quot;[path to model directory]&quot; &quot;[path to output directory]&quot;
+</code></pre></div></li>
+</ul>
+<p>Example:</p>
+<ul>
+<li>
+<p>RBAModel.json file is generated in directory same as JSONGenerator.jar
+<div class="highlight"><pre><span></span><code>java -cp ./ -jar JSONGenerator.jar &quot;./RBAModel.rba&quot;
+</code></pre></div></p>
+</li>
+<li>
+<p>RBAModel.json file is generated in ~/ directory
+<div class="highlight"><pre><span></span><code>java -cp ./ -jar JSONGenerator.jar &quot;./RBAModel.rba&quot; &quot;~/&quot;
+</code></pre></div>
+Note: For the reference .rba file is given under the path <a href="https://git.automotivelinux.org/staging/rba-tool/tree/tool_bin/sample_model">prebuilt package/sample_model</a></p>
+</li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../4_drm-leasemanager/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../4_drm-leasemanager/" class="btn btn-xs btn-link">
+        DRM lease manager
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../2_waltham-receiver_waltham-transmitter/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../2_waltham-receiver_waltham-transmitter/" class="btn btn-xs btn-link">
+        Waltham receiver/transmitter
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

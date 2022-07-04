@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Shankho Boron Ghosh">
+    <link rel="canonical" href="http://docs.automotivelinux.org/0_Getting_Started/2_Building_AGL_Image/2_Downloading_AGL_Software/">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Downloading AGL Software - AGL Documentation</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../3_Initializing_Your_Build_Environment/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../3_Initializing_Your_Build_Environment/" class="btn btn-xs btn-link">
+        Initializing Your Build Environment
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../1_Preparing_Your_Build_Host/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../1_Preparing_Your_Build_Host/" class="btn btn-xs btn-link">
+        Preparing Your Build Host
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <p>Once you have determined the build host can build an AGL image,
+you need to download the AGL source files.
+The AGL source files, which includes the Yocto Project layers, are
+maintained on the AGL Gerrit server.
+For information on how to create accounts for Gerrit, see the
+<a href="https://wiki.automotivelinux.org/start/getting-started">Getting Started with AGL</a>
+wiki page.</p>
+<p><strong>NOTE:</strong> Further information about Download and Build AGL Source Code available at <a href="https://wiki.automotivelinux.org/agl-distro/source-code">AGL wiki</a>.</p>
+<p>The remainder of this section provides steps on how to download the AGL source files:</p>
+<ol>
+<li>
+<p><strong>Define Your Top-Level Directory:</strong>
+   You can define an environment variable as your top-level AGL workspace folder.
+   Following is an example that defines the <code>$HOME/workspace_agl</code> folder using
+   an environment variable named "AGL_TOP":</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">export</span> <span class="nv">AGL_TOP</span><span class="o">=</span><span class="nv">$HOME</span>/AGL
+$ <span class="nb">echo</span> <span class="s1">&#39;export AGL_TOP=$HOME/AGL&#39;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+$ mkdir -p <span class="nv">$AGL_TOP</span>
+</code></pre></div>
+</li>
+<li>
+<p><strong>Download the <code>repo</code> Tool and Set Permissions:</strong>
+   AGL Uses the <code>repo</code> tool for managing repositories.
+   Use the following commands to download the tool and then set its
+   permissions to allow for execution:</p>
+<div class="highlight"><pre><span></span><code>$ mkdir -p <span class="nv">$HOME</span>/bin
+$ <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$HOME</span>/bin:<span class="nv">$PATH</span>
+$ <span class="nb">echo</span> <span class="s1">&#39;export PATH=$HOME/bin:$PATH&#39;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+$ curl https://storage.googleapis.com/git-repo-downloads/repo &gt; <span class="nv">$HOME</span>/bin/repo
+$ chmod a+x <span class="nv">$HOME</span>/bin/repo
+</code></pre></div>
+</li>
+</ol>
+<p><strong>NOTE:</strong> See the
+   "<a href="https://source.android.com/setup/develop/repo">Repo Command Reference</a>"
+   for more information on the <code>repo</code> tool.</p>
+<ol>
+<li>
+<p><strong>Download the AGL Source Files:</strong>
+   Depending on your development goals, you can either download the
+   latest stable AGL release branch, or the "cutting-edge" (i.e. "master"
+   branch) files.</p>
+</li>
+<li>
+<p><strong>Stable Release:</strong>
+     Using the latest stable release gives you a solid snapshot of the
+     latest know release.
+     The release is static, tested, and known to work.
+     To download the latest stable release branch (i.e. Jellyfish), use
+     the following commands:</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">cd</span> <span class="nv">$AGL_TOP</span>
+$ mkdir koi
+$ <span class="nb">cd</span> koi
+$ repo init -b koi -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo
+$ repo sync
+</code></pre></div>
+</li>
+<li>
+<p><strong>Cutting-Edge Files:</strong>
+     Using the "cutting-edge" AGL files gives you a snapshot of the
+     "master" branch.
+     The resulting local repository you download is dynamic and changes frequently depending on community contributions.
+     The advantage of using "cutting-edge" AGL files is that you have the
+     absolute latest features, which are often under development, for AGL.</p>
+<p>To download the "cutting-edge" AGL files, use the following commands:</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">cd</span> <span class="nv">$AGL_TOP</span>
+$ mkdir master
+$ <span class="nb">cd</span> master
+$ repo init -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo
+$ repo sync
+</code></pre></div>
+</li>
+</ol>
+<p>Once you <code>sync</code> the repository, you have the AGL files in the form of
+   "layers" (e.g. <code>meta-*</code> folders).
+   You also have the <code>poky</code> repository in your AGL workspace.</p>
+<p>Listing out the resulting directory structure appears as follows:</p>
+<div class="highlight"><pre><span></span><code>$ tree -L <span class="m">1</span>
+ .
+ ├── bsp
+ ├── external
+ ├── meta-agl
+ ├── meta-agl-cluster-demo
+ ├── meta-agl-demo
+ ├── meta-agl-devel
+ ├── meta-agl-extra
+ └── meta-agl-telematics-demo
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../3_Initializing_Your_Build_Environment/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../3_Initializing_Your_Build_Environment/" class="btn btn-xs btn-link">
+        Initializing Your Build Environment
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../1_Preparing_Your_Build_Host/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../1_Preparing_Your_Build_Host/" class="btn btn-xs btn-link">
+        Preparing Your Build Host
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>
