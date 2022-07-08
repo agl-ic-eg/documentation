@@ -2,292 +2,292 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>http://docs.automotivelinux.org/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/0_Getting_Started/1_Quickstart/Using_Ready_Made_Images/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/0_Getting_Started/2_Building_AGL_Image/0_Build_Process/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/0_Getting_Started/2_Building_AGL_Image/1_Preparing_Your_Build_Host/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/0_Getting_Started/2_Building_AGL_Image/2_Downloading_AGL_Software/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/0_Getting_Started/2_Building_AGL_Image/3_Initializing_Your_Build_Environment/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/0_Getting_Started/2_Building_AGL_Image/4_Customizing_Your_Build/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/0_Getting_Started/2_Building_AGL_Image/5_0_Building_the_AGL_Image/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/0_Getting_Started/2_Building_AGL_Image/5_1_x86_Emulation_and_Hardware/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/0_Getting_Started/2_Building_AGL_Image/5_2_Raspberry_Pi_4/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/0_Getting_Started/2_Building_AGL_Image/5_3_RCar_Gen_3/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/0_Getting_Started/2_Building_AGL_Image/5_4_Virtio/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/0_Getting_Started/3_Build_and_Boot_guide_Profile/1_Instrument_Cluster_%28IC-IVI_with_Container_isolation%29/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/1_Hardware_Support/Overview/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/2_Architecture_Guides/1_Introduction/0_Overview/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/2_Architecture_Guides/1_Introduction/1_AGL_Requirements_Specifications/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/2_Architecture_Guides/2_Security_Blueprint/0_Overview/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/2_Architecture_Guides/2_Security_Blueprint/1_Hardware/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/2_Architecture_Guides/2_Security_Blueprint/2_Secure_Boot/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/2_Architecture_Guides/2_Security_Blueprint/3_Hypervisor/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/2_Architecture_Guides/2_Security_Blueprint/4_Kernel/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/2_Architecture_Guides/2_Security_Blueprint/5_Platform/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/2_Architecture_Guides/2_Security_Blueprint/6_Application/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/2_Architecture_Guides/2_Security_Blueprint/7_Connectivity/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/2_Architecture_Guides/2_Security_Blueprint/8_Update_OTA/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/2_Architecture_Guides/2_Security_Blueprint/9_Secure_development/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/2_Architecture_Guides/2_Security_Blueprint/Annexes/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/3_Developer_Guides/0_FIXME/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/3_Developer_Guides/1_Setting_Up_AGL_SDK/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/3_Developer_Guides/2_Creating_a_New_Service/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/3_Developer_Guides/3_Creating_a_New_Application/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/3_Developer_Guides/4_Creating_a_custom_recipe/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/3_Developer_Guides/5_General_setup/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/3_Developer_Guides/1_Application_Framework/1_Introduction/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/3_Developer_Guides/1_Application_Framework/2_Application_Startup/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/3_Developer_Guides/6_AGL_Layers/1_Overview/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/3_Developer_Guides/6_AGL_Layers/2_meta-agl/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/3_Developer_Guides/6_AGL_Layers/3_meta-agl-demo/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/3_Developer_Guides/6_AGL_Layers/4_meta-agl-devel/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/4_APIs_and_Services/FIXME/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/5_Component_Documentation/0_AGL_components/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/5_Component_Documentation/1_agl-compositor/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/5_Component_Documentation/2_waltham-receiver_waltham-transmitter/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/5_Component_Documentation/3_rba/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/5_Component_Documentation/4_drm-leasemanager/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/5_Component_Documentation/5_application_framework/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/5_Component_Documentation/6_pipewire_wireplumber/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/5_Component_Documentation/7_ic-sound-manager/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/6_How_To_Contribute/1_Getting_Linux_Foundation_account/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/6_How_To_Contribute/2_Using_Jira_for_current_work_items/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/6_How_To_Contribute/3_Working_with_Gerrit/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/6_How_To_Contribute/4_Submitting_Changes/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/6_How_To_Contribute/5_Reviewing_Changes/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/6_How_To_Contribute/6_Gerrit_Recommended_Practices/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/6_How_To_Contribute/7_General_Guidelines/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/6_How_To_Contribute/8_Adding_Documentation/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/6_How_To_Contribute/9_Contribution_Checklist/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://docs.automotivelinux.org/6_How_To_Contribute/A_How_to_setup_your_own_AGL_LAVA_Lab/</loc>
-         <lastmod>2022-07-06</lastmod>
+         <lastmod>2022-07-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
